@@ -8,9 +8,15 @@
 
 #import "DisplayCardsViewController.h"
 #import "AddCardViewController.h"
+#import <QuartzCore/QuartzCore.h>
 #import "Card.h"
 
-@interface DisplayCardsViewController ()
+@interface DisplayCardsViewController () {
+    UIButton *chooseColorBtn;
+    NSArray *colorOptions;
+    NSString *colorChoice;
+    int currentColorIndex;
+}
 @property (nonatomic) NSMutableArray *coordinates;
 @property (strong) UIViewController *cardInfo;
 @end
@@ -142,6 +148,18 @@ UITextView *explanation;
     UIFont *theFont = [[UIFont alloc] init];
     theFont = [UIFont fontWithName:@"Helvetica" size:14];
     
+    chooseColorBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
+    
+    [chooseColorBtn setTitle:@"Choose Color" forState:UIControlStateNormal];
+    [[chooseColorBtn titleLabel] setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16.0f]];
+    [[chooseColorBtn titleLabel] setTextColor:[UIColor blackColor]];
+    chooseColorBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    [chooseColorBtn addTarget:self
+               action:@selector(chooseColor:)
+     forControlEvents:UIControlEventTouchDown];
+    [self.cardInfo.view addSubview:chooseColorBtn];
+    
     point = [[UITextView alloc] init];
     indexCard = [tappedLabel.index intValue];
     point.frame = CGRectMake(125, 50, 400, 50);
@@ -231,6 +249,41 @@ UITextView *explanation;
     [self.cardInfo.view addSubview:deleteButton];
 }
 
+-(IBAction)chooseColor:(id)sender {
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    toolbar.barStyle = UIBarStyleDefault;
+    
+    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:@"Choose" style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIBarButtonItem *fixed1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *fixed2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    [toolbar setItems:[NSArray arrayWithObjects:fixed1, chooseButton, fixed2, nil]];
+    
+    UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
+    CGRect pickerFrame = pickerView.frame;
+    pickerFrame.origin.y = toolbar.frame.size.height;
+    [pickerView setFrame:pickerFrame];
+    
+    UIView *colorPopupView = [[UIView alloc] init];
+    [colorPopupView addSubview:pickerView];
+    [colorPopupView addSubview:toolbar];
+    
+    UIViewController *colorVC = [[UIViewController alloc] init];
+    [colorVC setView:colorPopupView];
+    [colorVC setContentSizeForViewInPopover:CGSizeMake(320, 260)];
+    
+    popover = [[UIPopoverController alloc] initWithContentViewController:colorVC];
+    
+    pickerView.showsSelectionIndicator = YES;
+    pickerView.dataSource = self;
+    pickerView.delegate = self;
+    
+    [pickerView selectRow:currentColorIndex inComponent:0 animated:NO];
+    
+    NSLog(@"%@", chooseColorBtn);
+    [popover presentPopoverFromRect:chooseColorBtn.bounds inView:chooseColorBtn permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
 -(void) deleteCard {
     NSManagedObjectContext *context = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -285,6 +338,7 @@ UITextView *explanation;
     [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
     [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
     [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
+    [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
     
     NSManagedObjectContext *context = [self managedObjectContext];
     NSError *error = nil;
@@ -382,6 +436,27 @@ UITextView *explanation;
     NSLog(@"CLEAARRRRED!");
 }
 
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    return 1;
+}
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+    return [colorOptions count];
+}
+
+// Display each row's data.
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+    return [colorOptions objectAtIndex: row];
+}
+
+// Do something with the selected row.
+-(void)pickerView:(UIPickerView *)pv didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    colorChoice = [colorOptions objectAtIndex:row];
+    currentColorIndex = row;
+    chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    chooseColorBtn.layer.borderWidth = 3.0f;
+}
+
 
 - (NSManagedObjectContext *)managedObjectContext
 {
@@ -433,6 +508,13 @@ UITextView *explanation;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
+    colorChoice = [NSString new];
+    chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 }
 
 @end

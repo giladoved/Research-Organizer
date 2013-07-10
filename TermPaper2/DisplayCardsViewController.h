@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "AddCardViewController.h"
 
-@interface DisplayCardsViewController : UIViewController
+@interface DisplayCardsViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate> {
+    UIPopoverController *popover;
+}
 @property (strong) NSMutableArray *cards;
 @property (strong) NSMutableArray *cardViews;
 @property (strong) NSMutableArray *retrievedViewLocations;

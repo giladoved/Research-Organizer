@@ -14,10 +14,7 @@
 {
     NSArray *colorOptions;
     NSString *colorChoice;
-    
-    UIViewController *colorVC;
-    UIPickerView *pickerView;
-    
+        
     int currentColorIndex;
 }
 @end
@@ -63,7 +60,7 @@
     
     [toolbar setItems:[NSArray arrayWithObjects:fixed1, chooseButton, fixed2, nil]];
 
-    pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
+    UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
     CGRect pickerFrame = pickerView.frame;
     pickerFrame.origin.y = toolbar.frame.size.height;
     [pickerView setFrame:pickerFrame];
@@ -72,7 +69,7 @@
     [colorPopupView addSubview:pickerView];
     [colorPopupView addSubview:toolbar];
     
-    colorVC = [[UIViewController alloc] init];
+    UIViewController *colorVC = [[UIViewController alloc] init];
     [colorVC setView:colorPopupView];
     [colorVC setContentSizeForViewInPopover:CGSizeMake(320, 260)];
     
