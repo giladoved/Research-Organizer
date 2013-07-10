@@ -137,12 +137,17 @@ UITextView *explanation;
 }
 
 - (void)cardTapped:(UITapGestureRecognizer *)rec {
+    UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
+    scrollview.showsVerticalScrollIndicator=YES;
+    scrollview.scrollEnabled=YES;
+    scrollview.userInteractionEnabled=YES;
+    
     Card *tappedLabel = (Card *)rec.view;
     self.cardInfo = [[UIViewController alloc] init];
     self.cardInfo.modalPresentationStyle = UIModalPresentationFormSheet;
     self.cardInfo.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [self presentViewController:self.cardInfo animated:YES completion:nil];
-    self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720); //it's important to do this after presentModalViewController
+    self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720); 
     self.cardInfo.view.superview.center = self.view.center;
     
     UIFont *theFont = [[UIFont alloc] init];
@@ -167,14 +172,11 @@ UITextView *explanation;
     point.tag = 0;
     point.font = theFont;
     point.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
-    [self.cardInfo.view addSubview:point];
     
     UILabel *pointLbl = [UILabel new];
     pointLbl.text = @"Point";
     pointLbl.backgroundColor = [UIColor clearColor];
     pointLbl.frame = CGRectMake(25, 45, 100, 50);
-    [self.cardInfo.view addSubview:pointLbl];
-    
     
     quote = [[UITextView alloc] init];
     quote.frame = CGRectMake(125, 130, 400, 200);
@@ -182,14 +184,11 @@ UITextView *explanation;
     quote.tag = 1;
     quote.font = theFont;
     quote.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"]];
-    [self.cardInfo.view addSubview:quote];
     
     UILabel *quoteLbl = [UILabel new];
     quoteLbl.text = @"Quote";
     quoteLbl.backgroundColor = [UIColor clearColor];
     quoteLbl.frame = CGRectMake(25, 125, 100, 50);
-    [self.cardInfo.view addSubview:quoteLbl];
-    
     
     citation = [[UITextView alloc] init];
     citation.frame = CGRectMake(125, 365, 400, 50);
@@ -197,14 +196,11 @@ UITextView *explanation;
     citation.tag = 2;
     citation.font = theFont;
     citation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
-    [self.cardInfo.view addSubview:citation];
     
     UILabel *citationLbl = [UILabel new];
     citationLbl.text = @"Citation";
     citationLbl.backgroundColor = [UIColor clearColor];
     citationLbl.frame = CGRectMake(25, 360, 100, 50);
-    [self.cardInfo.view addSubview:citationLbl];
-    
     
     explanation = [[UITextView alloc] init];
     explanation.frame = CGRectMake(125, 450, 400, 200);
@@ -212,13 +208,11 @@ UITextView *explanation;
     explanation.tag = 3;
     explanation.font = theFont;
     explanation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
-    [self.cardInfo.view addSubview:explanation];
     
     UILabel *explanationLbl = [UILabel new];
     explanationLbl.text = @"Explanation";
     explanationLbl.backgroundColor = [UIColor clearColor];
     explanationLbl.frame = CGRectMake(25, 445, 100, 50);
-    [self.cardInfo.view addSubview:explanationLbl];
     
     UIButton *cancelButton = [[UIButton alloc] init];
     cancelButton.frame = CGRectMake(20, 670, 150, 35);
@@ -227,7 +221,6 @@ UITextView *explanation;
     [cancelButton addTarget:self
                  action:@selector(cancelPopup)
        forControlEvents:UIControlEventTouchUpInside];
-    [self.cardInfo.view addSubview:cancelButton];
     
     UIButton *saveButton = [[UIButton alloc] init];
     saveButton.frame = CGRectMake(350, 670, 150, 35);
@@ -236,7 +229,6 @@ UITextView *explanation;
     [saveButton addTarget:self
                      action:@selector(savePopup)
            forControlEvents:UIControlEventTouchUpInside];
-    [self.cardInfo.view addSubview:saveButton];
     
     UIButton *deleteButton = [[UIButton alloc] init];
     deleteButton.frame = CGRectMake(185, 670, 150, 35);
@@ -246,7 +238,21 @@ UITextView *explanation;
     [deleteButton addTarget:self
                    action:@selector(deleteCard)
          forControlEvents:UIControlEventTouchUpInside];
-    [self.cardInfo.view addSubview:deleteButton];
+
+    [scrollview addSubview:point];
+    [scrollview addSubview:pointLbl];
+    [scrollview addSubview:quote];
+    [scrollview addSubview:quoteLbl];
+    [scrollview addSubview:citation];
+    [scrollview addSubview:citationLbl];
+    [scrollview addSubview:explanation];
+    [scrollview addSubview:explanationLbl];
+    [scrollview addSubview:chooseColorBtn];
+    [scrollview addSubview:cancelButton];
+    [scrollview addSubview:saveButton];
+    [scrollview addSubview:deleteButton];
+    [self.cardInfo.view addSubview:scrollview];
+    scrollview.contentSize = CGSizeMake(self.cardInfo.view.frame.size.width, self.cardInfo.view.frame.size.height + 265);
 }
 
 -(IBAction)chooseColor:(id)sender {
