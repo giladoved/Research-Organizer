@@ -103,12 +103,12 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" id="BwS-bR-evj">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" id="BwS-bR-evj">
                                 <rect key="frame" x="0.0" y="44" width="1024" height="705"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Citation" minimumFontSize="17" clearButtonMode="whileEditing" id="4La-vd-eUn">
-                                        <rect key="frame" x="74" y="391" width="877" height="30"/>
+                                        <rect key="frame" x="74" y="380" width="877" height="30"/>
                                         <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -119,15 +119,15 @@
                                     </textField>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="&quot;Quote&quot;" id="JL2-cX-OiP">
                                         <rect key="frame" x="74" y="136" width="877" height="184"/>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Explanation" id="Swa-eX-5Y7">
                                         <rect key="frame" x="74" y="467" width="877" height="258"/>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="go"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="AeV-lq-ST1">
                                         <rect key="frame" x="74" y="47" width="78" height="60"/>
@@ -146,6 +146,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <color key="backgroundColor" red="0.74940210459183676" green="0.74940210459183676" blue="0.74940210459183676" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -166,6 +167,28 @@
             <point key="canvasLocation" x="589" y="-277"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="AddCardViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddCardViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addCard:"/>
+                <relationship kind="action" name="cancel:"/>
+                <relationship kind="action" name="chooseColor:"/>
+                <relationship kind="outlet" name="citationTxt" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="colorPickerButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="explanationTxt" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="pointTxt" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="quoteTxt" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="DisplayCardsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayCardsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="chooseColor:"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

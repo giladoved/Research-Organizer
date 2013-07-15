@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "Card.h"
 
-@interface AddCardViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource> {
+@interface AddCardViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate> {
     UIPopoverController *popover;
 }
 @property (weak, nonatomic) IBOutlet UITextField *pointTxt;
