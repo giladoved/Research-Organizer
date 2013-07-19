@@ -16,6 +16,7 @@
     NSArray *colorOptions;
     NSString *colorChoice;
     int currentColorIndex;
+    UIPickerView *pickerView;
 }
 @property (nonatomic) NSMutableArray *coordinates;
 @property (strong) UIViewController *cardInfo;
@@ -42,12 +43,12 @@ UITextView *explanation;
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequestF error:nil] mutableCopy];
     NSLog(@"card count: %i", self.cards.count);
     
-    /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+    [self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
     [self deleteAllObjectsForEntity:@"Layout" andContext:managedObjectContext];
     [self.cards removeAllObjects];
     [self.coordinates removeAllObjects];
     [self.retrievedViewLocations removeAllObjects];
-    [self.cardViews removeAllObjects];*/
+    [self.cardViews removeAllObjects];
     
     for (UIView *view in self.view.subviews)
     {
@@ -247,6 +248,10 @@ UITextView *explanation;
 }
 
 -(IBAction)chooseColor:(id)sender {
+    colorChoice = [colorOptions objectAtIndex:0];
+    currentColorIndex = 0;
+    chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    chooseColorBtn.layer.borderWidth = 3.0f;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     toolbar.barStyle = UIBarStyleDefault;
     
@@ -256,7 +261,7 @@ UITextView *explanation;
     
     [toolbar setItems:[NSArray arrayWithObjects:fixed1, chooseButton, fixed2, nil]];
     
-    UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
+    pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, 320, 216)];
     CGRect pickerFrame = pickerView.frame;
     pickerFrame.origin.y = toolbar.frame.size.height;
     [pickerView setFrame:pickerFrame];
@@ -519,7 +524,6 @@ UITextView *explanation;
 - (void) viewDidLoad {
     [super viewDidLoad];
     colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
-    colorChoice = [NSString new];
     chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     
     self.cards = [[NSMutableArray alloc] init];

@@ -15,6 +15,11 @@
 
 -(void) viewDidLoad
 {
+    [self populateTable];
+    [self deleteAllObjectsForEntity:@"Layout" andContext:[self managedObjectContext]];
+}
+
+-(void) populateTable {
     self.points = [NSMutableArray new];
     self.quotes = [NSMutableArray new];
     self.citations = [NSMutableArray new];
@@ -32,6 +37,7 @@
         [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
     }
+
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -101,14 +107,71 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     NSUInteger row = [indexPath row];
     NSUInteger count = [self.points count];
     
     if (row < count) {
-        return UITableViewCellEditingStyleDelete;
-    } else {
-        return UITableViewCellEditingStyleNone;
+        [self.points removeObjectAtIndex:row];
+        [self.quotes removeObjectAtIndex:row];
+        [self.citations removeObjectAtIndex:row];
+        [self.explanations removeObjectAtIndex:row];
+        [self.colors removeObjectAtIndex:row];
+        
+        NSManagedObjectContext *context = [self managedObjectContext];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Flashcards" inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSError *error;
+        [context deleteObject:[self.cards objectAtIndex:row]];
+        [self.cards removeObjectAtIndex:row];
+        if (![context save:&error]) {
+            NSLog(@"Error deleting card:%@",error);
+        }
+
     }
 }
+
+- (void)tableView:(UITableView *)tableView
+didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self populateTable];
+    [tableView reloadData];
+}
+
+-(BOOL)deleteAllObjectsForEntity:(NSString*)entityName andContext:(NSManagedObjectContext *)managedObjectContext
+{
+	// Create fetch request
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext];
+	[request setEntity:entity];
+    
+	// Ignore property values for maximum performance
+	[request setIncludesPropertyValues:NO];
+    
+	// Execute the count request
+	NSError *error = nil;
+	NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
+    
+	// Delete the objects returned if the results weren't nil
+	if (fetchResults != nil) {
+		for (NSManagedObject *manObj in fetchResults) {
+			[managedObjectContext deleteObject:manObj];
+		}
+	} else {
+		NSLog(@"Couldn't delete objects for entity %@", entityName);
+		return NO;
+	}
+    
+	return YES;
+}
+
+
 
 @end

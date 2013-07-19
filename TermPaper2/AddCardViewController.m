@@ -61,6 +61,10 @@
 }
 
 - (IBAction)chooseColor:(id)sender {
+    colorChoice = [colorOptions objectAtIndex:0];
+    currentColorIndex = 0;
+    self.colorPickerButton.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButton.layer.borderWidth = 3.0f;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     toolbar.barStyle = UIBarStyleDefault;
 
