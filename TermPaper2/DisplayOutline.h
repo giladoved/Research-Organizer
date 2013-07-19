@@ -20,7 +20,6 @@
 @property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-- (IBAction)DeleteButtonAction:(id)sender;
 - (IBAction) EditTable:(id)sender;
 
 @end

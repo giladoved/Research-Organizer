@@ -20,12 +20,6 @@
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(EditTable:)];
     [self.navigationItem setLeftBarButtonItem:editButton];
 
-    
-    [self populateTable];
-    [self deleteAllObjectsForEntity:@"Layout" andContext:[self managedObjectContext]];
-}
-
--(void) populateTable {
     self.points = [NSMutableArray new];
     self.quotes = [NSMutableArray new];
     self.citations = [NSMutableArray new];
@@ -42,8 +36,7 @@
         [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
         [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
-    }
-
+    }    [self deleteAllObjectsForEntity:@"Layout" andContext:[self managedObjectContext]];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -115,7 +108,7 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSUInteger row = [indexPath row];
-    NSUInteger count = [self.points count];
+    NSUInteger count = [self.cards count];
     
     if (row < count) {
         [self.points removeObjectAtIndex:row];
@@ -124,26 +117,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         [self.explanations removeObjectAtIndex:row];
         [self.colors removeObjectAtIndex:row];
         
-        NSManagedObjectContext *context = [self managedObjectContext];
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Flashcards" inManagedObjectContext:context];
-        [fetchRequest setEntity:entity];
-        
-        NSError *error;
-        [context deleteObject:[self.cards objectAtIndex:row]];
         [self.cards removeObjectAtIndex:row];
-        if (![context save:&error]) {
-            NSLog(@"Error deleting card:%@",error);
-        }
         
-        [self populateTable];
         [self.tableView reloadData];
     }
 }
 
 - (void)tableView:(UITableView *)tableView
 didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self populateTable];
     [tableView reloadData];
 }
 
@@ -206,8 +187,6 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
-
-
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
@@ -217,8 +196,6 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     id card = [self.cards objectAtIndex:fromIndexPath.row];
     [self.cards removeObjectAtIndex:fromIndexPath.row];
     [self.cards insertObject:card atIndex:toIndexPath.row];
-    [tableView reloadData];
-    [self populateTable];
 }
 
 @end
