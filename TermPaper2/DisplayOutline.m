@@ -11,10 +11,16 @@
 #import "SimpleTableCell.h"
 
 @implementation DisplayOutline
-
+{
+    BOOL editing;
+}
 
 -(void) viewDidLoad
 {
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(EditTable:)];
+    [self.navigationItem setLeftBarButtonItem:editButton];
+
+    
     [self populateTable];
     [self deleteAllObjectsForEntity:@"Layout" andContext:[self managedObjectContext]];
 }
@@ -104,12 +110,6 @@
     return nil;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
-           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    return UITableViewCellEditingStyleDelete;
-}
-
 - (void)tableView:(UITableView *)tableView
 commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -135,7 +135,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         if (![context save:&error]) {
             NSLog(@"Error deleting card:%@",error);
         }
-
+        
+        [self populateTable];
+        [self.tableView reloadData];
     }
 }
 
@@ -172,6 +174,51 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
 	return YES;
 }
 
+- (IBAction) EditTable:(id)sender{
+    if(editing)
+    {
+        [super setEditing:NO animated:NO];
+        [self.tableView setEditing:NO animated:NO];
+        [self.tableView reloadData];
+        [self.navigationItem.leftBarButtonItem setTitle:@"Edit"];
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+        editing = NO;
+    }
+    else
+    {
+        [super setEditing:YES animated:YES];
+        [self.tableView setEditing:YES animated:YES];
+        [self.tableView reloadData];
+        [self.navigationItem.leftBarButtonItem setTitle:@"Done"];
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+        editing = YES;
+    }
+}
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editing == NO || !indexPath)
+        return UITableViewCellEditingStyleNone;
+
+    if (indexPath.row != [self.cards count]) {
+        return UITableViewCellEditingStyleDelete;
+    }
+    return UITableViewCellEditingStyleNone;
+}
+
+
+
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+    id card = [self.cards objectAtIndex:fromIndexPath.row];
+    [self.cards removeObjectAtIndex:fromIndexPath.row];
+    [self.cards insertObject:card atIndex:toIndexPath.row];
+    [tableView reloadData];
+    [self populateTable];
+}
 
 @end

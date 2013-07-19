@@ -29,7 +29,7 @@
     // Create a new managed object
     NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
     
-    if (self.pointTxt && self.quoteTxt && self.citationTxt && self.explanationTxt && colorChoice) {
+    if (self.pointTxt.text && self.quoteTxt.text && self.citationTxt.text && self.explanationTxt.text && colorChoice) {
         [newCard setValue:self.pointTxt.text forKey:@"point"];
         [newCard setValue:self.quoteTxt.text forKey:@"quote"];
         [newCard setValue:self.citationTxt.text forKey:@"citation"];
