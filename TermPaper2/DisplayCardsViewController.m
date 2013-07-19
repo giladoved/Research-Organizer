@@ -331,27 +331,36 @@ UITextView *explanation;
 }
 
 -(void) savePopup {
-    [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
-    [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
-    [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
-    [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
-    [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
+    if (point.text && quote.text && citation.text && explanation.text && colorChoice) {
+        [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
+        [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
+        [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
+        [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
+        [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
     
-    NSManagedObjectContext *context = [self managedObjectContext];
-    NSError *error = nil;
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-    }
+        NSManagedObjectContext *context = [self managedObjectContext];
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
 
-    [self viewDidAppear:YES];
+        [self viewDidAppear:YES];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
                                                     message:@"Card was successfully modified!"
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
-    [alert show];
-    [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+        [alert show];
+        [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Do not leave textboxes blank"
+                                                        message:@"All properties must be filled out! No blanks are allowed!"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 -(void) cancelPopup {

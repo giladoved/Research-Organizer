@@ -29,25 +29,35 @@
     // Create a new managed object
     NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
     
-    [newCard setValue:self.pointTxt.text forKey:@"point"];
-    [newCard setValue:self.quoteTxt.text forKey:@"quote"];
-    [newCard setValue:self.citationTxt.text forKey:@"citation"];
-    [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
-    [newCard setValue:colorChoice forKey:@"color"];
+    if (self.pointTxt && self.quoteTxt && self.citationTxt && self.explanationTxt && colorChoice) {
+        [newCard setValue:self.pointTxt.text forKey:@"point"];
+        [newCard setValue:self.quoteTxt.text forKey:@"quote"];
+        [newCard setValue:self.citationTxt.text forKey:@"citation"];
+        [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
+        [newCard setValue:colorChoice forKey:@"color"];
 
-    NSError *error = nil;
-    // Save the object to persistent store
-    if (![context save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-    }
+        NSError *error = nil;
+        // Save the object to persistent store
+        if (![context save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Added"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Added"
                                                     message:@"Card was successfully added!"
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
-    [alert show];
-    [self dismissViewControllerAnimated:YES completion:nil];
+        [alert show];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Do not leave textboxes blank"
+                                                        message:@"All properties must be filled out! No blanks are allowed!"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (IBAction)chooseColor:(id)sender {
