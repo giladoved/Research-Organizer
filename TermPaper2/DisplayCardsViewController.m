@@ -37,22 +37,17 @@ UITextView *explanation;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
         
-    self.cards = [[NSMutableArray alloc] init];
-    self.cardViews = [[NSMutableArray alloc] init];
-    self.retrievedViewLocations = [[NSMutableArray alloc] init];
-    self.coordinates = [[NSMutableArray alloc] init];
-    
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequestF = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequestF error:nil] mutableCopy];
     NSLog(@"card count: %i", self.cards.count);
     
-    [self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+    /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
     [self deleteAllObjectsForEntity:@"Layout" andContext:managedObjectContext];
     [self.cards removeAllObjects];
     [self.coordinates removeAllObjects];
     [self.retrievedViewLocations removeAllObjects];
-    [self.cardViews removeAllObjects];
+    [self.cardViews removeAllObjects];*/
     
     for (UIView *view in self.view.subviews)
     {
@@ -69,10 +64,6 @@ UITextView *explanation;
         if ([self.coordinates containsObject:@""]) {
             [self.coordinates removeLastObject];
         }
-        NSLog(@"coordinate count: %i", self.coordinates.count);
-    }
-    else {
-        NSLog(@"no Layout saved");
     }
     
     Card *theLabel = nil;
@@ -521,6 +512,11 @@ UITextView *explanation;
     colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
     colorChoice = [NSString new];
     chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    
+    self.cards = [[NSMutableArray alloc] init];
+    self.cardViews = [[NSMutableArray alloc] init];
+    self.retrievedViewLocations = [[NSMutableArray alloc] init];
+    self.coordinates = [[NSMutableArray alloc] init];
 }
 
 @end

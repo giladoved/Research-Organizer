@@ -15,4 +15,10 @@
 @property (strong) NSMutableArray *cards;
 @property (strong) NSMutableArray *cardViews;
 @property (strong) NSMutableArray *retrievedViewLocations;
+
+@property (nonatomic, strong) NSMutableArray *points;
+@property (nonatomic, strong) NSMutableArray *quotes;
+@property (nonatomic, strong) NSMutableArray *citations;
+@property (nonatomic, strong) NSMutableArray *explanations;
+
 @end

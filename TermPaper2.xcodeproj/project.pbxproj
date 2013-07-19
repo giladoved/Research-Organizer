@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		610A1C4E1794275D005B6351 /* DisplayOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 610A1C4D1794275D005B6351 /* DisplayOutline.m */; };
 		61996358178D07E5006B8706 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61996357178D07E5006B8706 /* Storyboard.storyboard */; };
 		6199635A178D08E9006B8706 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61996359178D08E9006B8706 /* QuartzCore.framework */; };
 		61C04E3B1783D0BC006BC2C0 /* Card.m in Sources */ = {isa = PBXBuildFile; fileRef = 61C04E3A1783D0BC006BC2C0 /* Card.m */; };
+		61C2D1D01797462A00B7566E /* SimpleTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */; };
+		61C2D1D3179746EC00B7566E /* SimpleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61C2D1D2179746EC00B7566E /* SimpleTableCell.m */; };
 		61CEC9C717792D6400820AA9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CEC9C617792D6400820AA9 /* UIKit.framework */; };
 		61CEC9C917792D6400820AA9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CEC9C817792D6400820AA9 /* Foundation.framework */; };
 		61CEC9CB17792D6400820AA9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CEC9CA17792D6400820AA9 /* CoreGraphics.framework */; };
@@ -26,10 +29,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		610A1C4C1794275D005B6351 /* DisplayOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayOutline.h; sourceTree = "<group>"; };
+		610A1C4D1794275D005B6351 /* DisplayOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayOutline.m; sourceTree = "<group>"; };
 		61996357178D07E5006B8706 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		61996359178D08E9006B8706 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		61C04E391783D0BC006BC2C0 /* Card.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Card.h; sourceTree = "<group>"; };
 		61C04E3A1783D0BC006BC2C0 /* Card.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Card.m; sourceTree = "<group>"; };
+		61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleTableCell.xib; sourceTree = "<group>"; };
+		61C2D1D1179746EC00B7566E /* SimpleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTableCell.h; sourceTree = "<group>"; };
+		61C2D1D2179746EC00B7566E /* SimpleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTableCell.m; sourceTree = "<group>"; };
 		61CEC9C317792D6400820AA9 /* TermPaper2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TermPaper2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61CEC9C617792D6400820AA9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		61CEC9C817792D6400820AA9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -107,9 +115,14 @@
 				61996357178D07E5006B8706 /* Storyboard.storyboard */,
 				61CEC9EA17792E1A00820AA9 /* AddCardViewController.h */,
 				61CEC9EB17792E1A00820AA9 /* AddCardViewController.m */,
+				610A1C4C1794275D005B6351 /* DisplayOutline.h */,
+				610A1C4D1794275D005B6351 /* DisplayOutline.m */,
 				61CEC9CF17792D6400820AA9 /* Supporting Files */,
 				61C04E391783D0BC006BC2C0 /* Card.h */,
 				61C04E3A1783D0BC006BC2C0 /* Card.m */,
+				61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */,
+				61C2D1D1179746EC00B7566E /* SimpleTableCell.h */,
+				61C2D1D2179746EC00B7566E /* SimpleTableCell.m */,
 			);
 			path = TermPaper2;
 			sourceTree = "<group>";
@@ -185,6 +198,7 @@
 				61CEC9DD17792D6400820AA9 /* Default@2x.png in Resources */,
 				61CEC9DF17792D6400820AA9 /* Default-568h@2x.png in Resources */,
 				61996358178D07E5006B8706 /* Storyboard.storyboard in Resources */,
+				61C2D1D01797462A00B7566E /* SimpleTableCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +215,8 @@
 				61CEC9EC17792E1A00820AA9 /* AddCardViewController.m in Sources */,
 				61CEC9EF17792FC600820AA9 /* DisplayCardsViewController.m in Sources */,
 				61C04E3B1783D0BC006BC2C0 /* Card.m in Sources */,
+				610A1C4E1794275D005B6351 /* DisplayOutline.m in Sources */,
+				61C2D1D3179746EC00B7566E /* SimpleTableCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
