@@ -196,6 +196,22 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     id card = [self.cards objectAtIndex:fromIndexPath.row];
     [self.cards removeObjectAtIndex:fromIndexPath.row];
     [self.cards insertObject:card atIndex:toIndexPath.row];
+    
+    id point = [self.points objectAtIndex:fromIndexPath.row];
+    [self.points removeObjectAtIndex:fromIndexPath.row];
+    [self.points insertObject:point atIndex:toIndexPath.row];
+    
+    id quote = [self.quotes objectAtIndex:fromIndexPath.row];
+    [self.quotes removeObjectAtIndex:fromIndexPath.row];
+    [self.quotes insertObject:quote atIndex:toIndexPath.row];
+    
+    id expl = [self.explanations objectAtIndex:fromIndexPath.row];
+    [self.explanations removeObjectAtIndex:fromIndexPath.row];
+    [self.explanations insertObject:expl atIndex:toIndexPath.row];
+    
+    id color = [self.colors objectAtIndex:fromIndexPath.row];
+    [self.colors removeObjectAtIndex:fromIndexPath.row];
+    [self.colors insertObject:color atIndex:toIndexPath.row];
 }
 
 @end
