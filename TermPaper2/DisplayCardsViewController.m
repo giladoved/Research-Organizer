@@ -43,12 +43,12 @@ UITextView *explanation;
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequestF error:nil] mutableCopy];
     NSLog(@"card count: %i", self.cards.count);
     
-    /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+    [self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
     [self deleteAllObjectsForEntity:@"Layout" andContext:managedObjectContext];
     [self.cards removeAllObjects];
     [self.coordinates removeAllObjects];
     [self.retrievedViewLocations removeAllObjects];
-    [self.cardViews removeAllObjects];*/
+    [self.cardViews removeAllObjects];
     
     for (UIView *view in self.view.subviews)
     {
@@ -94,6 +94,7 @@ UITextView *explanation;
         [self.cardViews addObject:theLabel];
     }
     
+    NSLog(@"corrdinatee count %i", _coordinates.count);
     for (int i = 0; i < [self.coordinates count]; i++) {
         NSString *temp = [self.coordinates objectAtIndex:i];
         NSArray *temp2 = [temp  componentsSeparatedByString:@","];

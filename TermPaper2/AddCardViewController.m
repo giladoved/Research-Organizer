@@ -181,7 +181,7 @@
     if ([colorStr isEqualToString:@"Magenta"])
         return [UIColor magentaColor];
     
-    return [UIColor whiteColor];
+    return [UIColor grayColor];
 }
 
 
