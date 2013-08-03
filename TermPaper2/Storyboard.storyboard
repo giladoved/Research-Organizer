@@ -195,7 +195,7 @@
                                     <navigationItem title="Citation" id="ijE-R3-F6J">
                                         <barButtonItem key="leftBarButtonItem" title="Show Essay" id="7uC-f0-nIh">
                                             <connections>
-                                                <segue destination="hcP-Tl-XaA" kind="modal" id="OuM-WH-Nay"/>
+                                                <segue destination="hcP-Tl-XaA" kind="modal" modalTransitionStyle="flipHorizontal" id="OuM-WH-Nay"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="Export" id="BZM-pH-5lS"/>
@@ -246,7 +246,7 @@
                                     <navigationItem title="Essay" id="ncd-tE-b4r">
                                         <barButtonItem key="leftBarButtonItem" title="Citation Page" id="Ljl-AX-UFd">
                                             <connections>
-                                                <segue destination="IeU-Wa-3bG" kind="modal" id="icc-NM-Wn6"/>
+                                                <segue destination="IeU-Wa-3bG" kind="modal" modalTransitionStyle="flipHorizontal" id="icc-NM-Wn6"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="Export" id="wQq-35-aO8"/>
