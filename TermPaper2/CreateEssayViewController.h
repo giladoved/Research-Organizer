@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CreateEssayViewController : UIViewController
+@interface CreateEssayViewController : UIViewController <UITextViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UITextView *essayText;
+@property (nonatomic, strong) UITextView *essayText;
+@property (nonatomic, strong) NSMutableArray *cards;
+@property (nonatomic, strong) NSMutableArray *savedEssay;
+@property (nonatomic, strong) NSMutableString *essay;
+@property (strong, nonatomic) IBOutlet UITextField *cool;
 
 @end
