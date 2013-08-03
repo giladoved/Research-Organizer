@@ -20,22 +20,19 @@
 @end
 
 @implementation AddCardViewController
-@synthesize scrollView = _scrollView;
-@synthesize colorPickerButton = _colorPickerButton;
 
 - (IBAction)addCard:(id)sender {
-    NSManagedObjectContext *context = [self managedObjectContext];
-    
-    // Create a new managed object
-    NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
-    
-    if (self.pointTxt.text && self.quoteTxt.text && self.citationTxt.text && self.explanationTxt.text && colorChoice) {
+        NSManagedObjectContext *context = [self managedObjectContext];
+        NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
+        
         [newCard setValue:self.pointTxt.text forKey:@"point"];
         [newCard setValue:self.quoteTxt.text forKey:@"quote"];
         [newCard setValue:self.citationTxt.text forKey:@"citation"];
         [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
         [newCard setValue:colorChoice forKey:@"color"];
-
+        [newCard setValue:[NSNumber numberWithFloat:0] forKey:@"locationX"];
+        [newCard setValue:[NSNumber numberWithFloat:300] forKey:@"locationY"];
+        
         NSError *error = nil;
         // Save the object to persistent store
         if (![context save:&error]) {
@@ -49,15 +46,6 @@
                                           otherButtonTitles:nil];
         [alert show];
         [self dismissViewControllerAnimated:YES completion:nil];
-    }
-    else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Do not leave textboxes blank"
-                                                        message:@"All properties must be filled out! No blanks are allowed!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
 }
 
 - (IBAction)chooseColor:(id)sender {

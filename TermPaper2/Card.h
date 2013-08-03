@@ -12,7 +12,6 @@
 
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, copy) UIColor *color;
-@property (nonatomic, strong) NSNumber *index;
-@property (nonatomic) CGPoint location;
+@property (nonatomic, assign) int index;
 
 @end

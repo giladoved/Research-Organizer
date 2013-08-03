@@ -37,71 +37,52 @@ UITextView *explanation;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-        
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *fetchRequestF = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
-    self.cards = [[managedObjectContext executeFetchRequest:fetchRequestF error:nil] mutableCopy];
-    NSLog(@"card count: %i", self.cards.count);
-    
-    [self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
-    [self deleteAllObjectsForEntity:@"Layout" andContext:managedObjectContext];
-    [self.cards removeAllObjects];
-    [self.coordinates removeAllObjects];
-    [self.retrievedViewLocations removeAllObjects];
-    [self.cardViews removeAllObjects];
     
     for (UIView *view in self.view.subviews)
     {
         if ([view isKindOfClass:[Card class]])
             [view removeFromSuperview];
     }
-    
-    NSFetchRequest *fetchRequestL = [[NSFetchRequest alloc] initWithEntityName:@"Layout"];
-    NSMutableArray *layoutData = [[managedObjectContext executeFetchRequest:fetchRequestL error:nil] mutableCopy];
-    if (layoutData.count > 0) {
-        NSManagedObject *layoutObj = [layoutData objectAtIndex:0];
-        NSString *layout = [NSString stringWithFormat:@"%@", [layoutObj valueForKey:@"layout"]];
-        self.coordinates = [[layout componentsSeparatedByString:@";"] mutableCopy];
-        if ([self.coordinates containsObject:@""]) {
-            [self.coordinates removeLastObject];
-        }
-    }
-    
-    Card *theLabel = nil;
         
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
+    self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    self.cardViews = [NSMutableArray new];
+    
+     /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+     [self.cards removeAllObjects];
+     [self.coordinates removeAllObjects];
+     [self.retrievedViewLocations removeAllObjects];
+     [self.cardViews removeAllObjects];*/
+    
+    if (self.cards.count > 0) {
     for (int i = 0; i < [self.cards count]; i++) {
         NSManagedObject *card = [self.cards objectAtIndex:i];
         
-        theLabel = [[Card alloc] initWithFrame:CGRectMake(
-            self.view.frame.size.width / 2, self.view.frame.size.height / 2,
-                                                     200.0,120.0)];
-        theLabel.text = [NSString stringWithString:[card valueForKey:@"point"]];
-        theLabel.color = [self getColorWithString:[card valueForKey:@"color"]];
-        theLabel.index = [NSNumber numberWithInt:i];
-        theLabel.backgroundColor = theLabel.color;
+        float x = [[card valueForKey:@"locationX"] floatValue];
+        float y = [[card valueForKey:@"locationY"] floatValue];
+        Card *currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
+        currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
+        NSLog(@"%@: %f by %f", currentCard.text, x, y);
+        currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
+        currentCard.index = i;
+        currentCard.backgroundColor = currentCard.color;
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = theLabel.text;
+        titleLabel.text = currentCard.text;
         [titleLabel setFrame:CGRectMake(5, 5, 190, 110)];
         titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         titleLabel.numberOfLines = 5;
         titleLabel.backgroundColor = [UIColor clearColor];
-        [theLabel addSubview:titleLabel];
-        [self.view addSubview:theLabel];
-        theLabel.userInteractionEnabled = true;
+        [currentCard addSubview:titleLabel];
+        [self.view addSubview:currentCard];
+        currentCard.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped:)];
-        [theLabel addGestureRecognizer:tap];
+        [currentCard addGestureRecognizer:tap];
         
-        [self.cardViews addObject:theLabel];
+        [self.cardViews addObject:currentCard];
+    }
     }
     
-    NSLog(@"corrdinatee count %i", _coordinates.count);
-    for (int i = 0; i < [self.coordinates count]; i++) {
-        NSString *temp = [self.coordinates objectAtIndex:i];
-        NSArray *temp2 = [temp  componentsSeparatedByString:@","];
-        CGFloat x = [[temp2 objectAtIndex:0] floatValue];
-        CGFloat y = [[temp2 objectAtIndex:1] floatValue];
-        [[self.cardViews objectAtIndex:i] setFrame:CGRectMake(x, y, theLabel.frame.size.width, theLabel.frame.size.height)];
-    }
 }
 
 -(UIColor *) getColorWithString:(NSString *)colorStr {
@@ -136,6 +117,7 @@ UITextView *explanation;
     scrollview.userInteractionEnabled=YES;
     
     Card *tappedLabel = (Card *)rec.view;
+    indexCard = tappedLabel.index;
     self.cardInfo = [[UIViewController alloc] init];
     self.cardInfo.modalPresentationStyle = UIModalPresentationFormSheet;
     self.cardInfo.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
@@ -159,7 +141,6 @@ UITextView *explanation;
     [self.cardInfo.view addSubview:chooseColorBtn];
     
     point = [[UITextView alloc] init];
-    indexCard = [tappedLabel.index intValue];
     point.frame = CGRectMake(125, 50, 400, 50);
     point.backgroundColor = [UIColor whiteColor];
     point.tag = 0;
@@ -301,31 +282,7 @@ UITextView *explanation;
     	NSLog(@"Error deleting card:%@",error);
     }
     
-    NSString *layoutStr = [[NSString alloc] init];
-    for (int i = 0; i < self.cards.count; i++) {
-        if (i != indexCard) {
-            UILabel *currentView = [self.cardViews objectAtIndex:i];
-            layoutStr = [layoutStr stringByAppendingFormat:@"%f", currentView.frame.origin.x];
-            layoutStr = [layoutStr stringByAppendingString:@","];
-            layoutStr = [layoutStr stringByAppendingFormat:@"%f", currentView.frame.origin.y];
-            layoutStr = [layoutStr stringByAppendingString:@";"];
-        }
-    }
         
-    if ([self deleteAllObjectsForEntity:@"Layout" andContext:context]) {
-        NSManagedObject *newLayout = [NSEntityDescription insertNewObjectForEntityForName:@"Layout" inManagedObjectContext:context];
-        [newLayout setValue:layoutStr forKey:@"layout"];
-        NSError *error = nil;
-        if (![context save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        } else {
-            NSLog(@"new layout saved!");
-        }
-    }
-    
-    
-    
-    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Delete"
                                                     message:@"Card was successfully deleted!"
                                                    delegate:nil
@@ -343,7 +300,11 @@ UITextView *explanation;
         [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
         [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
         [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
-    
+        //float frameX = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
+        //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameX] forKey:@"locationX"];
+        //float frameY = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
+        //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameY] forKey:@"locationY"];
+
         NSManagedObjectContext *context = [self managedObjectContext];
         NSError *error = nil;
         if (![context save:&error]) {
@@ -359,6 +320,7 @@ UITextView *explanation;
                                           otherButtonTitles:nil];
         [alert show];
         [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+        [self viewDidAppear:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Do not leave textboxes blank"
                                                         message:@"All properties must be filled out! No blanks are allowed!"
@@ -378,6 +340,8 @@ UITextView *explanation;
     CGPoint touchLocation = [touch locationInView:touch.view];
     touchLoc = touchLocation;
     if ([[touch.view class] isSubclassOfClass:[Card class]]) {
+        Card *clickedCard = (Card *)touch.view;
+        indexCard = clickedCard.index;
         dragging = YES;
         [self.view bringSubviewToFront:touch.view];
         oldX = touchLocation.x;
@@ -389,29 +353,24 @@ UITextView *explanation;
     if (dragging) {
         dragging = NO;
         
-        //save layout
-        NSString *layoutStr = [[NSString alloc] init];
-        for (int i = 0; i < self.cards.count; i++) {
-            UILabel *currentView = [self.cardViews objectAtIndex:i];
-            layoutStr = [layoutStr stringByAppendingFormat:@"%f", currentView.frame.origin.x];
-            layoutStr = [layoutStr stringByAppendingString:@","];
-            layoutStr = [layoutStr stringByAppendingFormat:@"%f", currentView.frame.origin.y];
-            layoutStr = [layoutStr stringByAppendingString:@";"];
+        UITouch *touch = [[event allTouches] anyObject];
+        Card *clickedCard;
+        if ([[touch.view class] isSubclassOfClass:[Card class]]) {
+            clickedCard = (Card *)touch.view;
         }
         
         NSManagedObjectContext *context = [self managedObjectContext];
+        NSManagedObject *updatedCard = [self.cards objectAtIndex:indexCard];
         
-        if ([self deleteAllObjectsForEntity:@"Layout" andContext:context]) {
-            NSManagedObject *newLayout = [NSEntityDescription insertNewObjectForEntityForName:@"Layout" inManagedObjectContext:context];
-            [newLayout setValue:layoutStr forKey:@"layout"];
-            NSError *error = nil;
-            // Save the object to persistent store
-            if (![context save:&error]) {
-                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-            } else {
-                NSLog(@"new layout saved!");
-            }
+        [updatedCard setValue:[NSNumber numberWithFloat:clickedCard.frame.origin.x] forKey:@"locationX"];
+        [updatedCard setValue:[NSNumber numberWithFloat:clickedCard.frame.origin.y] forKey:@"locationY"];
+
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         }
+        
+        NSLog(@"Layout Saved");
     }
 }
 
@@ -419,13 +378,13 @@ UITextView *explanation;
     UITouch *touch = [[event allTouches] anyObject];
     CGPoint touchLocation = [touch locationInView:touch.view];
     if ([[touch.view class] isSubclassOfClass:[Card class]]) {
-        UILabel *label = (UILabel *)touch.view;
-        [self.view bringSubviewToFront:label];
+        Card *movingCard = (Card *)touch.view;
+        [self.view bringSubviewToFront:movingCard];
         if (dragging) {
-            CGRect frame = label.frame;
-            frame.origin.x = label.frame.origin.x + touchLocation.x - oldX;
-            frame.origin.y = label.frame.origin.y + touchLocation.y - oldY;
-            label.frame = frame;
+            CGRect frame = movingCard.frame;
+            frame.origin.x = movingCard.frame.origin.x + touchLocation.x - oldX;
+            frame.origin.y = movingCard.frame.origin.y + touchLocation.y - oldY;
+            movingCard.frame = frame;
         }
     }
 }
@@ -442,10 +401,8 @@ UITextView *explanation;
 }
 
 - (IBAction)clearAll:(id)sender {
-    [self deleteAllObjectsForEntity:@"Layout" andContext:[self managedObjectContext]];
     [self deleteAllObjectsForEntity:@"Flashcards" andContext:[self managedObjectContext]];
     [self performSelectorOnMainThread:@selector(viewDidAppear:) withObject:nil waitUntilDone:YES];
-    NSLog(@"CLEAARRRRED!");
 }
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
@@ -480,31 +437,20 @@ UITextView *explanation;
     return context;
 }
 
--(BOOL)deleteAllObjectsForEntity:(NSString*)entityName andContext:(NSManagedObjectContext *)managedObjectContext
+-(void)deleteAllObjectsForEntity:(NSString*)entityName andContext:(NSManagedObjectContext *)managedObjectContext
 {
-	// Create fetch request
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	NSEntityDescription *entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext];
-	[request setEntity:entity];
+    NSFetchRequest * allCards = [[NSFetchRequest alloc] init];
+    [allCards setEntity:[NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext]];
+    [allCards setIncludesPropertyValues:NO];
     
-	// Ignore property values for maximum performance
-	[request setIncludesPropertyValues:NO];
-    
-	// Execute the count request
-	NSError *error = nil;
-	NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
-    
-	// Delete the objects returned if the results weren't nil
-	if (fetchResults != nil) {
-		for (NSManagedObject *manObj in fetchResults) {
-			[managedObjectContext deleteObject:manObj];
-		}
-	} else {
-		NSLog(@"Couldn't delete objects for entity %@", entityName);
-		return NO;
-	}
-    
-	return YES;	
+    NSError *error = nil;
+    NSArray *cards = [managedObjectContext executeFetchRequest:allCards error:&error];
+
+    for (NSManagedObject *card in cards) {
+        [managedObjectContext deleteObject:card];
+    }
+    NSError *saveError = nil;
+    [managedObjectContext save:&saveError];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
