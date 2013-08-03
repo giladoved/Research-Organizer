@@ -13,6 +13,8 @@
 @implementation DisplayOutline
 {
     BOOL editing;
+    UITableView *tableview;
+    NSIndexPath *indexpath;
 }
 
 -(void) viewDidLoad
@@ -52,6 +54,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *simpleTableIdentifier = @"SimpleTableItem";
+    tableview = tableView;
+    indexpath = indexPath;
 
     SimpleTableCell *cell = (SimpleTableCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
     if (cell == nil)
