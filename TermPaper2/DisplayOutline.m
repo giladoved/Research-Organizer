@@ -36,7 +36,7 @@
         [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
         [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
-    }    [self deleteAllObjectsForEntity:@"Layout" andContext:[self managedObjectContext]];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -128,33 +128,6 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView reloadData];
 }
 
--(BOOL)deleteAllObjectsForEntity:(NSString*)entityName andContext:(NSManagedObjectContext *)managedObjectContext
-{
-	// Create fetch request
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	NSEntityDescription *entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext];
-	[request setEntity:entity];
-    
-	// Ignore property values for maximum performance
-	[request setIncludesPropertyValues:NO];
-    
-	// Execute the count request
-	NSError *error = nil;
-	NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
-    
-	// Delete the objects returned if the results weren't nil
-	if (fetchResults != nil) {
-		for (NSManagedObject *manObj in fetchResults) {
-			[managedObjectContext deleteObject:manObj];
-		}
-	} else {
-		NSLog(@"Couldn't delete objects for entity %@", entityName);
-		return NO;
-	}
-    
-	return YES;
-}
-
 - (IBAction) EditTable:(id)sender{
     if(editing)
     {
@@ -212,6 +185,23 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     id color = [self.colors objectAtIndex:fromIndexPath.row];
     [self.colors removeObjectAtIndex:fromIndexPath.row];
     [self.colors insertObject:color atIndex:toIndexPath.row];
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    for (int i = 0; i < self.cards.count; i++) {
+        NSManagedObject *updatedCard = [self.cards objectAtIndex:i];
+    
+        [updatedCard setValue:self.points[i] forKey:@"point"];
+        [updatedCard setValue:self.quotes[i] forKey:@"quote"];
+        [updatedCard setValue:self.citations[i] forKey:@"citation"];
+        [updatedCard setValue:self.explanations[i] forKey:@"explanation"];
+    
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+    
+        NSLog(@"%i: Layout Saved", i);
+    }
 }
 
 @end
