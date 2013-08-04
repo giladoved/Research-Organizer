@@ -34,7 +34,9 @@
     self.savedEssay = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
     NSString *foundEssay = [[self.savedEssay objectAtIndex:0] valueForKey:@"essay"];
     self.essay = [NSMutableString string];
+    self.essayTV.delegate = self;
     if (foundEssay) {
+        NSLog(@"Found %@ ===== %@", self.essay, foundEssay);
         self.essay = [NSString stringWithString:foundEssay];
     }
     else {
@@ -70,9 +72,9 @@
         if (![[self managedObjectContext] save:&error]) {
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         }
-        
-        self.essayTV.text = [self.essay copy];
     }
+    
+    self.essayTV.text = [self.essay copy];
 
     _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
     _navBar.rightBarButtonItem = _exportBarButton;
@@ -82,20 +84,15 @@
 {
     NSLog(@"POPCORN");
     if (_exportPicker == nil) {
-        //Create the ColorPickerViewController.
         _exportPicker = [[ExportPickerViewController alloc] initWithStyle:UITableViewStylePlain];
-        
-        //Set this VC as the delegate.
         _exportPicker.delegate = self;
     }
     
     if (_exportPickerPopover == nil) {
-        //The color picker popover is not showing. Show it.
         _exportPickerPopover = [[UIPopoverController alloc] initWithContentViewController:_exportPicker];
         [_exportPickerPopover presentPopoverFromBarButtonItem:(UIBarButtonItem *)sender
                                     permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     } else {
-        //The color picker popover is showing. Hide it.
         [_exportPickerPopover dismissPopoverAnimated:YES];
         _exportPickerPopover = nil;
     }
@@ -103,7 +100,6 @@
 
 -(void)selectedOption:(NSString *)chosenOption
 {
-    NSLog(@"%@", chosenOption);
     if ([chosenOption isEqualToString:@"Copy"]) {
         NSLog(@"Pasted!");
         [[UIPasteboard generalPasteboard] setString:_essayTV.text];
@@ -112,7 +108,7 @@
     } else if ([chosenOption isEqualToString:@"iMessage"]) {
         [self sendiMessage];
     }
-    //Dismiss the popover if it's showing.
+
     if (_exportPickerPopover) {
         [_exportPickerPopover dismissPopoverAnimated:YES];
         _exportPickerPopover = nil;
@@ -171,13 +167,14 @@
         NSLog(@"Message failed");
 }
 
-
 -(void)textViewDidEndEditing:(UITextView *)textView {
-    //self.essay = [NSString stringWithString:self.essayText.text];
-}
-
--(void)setEssayText:(UITextView *)essayText {
-    //edit first object to be self.essayText.text
+    self.essay = [NSString stringWithString:_essayTV.text];
+    [[self.savedEssay objectAtIndex:0] setValue:_essayTV.text forKey:@"essay"];
+    NSError *error = nil;
+    if (![[self managedObjectContext] save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+    NSLog(@"Saved essay");
 }
 
 
