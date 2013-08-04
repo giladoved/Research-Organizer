@@ -8,7 +8,9 @@
 
 #import "CreateEssayViewController.h"
 
-@interface CreateEssayViewController ()
+@interface CreateEssayViewController (){
+    UIBarButtonItem *_exportBarButton;
+}
 
 @end
 
@@ -71,7 +73,45 @@
         
         self.essayTV.text = [self.essay copy];
     }
+
+    _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
+    _navBar.rightBarButtonItem = _exportBarButton;
 }
+
+-(IBAction)pop:(id)sender
+{
+    NSLog(@"POPCORN");
+    if (_exportPicker == nil) {
+        //Create the ColorPickerViewController.
+        _exportPicker = [[ExportPickerViewController alloc] initWithStyle:UITableViewStylePlain];
+        
+        //Set this VC as the delegate.
+        _exportPicker.delegate = self;
+    }
+    
+    if (_exportPickerPopover == nil) {
+        //The color picker popover is not showing. Show it.
+        _exportPickerPopover = [[UIPopoverController alloc] initWithContentViewController:_exportPicker];
+        [_exportPickerPopover presentPopoverFromBarButtonItem:(UIBarButtonItem *)sender
+                                    permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    } else {
+        //The color picker popover is showing. Hide it.
+        [_exportPickerPopover dismissPopoverAnimated:YES];
+        _exportPickerPopover = nil;
+    }
+}
+
+-(void)selectedOption:(UIColor *)newColor
+{
+    NSLog(@"%@", newColor);
+    
+    //Dismiss the popover if it's showing.
+    if (_exportPickerPopover) {
+        [_exportPickerPopover dismissPopoverAnimated:YES];
+        _exportPickerPopover = nil;
+    }
+}
+
 
 -(void)textViewDidEndEditing:(UITextView *)textView {
     //self.essay = [NSString stringWithString:self.essayText.text];

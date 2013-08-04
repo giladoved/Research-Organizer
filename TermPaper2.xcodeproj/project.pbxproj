@@ -28,7 +28,7 @@
 		61CEC9E217792D6400820AA9 /* TermPaper2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9E017792D6400820AA9 /* TermPaper2.xcdatamodeld */; };
 		61CEC9EC17792E1A00820AA9 /* AddCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9EB17792E1A00820AA9 /* AddCardViewController.m */; };
 		61CEC9EF17792FC600820AA9 /* DisplayCardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9EE17792FC600820AA9 /* DisplayCardsViewController.m */; };
-		61EBFA3817AEB65800F1FEBC /* EssayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EBFA3717AEB65800F1FEBC /* EssayViewController.m */; };
+		61EBFA3E17AF0B3E00F1FEBC /* ExportPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,8 +64,8 @@
 		61CEC9EB17792E1A00820AA9 /* AddCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCardViewController.m; sourceTree = "<group>"; };
 		61CEC9ED17792FC600820AA9 /* DisplayCardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCardsViewController.h; sourceTree = "<group>"; };
 		61CEC9EE17792FC600820AA9 /* DisplayCardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCardsViewController.m; sourceTree = "<group>"; };
-		61EBFA3617AEB65800F1FEBC /* EssayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EssayViewController.h; sourceTree = "<group>"; };
-		61EBFA3717AEB65800F1FEBC /* EssayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EssayViewController.m; sourceTree = "<group>"; };
+		61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPickerViewController.h; sourceTree = "<group>"; };
+		61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportPickerViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,8 +136,8 @@
 				61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */,
 				61C2D1D1179746EC00B7566E /* SimpleTableCell.h */,
 				61C2D1D2179746EC00B7566E /* SimpleTableCell.m */,
-				61EBFA3617AEB65800F1FEBC /* EssayViewController.h */,
-				61EBFA3717AEB65800F1FEBC /* EssayViewController.m */,
+				61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */,
+				61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */,
 			);
 			path = TermPaper2;
 			sourceTree = "<group>";
@@ -234,7 +234,7 @@
 				61C2D1D3179746EC00B7566E /* SimpleTableCell.m in Sources */,
 				617F792117ACA00300E82B22 /* CreateEssayViewController.m in Sources */,
 				617F792417ACA2AF00E82B22 /* CitationViewController.m in Sources */,
-				61EBFA3817AEB65800F1FEBC /* EssayViewController.m in Sources */,
+				61EBFA3E17AF0B3E00F1FEBC /* ExportPickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

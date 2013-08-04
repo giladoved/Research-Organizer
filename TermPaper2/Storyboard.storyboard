@@ -200,7 +200,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="Essay" id="fQK-12-uxX"/>
+                                    <navigationItem title="Essay" id="fQK-12-uxX">
+                                        <barButtonItem key="leftBarButtonItem" title="Citation Page" id="icG-zn-oJC"/>
+                                    </navigationItem>
                                 </items>
                             </navigationBar>
                         </subviews>
@@ -210,6 +212,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="essayTV" destination="ORy-AT-nRg" id="oR8-AD-25n"/>
+                        <outlet property="navBar" destination="fQK-12-uxX" id="S2B-IU-omN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZs-JV-C0j" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -236,13 +239,12 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEssayViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="essayTV" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="essayTxt" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
             </relationships>
         </class>
         <class className="DisplayCardsViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayCardsViewController.h"/>
             <relationships>
-                <relationship kind="action" name="chooseColor:"/>
                 <relationship kind="action" name="clearAll:"/>
             </relationships>
         </class>
