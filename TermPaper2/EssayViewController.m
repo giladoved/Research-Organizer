@@ -1,24 +1,24 @@
 //
-//  CitationViewController.m
+//  EssayViewController.m
 //  TermPaper2
 //
-//  Created by Gilad Oved on 8/2/13.
+//  Created by Gilad Oved on 8/4/13.
 //  Copyright (c) 2013 Gilad Oved. All rights reserved.
 //
 
-#import "CitationViewController.h"
+#import "EssayViewController.h"
 
-@interface CitationViewController ()
+@interface EssayViewController ()
 
 @end
 
-@implementation CitationViewController
+@implementation EssayViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        NSLog(@"cool");
+        NSLog(@"show time");
         // Custom initialization
     }
     return self;

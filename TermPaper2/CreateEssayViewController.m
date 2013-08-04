@@ -18,17 +18,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        NSLog(@"worked");
         self.essay = [NSMutableString string];
         self.cards = [NSMutableArray new];
-        
-        self.cool.backgroundColor = [UIColor yellowColor];
-        
-        self.essayText = [[UITextView alloc] initWithFrame:self.view.frame];
-        self.essayText.font = [UIFont fontWithName:@"Times New Roman" size:16];
-        self.essayText.backgroundColor = [UIColor orangeColor];
-        [self.view addSubview:self.essayText];
-        NSLog(@"added");
     }
     return self;
 }
@@ -36,7 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
+            
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
     self.savedEssay = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
     NSString *foundEssay = [[self.savedEssay objectAtIndex:0] valueForKey:@"essay"];
@@ -61,13 +52,6 @@
             
             [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
         }
-        self.essayText.backgroundColor = [UIColor blackColor];
-        NSLog(@"essayTEXT %@", self.essayText);
-        NSLog(@"essay %@", self.essay);
-        self.essayText.text = [self.essay copy];
-        NSLog(@"TEXT %@", self.essayText.text);
-
-
         NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
         
         [firstEssay setValue:self.essay forKey:@"essay"];
@@ -77,7 +61,7 @@
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         }
         
-        self.essayText.text = [self.essay copy];
+        self.essayTV.text = [self.essay copy];
     }
 }
 
