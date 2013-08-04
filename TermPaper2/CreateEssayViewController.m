@@ -43,12 +43,20 @@
             NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
             currentPoint = [currentPoint stringByTrimmingCharactersInSet:
                             [NSCharacterSet whitespaceCharacterSet]];
+            if (![[currentPoint substringFromIndex:[currentPoint length] - 1] isEqualToString:@"."])
+                currentPoint = [NSString stringWithFormat:@"%@.", currentPoint];
+            
             NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
             currentQuote = [currentQuote stringByTrimmingCharactersInSet:
                             [NSCharacterSet whitespaceCharacterSet]];
+            if (![[currentQuote substringFromIndex:[currentQuote length] - 1] isEqualToString:@"."])
+                currentQuote = [NSString stringWithFormat:@"%@.", currentQuote];
+            
             NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
             currentExplanation = [currentExplanation stringByTrimmingCharactersInSet:
                                   [NSCharacterSet whitespaceCharacterSet]];
+            if (![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"."])
+                currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
             
             [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
         }
