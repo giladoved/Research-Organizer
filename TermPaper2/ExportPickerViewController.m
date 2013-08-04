@@ -91,19 +91,10 @@
     //you've missed a case here.
     
     //Set the color object based on the selected color name.
-    if ([selectedColorName isEqualToString:@"Copy"]) {
-        
-        
-    } else if ([selectedColorName isEqualToString:@"Email"]){
-
-        
-    } else if ([selectedColorName isEqualToString:@"iMessage"]) {
-
-    }
     
     //Notify the delegate if it exists.
     if (_delegate != nil) {
-        [_delegate selectedOption:color];
+        [_delegate selectedOption:selectedColorName];
     }
 }
 

@@ -101,15 +101,74 @@
     }
 }
 
--(void)selectedOption:(UIColor *)newColor
+-(void)selectedOption:(NSString *)chosenOption
 {
-    NSLog(@"%@", newColor);
-    
+    NSLog(@"%@", chosenOption);
+    if ([chosenOption isEqualToString:@"Copy"]) {
+        NSLog(@"Pasted!");
+        [[UIPasteboard generalPasteboard] setString:_essayTV.text];
+    } else if ([chosenOption isEqualToString:@"Email"]){
+        [self sendEmail];
+    } else if ([chosenOption isEqualToString:@"iMessage"]) {
+        [self sendiMessage];
+    }
     //Dismiss the popover if it's showing.
     if (_exportPickerPopover) {
         [_exportPickerPopover dismissPopoverAnimated:YES];
         _exportPickerPopover = nil;
     }
+}
+
+-(void)sendiMessage {
+    MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
+    if([MFMessageComposeViewController canSendText])
+    {
+        controller.body = _essayTV.text;
+        controller.messageComposeDelegate = self;
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+}
+
+- (void)sendEmail {
+    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+    mc.mailComposeDelegate = self;
+    [mc setMessageBody:_essayTV.text isHTML:NO];
+    
+    [self presentViewController:mc animated:YES completion:NULL];    
+}
+
+- (void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail cancelled");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Email sent");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail sent failure: %@", [error localizedDescription]);
+            break;
+        default:
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if (result == MessageComposeResultCancelled)
+        NSLog(@"Message cancelled");
+    else if (result == MessageComposeResultSent)
+        NSLog(@"Message sent");
+    else
+        NSLog(@"Message failed");
 }
 
 

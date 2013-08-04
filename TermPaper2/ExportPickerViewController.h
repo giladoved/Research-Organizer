@@ -10,7 +10,7 @@
 
 @protocol ExportPickerDelegate <NSObject>
 @required
--(void)selectedOption:(UIColor *)newColor;
+-(void)selectedOption:(NSString *)chosenOption;
 @end
 
 @interface ExportPickerViewController : UITableViewController

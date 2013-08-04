@@ -29,6 +29,7 @@
 		61CEC9EC17792E1A00820AA9 /* AddCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9EB17792E1A00820AA9 /* AddCardViewController.m */; };
 		61CEC9EF17792FC600820AA9 /* DisplayCardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9EE17792FC600820AA9 /* DisplayCardsViewController.m */; };
 		61EBFA3E17AF0B3E00F1FEBC /* ExportPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */; };
+		61EBFA4017AF138B00F1FEBC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61EBFA3F17AF138B00F1FEBC /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		61CEC9EE17792FC600820AA9 /* DisplayCardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCardsViewController.m; sourceTree = "<group>"; };
 		61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPickerViewController.h; sourceTree = "<group>"; };
 		61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportPickerViewController.m; sourceTree = "<group>"; };
+		61EBFA3F17AF138B00F1FEBC /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61EBFA4017AF138B00F1FEBC /* MessageUI.framework in Frameworks */,
 				6199635A178D08E9006B8706 /* QuartzCore.framework in Frameworks */,
 				61CEC9C717792D6400820AA9 /* UIKit.framework in Frameworks */,
 				61CEC9C917792D6400820AA9 /* Foundation.framework in Frameworks */,
@@ -104,6 +107,7 @@
 		61CEC9C517792D6400820AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				61EBFA3F17AF138B00F1FEBC /* MessageUI.framework */,
 				61996359178D08E9006B8706 /* QuartzCore.framework */,
 				61CEC9C617792D6400820AA9 /* UIKit.framework */,
 				61CEC9C817792D6400820AA9 /* Foundation.framework */,

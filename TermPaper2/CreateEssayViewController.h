@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "PopViewController.h"
 #import "ExportPickerViewController.h"
+#import "MessageUI/MessageUI.h"
 
-@interface CreateEssayViewController : UIViewController <UITextViewDelegate, ExportPickerDelegate>
+@interface CreateEssayViewController : UIViewController <UITextViewDelegate, MFMailComposeViewControllerDelegate,
+MFMessageComposeViewControllerDelegate, ExportPickerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *cards;
 @property (nonatomic, strong) NSMutableArray *savedEssay;
