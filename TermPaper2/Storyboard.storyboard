@@ -180,6 +180,48 @@
             </objects>
             <point key="canvasLocation" x="589" y="664"/>
         </scene>
+        <!--Citation View Controller-->
+        <scene sceneID="Qhl-9N-UBU">
+            <objects>
+                <viewController id="bVJ-h5-lPW" customClass="CitationViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BN9-wa-Vwu">
+                        <rect key="frame" x="0.0" y="20" width="1024" height="748"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="Xf9-Yx-0ru">
+                                <rect key="frame" x="0.0" y="44" width="1024" height="704"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" name="TimesNewRomanPSMT" family="Times New Roman" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <navigationBar contentMode="scaleToFill" id="Ncx-VE-g76">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Citation" id="Fcj-00-KUY">
+                                        <barButtonItem key="leftBarButtonItem" title="Essay" id="MP5-9A-pd2">
+                                            <connections>
+                                                <segue destination="faL-YK-jdc" kind="modal" modalTransitionStyle="flipHorizontal" id="5WV-Zc-r8y"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <connections>
+                        <outlet property="citationTV" destination="Xf9-Yx-0ru" id="XsR-dU-gJU"/>
+                        <outlet property="navBar" destination="Fcj-00-KUY" id="5fD-Cm-Z37"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hxG-dS-jt7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1809" y="-307"/>
+        </scene>
         <!--Create Essay View Controller-->
         <scene sceneID="OeZ-E4-7WY">
             <objects>
@@ -201,7 +243,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Essay" id="fQK-12-uxX">
-                                        <barButtonItem key="leftBarButtonItem" title="Citation Page" id="icG-zn-oJC"/>
+                                        <barButtonItem key="leftBarButtonItem" title="Citation Page" id="icG-zn-oJC">
+                                            <connections>
+                                                <segue destination="bVJ-h5-lPW" kind="modal" modalTransitionStyle="flipHorizontal" id="Tah-YJ-2tV"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -235,9 +281,18 @@
                 <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
             </relationships>
         </class>
+        <class className="CitationViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CitationViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="pop:"/>
+                <relationship kind="outlet" name="citationTV" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
+            </relationships>
+        </class>
         <class className="CreateEssayViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEssayViewController.h"/>
             <relationships>
+                <relationship kind="action" name="pop:"/>
                 <relationship kind="outlet" name="essayTV" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
             </relationships>
@@ -245,6 +300,7 @@
         <class className="DisplayCardsViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayCardsViewController.h"/>
             <relationships>
+                <relationship kind="action" name="chooseColor:"/>
                 <relationship kind="action" name="clearAll:"/>
             </relationships>
         </class>
@@ -262,4 +318,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="5WV-Zc-r8y"/>
+    </inferredMetricsTieBreakers>
 </document>

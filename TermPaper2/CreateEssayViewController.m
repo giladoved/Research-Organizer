@@ -36,7 +36,6 @@
     self.essay = [NSMutableString string];
     self.essayTV.delegate = self;
     if (foundEssay) {
-        NSLog(@"Found %@ ===== %@", self.essay, foundEssay);
         self.essay = [NSString stringWithString:foundEssay];
     }
     else {
@@ -82,7 +81,6 @@
 
 -(IBAction)pop:(id)sender
 {
-    NSLog(@"POPCORN");
     if (_exportPicker == nil) {
         _exportPicker = [[ExportPickerViewController alloc] initWithStyle:UITableViewStylePlain];
         _exportPicker.delegate = self;
