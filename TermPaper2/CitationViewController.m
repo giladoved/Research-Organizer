@@ -159,8 +159,8 @@
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView {
-    self.essay = [NSString stringWithString:_essayTV.text];
-    [[self.savedEssay objectAtIndex:0] setValue:_essayTV.text forKey:@"essay"];
+    self.citation = [NSString stringWithString:_citationTV.text];
+    [[self.savedCitation objectAtIndex:0] setValue:_citationTV.text forKey:@"citation"];
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
