@@ -36,7 +36,10 @@
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
     self.savedCitation = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    NSString *foundCitation = [[self.savedCitation objectAtIndex:0] valueForKey:@"citation"];
+    NSString *foundCitation;
+    if (self.savedCitation.count > 0)
+        foundCitation = [[self.savedCitation objectAtIndex:0] valueForKey:@"citation"];
+    
     self.citation = [NSMutableString string];
     self.citationTV.delegate = self;
     if (foundCitation) {
@@ -50,8 +53,8 @@
             NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
             currentCitation = [currentCitation stringByTrimmingCharactersInSet:
                                   [NSCharacterSet whitespaceCharacterSet]];
-            if (![[currentCitation substringFromIndex:[currentCitation length] - 1] isEqualToString:@"."])
-                currentCitation = [NSString stringWithFormat:@"%@.", currentCitation];
+            //if (![[currentCitation substringFromIndex:[currentCitation length] - 1] isEqualToString:@"."])
+            //    currentCitation = [NSString stringWithFormat:@"%@.", currentCitation];
             
             [self.citation appendFormat:@"%@ ", currentCitation];
         }

@@ -32,10 +32,12 @@
             
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
     self.savedEssay = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    NSString *foundEssay = [[self.savedEssay objectAtIndex:0] valueForKey:@"essay"];
+    NSString *foundEssay = @"";
+    if (self.savedEssay.count > 0)
+        foundEssay = [[self.savedEssay objectAtIndex:0] valueForKey:@"essay"];
     self.essay = [NSMutableString string];
     self.essayTV.delegate = self;
-    if (foundEssay) {
+    if (![foundEssay isEqualToString:@""]) {
         self.essay = [NSString stringWithString:foundEssay];
     }
     else {

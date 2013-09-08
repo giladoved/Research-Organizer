@@ -49,11 +49,12 @@ UITextView *explanation;
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     self.cardViews = [NSMutableArray new];
     
-     /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+     [self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+     [self deleteAllObjectsForEntity:@"Results" andContext:managedObjectContext];
      [self.cards removeAllObjects];
      [self.coordinates removeAllObjects];
      [self.retrievedViewLocations removeAllObjects];
-     [self.cardViews removeAllObjects];*/
+     [self.cardViews removeAllObjects];
     
     if (self.cards.count > 0) {
     for (int i = 0; i < [self.cards count]; i++) {
