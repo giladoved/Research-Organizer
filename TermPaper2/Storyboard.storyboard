@@ -266,53 +266,6 @@
             <point key="canvasLocation" x="1854" y="664"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="AddCardViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddCardViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addCard:"/>
-                <relationship kind="action" name="cancel:"/>
-                <relationship kind="action" name="chooseColor:"/>
-                <relationship kind="outlet" name="citationTxt" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="colorPickerButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="explanationTxt" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="pointTxt" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="quoteTxt" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="CitationViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CitationViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pop:"/>
-                <relationship kind="outlet" name="citationTV" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
-            </relationships>
-        </class>
-        <class className="CreateEssayViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEssayViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pop:"/>
-                <relationship kind="outlet" name="essayTV" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
-            </relationships>
-        </class>
-        <class className="DisplayCardsViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayCardsViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="chooseColor:"/>
-                <relationship kind="action" name="clearAll:"/>
-            </relationships>
-        </class>
-        <class className="DisplayOutline" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayOutline.h"/>
-            <relationships>
-                <relationship kind="action" name="EditTable:"/>
-                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationItem"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

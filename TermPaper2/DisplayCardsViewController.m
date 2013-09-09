@@ -38,6 +38,9 @@ UITextView *explanation;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
+
+    
     for (UIView *view in self.view.subviews)
     {
         if ([view isKindOfClass:[Card class]])
@@ -49,39 +52,42 @@ UITextView *explanation;
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     self.cardViews = [NSMutableArray new];
     
-     [self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+     /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
      [self deleteAllObjectsForEntity:@"Results" andContext:managedObjectContext];
      [self.cards removeAllObjects];
      [self.coordinates removeAllObjects];
      [self.retrievedViewLocations removeAllObjects];
-     [self.cardViews removeAllObjects];
+     [self.cardViews removeAllObjects];*/
     
     if (self.cards.count > 0) {
-    for (int i = 0; i < [self.cards count]; i++) {
-        NSManagedObject *card = [self.cards objectAtIndex:i];
-        
-        float x = [[card valueForKey:@"locationX"] floatValue];
-        float y = [[card valueForKey:@"locationY"] floatValue];
-        Card *currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
-        currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
-        NSLog(@"%@: %f by %f", currentCard.text, x, y);
-        currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
-        currentCard.index = i;
-        currentCard.backgroundColor = currentCard.color;
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = currentCard.text;
-        [titleLabel setFrame:CGRectMake(5, 5, 190, 110)];
-        titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        titleLabel.numberOfLines = 5;
-        titleLabel.backgroundColor = [UIColor clearColor];
-        [currentCard addSubview:titleLabel];
-        [self.view addSubview:currentCard];
-        currentCard.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped:)];
-        [currentCard addGestureRecognizer:tap];
-        
-        [self.cardViews addObject:currentCard];
-    }
+        self.navigationItem.leftBarButtonItem.enabled = YES;
+        for (int i = 0; i < [self.cards count]; i++) {
+            NSManagedObject *card = [self.cards objectAtIndex:i];
+            
+            float x = [[card valueForKey:@"locationX"] floatValue];
+            float y = [[card valueForKey:@"locationY"] floatValue];
+            Card *currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
+            currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
+            NSLog(@"%@: %f by %f", currentCard.text, x, y);
+            currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
+            currentCard.index = i;
+            currentCard.backgroundColor = currentCard.color;
+            UILabel *titleLabel = [[UILabel alloc] init];
+            titleLabel.text = currentCard.text;
+            [titleLabel setFrame:CGRectMake(5, 5, 190, 110)];
+            titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            titleLabel.numberOfLines = 5;
+            titleLabel.backgroundColor = [UIColor clearColor];
+            [currentCard addSubview:titleLabel];
+            [self.view addSubview:currentCard];
+            currentCard.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped:)];
+            [currentCard addGestureRecognizer:tap];
+            
+            [self.cardViews addObject:currentCard];
+        }
+    } else {
+        self.navigationItem.leftBarButtonItem.enabled = NO;
     }
     
 }
@@ -213,6 +219,12 @@ UITextView *explanation;
     [deleteButton addTarget:self
                    action:@selector(deleteCard)
          forControlEvents:UIControlEventTouchUpInside];
+    
+    int row = [colorOptions indexOfObject:[[self.cards objectAtIndex:indexCard] valueForKey:@"color"]];
+    colorChoice = [colorOptions objectAtIndex:row];
+    currentColorIndex = row;
+    chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    chooseColorBtn.layer.borderWidth = 3.0f;
 
     [scrollview addSubview:point];
     [scrollview addSubview:pointLbl];
@@ -231,8 +243,7 @@ UITextView *explanation;
 }
 
 -(IBAction)chooseColor:(id)sender {
-    colorChoice = [colorOptions objectAtIndex:0];
-    currentColorIndex = 0;
+    colorChoice = [colorOptions objectAtIndex:currentColorIndex];
     chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
     chooseColorBtn.layer.borderWidth = 3.0f;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
@@ -265,7 +276,6 @@ UITextView *explanation;
     
     [pickerView selectRow:currentColorIndex inComponent:0 animated:NO];
     
-    NSLog(@"%@", chooseColorBtn);
     [popover presentPopoverFromRect:chooseColorBtn.bounds inView:chooseColorBtn permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
@@ -295,41 +305,41 @@ UITextView *explanation;
 }
 
 -(void) savePopup {
-    if (point.text && quote.text && citation.text && explanation.text && colorChoice) {
-        [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
-        [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
-        [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
-        [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
-        [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
-        //float frameX = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
-        //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameX] forKey:@"locationX"];
-        //float frameY = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
-        //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameY] forKey:@"locationY"];
-
-        NSManagedObjectContext *context = [self managedObjectContext];
-        NSError *error = nil;
-        if (![context save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        }
-
-        [self viewDidAppear:YES];
+    if ([point.text isEqualToString:@""])
+        point.text = @" ";
+    if ([quote.text isEqualToString:@""])
+        quote.text = @" ";
+    if ([citation.text isEqualToString:@""])
+        citation.text = @" ";
+    if ([explanation.text isEqualToString:@""])
+        explanation.text = @" ";
     
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
+    [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
+    [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
+    [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
+    [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
+    [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
+    //float frameX = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
+    //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameX] forKey:@"locationX"];
+    //float frameY = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
+    //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameY] forKey:@"locationY"];
+    
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+    
+    [self viewDidAppear:YES];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
                                                     message:@"Card was successfully modified!"
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
-        [alert show];
-        [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
-        [self viewDidAppear:YES];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Do not leave textboxes blank"
-                                                        message:@"All properties must be filled out! No blanks are allowed!"
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
+    [alert show];
+    [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+    [self viewDidAppear:YES];
 }
 
 -(void) cancelPopup {
@@ -467,6 +477,20 @@ UITextView *explanation;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(CGRect)currentScreenBoundsBasedOnOrientation
+{
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    CGFloat width = CGRectGetWidth(screenBounds);
+    CGFloat height = CGRectGetHeight(screenBounds);
+    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    if(UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(width, height);
+    }else if(UIInterfaceOrientationIsLandscape(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(height, width);
+    }
+    return screenBounds;
 }
 
 - (void) viewDidLoad {

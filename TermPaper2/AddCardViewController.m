@@ -22,30 +22,41 @@
 @implementation AddCardViewController
 
 - (IBAction)addCard:(id)sender {
-        NSManagedObjectContext *context = [self managedObjectContext];
-        NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
-        
-        [newCard setValue:self.pointTxt.text forKey:@"point"];
-        [newCard setValue:self.quoteTxt.text forKey:@"quote"];
-        [newCard setValue:self.citationTxt.text forKey:@"citation"];
-        [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
-        [newCard setValue:colorChoice forKey:@"color"];
-        [newCard setValue:[NSNumber numberWithFloat:0] forKey:@"locationX"];
-        [newCard setValue:[NSNumber numberWithFloat:300] forKey:@"locationY"];
-        
-        NSError *error = nil;
-        // Save the object to persistent store
-        if (![context save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        }
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
     
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Added"
+    if ([self.pointTxt.text isEqualToString:@""])
+        self.pointTxt.text = @" ";
+    if ([self.quoteTxt.text isEqualToString:@""])
+        self.quoteTxt.text = @" ";
+    if ([self.citationTxt.text isEqualToString:@""])
+        self.citationTxt.text = @" ";
+    if ([self.explanationTxt.text isEqualToString:@""])
+        self.explanationTxt.text = @" ";
+    
+    float xPos = [self currentScreenBoundsBasedOnOrientation].size.width / 2 - 100;
+    float yPos = [self currentScreenBoundsBasedOnOrientation].size.height / 2 - 60;
+    
+    [newCard setValue:self.pointTxt.text forKey:@"point"];
+    [newCard setValue:self.quoteTxt.text forKey:@"quote"];
+    [newCard setValue:self.citationTxt.text forKey:@"citation"];
+    [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
+    [newCard setValue:colorChoice forKey:@"color"];
+    [newCard setValue:[NSNumber numberWithFloat:xPos] forKey:@"locationX"];
+    [newCard setValue:[NSNumber numberWithFloat:yPos] forKey:@"locationY"];
+    
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Added"
                                                     message:@"Card was successfully added!"
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
-        [alert show];
-        [self dismissViewControllerAnimated:YES completion:nil];
+    [alert show];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)chooseColor:(id)sender {
@@ -81,9 +92,8 @@
     pickerView.dataSource = self;
     pickerView.delegate = self;
     
-    [pickerView selectRow:currentColorIndex inComponent:0 animated:NO];
+    [pickerView selectRow:0 inComponent:0 animated:NO];
     
-    NSLog(@"%@", self.colorPickerButton);
     [popover presentPopoverFromRect:self.colorPickerButton.bounds inView:self.colorPickerButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
@@ -104,7 +114,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+
     }
     return self;
 }
@@ -132,6 +142,19 @@
 }
 
 
+-(CGRect)currentScreenBoundsBasedOnOrientation
+{
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    CGFloat width = CGRectGetWidth(screenBounds);
+    CGFloat height = CGRectGetHeight(screenBounds);
+    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    if(UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(width, height);
+    }else if(UIInterfaceOrientationIsLandscape(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(height, width);
+    }
+    return screenBounds;
+}
 
 - (void)viewDidLoad
 {
@@ -145,6 +168,11 @@
 {
     [super viewDidAppear:animated];
     [self.scrollView setContentSize:CGSizeMake(1024,1100.0)];
+    colorChoice = [colorOptions objectAtIndex:0];
+    currentColorIndex = 0;
+    self.colorPickerButton.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButton.layer.borderWidth = 3.0f;
+    NSLog(@"colorchoice: %@", colorChoice);
 }
 
 -(UIColor *) getColorWithString:(NSString *)colorStr {
