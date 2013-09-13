@@ -16,8 +16,9 @@
 @property (nonatomic, strong) NSMutableArray *citations;
 @property (nonatomic, strong) NSMutableArray *explanations;
 @property (nonatomic, strong) NSMutableArray *colors;
+@property (strong, nonatomic) IBOutlet UINavigationItem *navBar;
 
-@property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
+@property (weak, nonatomic) IBOutlet UINavigationController *navCon;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 - (IBAction) EditTable:(id)sender;

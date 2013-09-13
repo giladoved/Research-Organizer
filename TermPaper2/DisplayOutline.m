@@ -9,6 +9,7 @@
 #import "DisplayOutline.h"
 #import "DisplayCardsViewController.h"
 #import "SimpleTableCell.h"
+#import "CreateEssayViewController.h"
 
 @implementation DisplayOutline
 {
@@ -20,7 +21,23 @@
 -(void) viewDidLoad
 {
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(EditTable:)];
-    [self.navigationItem setLeftBarButtonItem:editButton];
+    
+    UIBarButtonItem *goBack = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Back"
+                               style:UIBarButtonItemStyleBordered
+                               target:self
+                               action:@selector(goBack:)];
+    
+    NSArray *arrBtns = [[NSArray alloc]initWithObjects:goBack,editButton, nil];
+    self.navigationItem.leftBarButtonItems = arrBtns;
+    self.navigationItem.title = @"Outline";
+    
+    UIBarButtonItem *createEssay = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Create Essay"
+                               style:UIBarButtonItemStyleBordered
+                               target:self
+                                    action:@selector(goEssay:)];
+    self.navigationItem.rightBarButtonItem = createEssay;
 
     self.points = [NSMutableArray new];
     self.quotes = [NSMutableArray new];
@@ -39,6 +56,15 @@
         [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
     }
+}
+
+-(IBAction)goEssay:(id)sender {
+    CreateEssayViewController *vcx = [[CreateEssayViewController alloc] initWithNibName:@"CreateEssay" bundle:nil];
+    [self.navigationController pushViewController:vcx animated:YES];
+}
+
+-(IBAction)goBack:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -138,8 +164,8 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
         [super setEditing:NO animated:NO];
         [self.tableView setEditing:NO animated:NO];
         [self.tableView reloadData];
-        [self.navigationItem.leftBarButtonItem setTitle:@"Edit"];
-        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+        [self.navigationItem.leftBarButtonItems[1] setTitle:@"Edit"];
+        [self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStylePlain];
         editing = NO;
     }
     else
@@ -147,8 +173,8 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
         [super setEditing:YES animated:YES];
         [self.tableView setEditing:YES animated:YES];
         [self.tableView reloadData];
-        [self.navigationItem.leftBarButtonItem setTitle:@"Done"];
-        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+        [self.navigationItem.leftBarButtonItems[1] setTitle:@"Done"];
+        [self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStyleDone];
         editing = YES;
     }
 }

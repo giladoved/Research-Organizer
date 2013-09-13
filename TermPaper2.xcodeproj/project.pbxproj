@@ -317,14 +317,14 @@
 		61CEC9E617792D6400820AA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Gilad Oved (Z9G4SXAWKC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilad Oved (Z9G4SXAWKC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dror Oved (XG726H4U35)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dror Oved (XG726H4U35)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TermPaper2/TermPaper2-Prefix.pch";
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "85F36C21-E215-4D91-9236-7E169131A925";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "85F36C21-E215-4D91-9236-7E169131A925";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -332,14 +332,14 @@
 		61CEC9E717792D6400820AA9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Gilad Oved (Z9G4SXAWKC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilad Oved (Z9G4SXAWKC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dror Oved (XG726H4U35)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dror Oved (XG726H4U35)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TermPaper2/TermPaper2-Prefix.pch";
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "85F36C21-E215-4D91-9236-7E169131A925";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "85F36C21-E215-4D91-9236-7E169131A925";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

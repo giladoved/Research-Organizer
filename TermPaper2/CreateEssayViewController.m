@@ -7,6 +7,7 @@
 //
 
 #import "CreateEssayViewController.h"
+#import "CitationViewController.h"
 
 @interface CreateEssayViewController (){
     UIBarButtonItem *_exportBarButton;
@@ -79,6 +80,31 @@
 
     _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
     _navBar.rightBarButtonItem = _exportBarButton;
+    
+    UIBarButtonItem *goBack = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Back"
+                               style:UIBarButtonItemStyleBordered
+                               target:self
+                               action:@selector(goBack:)];
+    
+    UIBarButtonItem *goCitation = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Citation Page"
+                               style:UIBarButtonItemStyleBordered
+                               target:self
+                               action:@selector(goCitation:)];
+    
+    NSArray *arrBtns = [[NSArray alloc]initWithObjects:goBack,goCitation, nil];
+    self.navigationItem.leftBarButtonItems = arrBtns;
+    self.navBar.title = @"Essay";
+}
+
+-(IBAction)goCitation:(id)sender {
+    CitationViewController *vc = [[CitationViewController alloc] initWithNibName:@"CitationViewController" bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+-(IBAction)goBack:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(IBAction)pop:(id)sender

@@ -20,9 +20,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        NSLog(@"cool");
-        self.citation = [NSMutableString string];
-        self.cards = [NSMutableArray new];
+
     }
     return self;
 }
