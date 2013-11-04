@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="aSK-Uc-KOh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="aSK-Uc-KOh">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -24,7 +24,7 @@
             <objects>
                 <viewController id="tay-n5-cZS" customClass="DisplayCardsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kSj-Lm-hNj">
-                        <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -41,6 +41,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q4J-hI-7hG" sceneMemberID="firstResponder"/>
@@ -52,7 +53,7 @@
             <objects>
                 <viewController id="kKJ-XH-0JY" customClass="AddCardViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fE3-bu-dOB">
-                        <rect key="frame" x="0.0" y="20" width="1024" height="748"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" id="ZGr-oO-7yO">
@@ -74,47 +75,87 @@
                                 </items>
                             </navigationBar>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" id="BwS-bR-evj">
-                                <rect key="frame" x="0.0" y="44" width="1024" height="705"/>
+                                <rect key="frame" x="0.0" y="45" width="1024" height="723"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Citation" minimumFontSize="17" clearButtonMode="whileEditing" id="4La-vd-eUn">
-                                        <rect key="frame" x="74" y="380" width="877" height="30"/>
-                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Point" minimumFontSize="17" clearButtonMode="whileEditing" id="HRp-Vc-mdu">
-                                        <rect key="frame" x="199" y="47" width="752" height="30"/>
-                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="&quot;Quote&quot;" id="JL2-cX-OiP">
-                                        <rect key="frame" x="74" y="136" width="877" height="184"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Explanation" id="Swa-eX-5Y7">
-                                        <rect key="frame" x="74" y="467" width="877" height="258"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="AeV-lq-ST1">
-                                        <rect key="frame" x="74" y="47" width="78" height="60"/>
+                                    <view hidden="YES" contentMode="scaleToFill" id="O3c-R0-Mmx">
+                                        <rect key="frame" x="20" y="75" width="984" height="806"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                        <state key="normal" title="Choose Color">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Citation" minimumFontSize="17" clearButtonMode="whileEditing" id="4La-vd-eUn">
+                                                <rect key="frame" x="20" y="363" width="877" height="30"/>
+                                                <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Point" minimumFontSize="17" clearButtonMode="whileEditing" id="HRp-Vc-mdu">
+                                                <rect key="frame" x="145" y="21" width="752" height="30"/>
+                                                <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="&quot;Quote&quot;" id="JL2-cX-OiP">
+                                                <rect key="frame" x="20" y="113" width="877" height="184"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Explanation" id="Swa-eX-5Y7">
+                                                <rect key="frame" x="20" y="458" width="877" height="258"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="AeV-lq-ST1">
+                                                <rect key="frame" x="20" y="20" width="78" height="60"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                <state key="normal" title="Choose Color">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="chooseColor:" destination="kKJ-XH-0JY" eventType="touchUpInside" id="zQb-C3-WPc"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" id="yIx-eb-f1R">
+                                        <rect key="frame" x="406" y="20" width="213" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <segments>
+                                            <segment title="Topic Sentence"/>
+                                            <segment title="PIE Card"/>
+                                        </segments>
                                         <connections>
-                                            <action selector="chooseColor:" destination="kKJ-XH-0JY" eventType="touchUpInside" id="zQb-C3-WPc"/>
+                                            <action selector="changeCardType:" destination="kKJ-XH-0JY" eventType="valueChanged" id="B4C-Mz-R1u"/>
                                         </connections>
-                                    </button>
+                                    </segmentedControl>
+                                    <view contentMode="scaleToFill" id="5VZ-Cm-Ctt">
+                                        <rect key="frame" x="20" y="75" width="984" height="806"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Point" minimumFontSize="17" clearButtonMode="whileEditing" id="4Th-kD-d80">
+                                                <rect key="frame" x="145" y="21" width="751" height="30"/>
+                                                <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="Rnx-oK-8v2">
+                                                <rect key="frame" x="20" y="20" width="78" height="60"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                <state key="normal" title="Choose Color">
+                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="chooseColor:" destination="kKJ-XH-0JY" eventType="touchUpInside" id="SP5-tP-7wC"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.74940210459183676" green="0.74940210459183676" blue="0.74940210459183676" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                             </scrollView>
@@ -123,13 +164,19 @@
                         <accessibility key="accessibilityConfiguration" hint="SDVSv" label=""/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="cardChooser" destination="yIx-eb-f1R" id="04y-qa-Wzm"/>
                         <outlet property="citationTxt" destination="4La-vd-eUn" id="Cda-ZU-vYQ"/>
                         <outlet property="colorPickerButton" destination="AeV-lq-ST1" id="cAu-Rn-Kga"/>
                         <outlet property="explanationTxt" destination="Swa-eX-5Y7" id="gSe-Vf-xhW"/>
+                        <outlet property="pieForm" destination="O3c-R0-Mmx" id="LKg-1P-zFK"/>
                         <outlet property="pointTxt" destination="HRp-Vc-mdu" id="6D7-mU-FEy"/>
                         <outlet property="quoteTxt" destination="JL2-cX-OiP" id="esA-lU-PjH"/>
                         <outlet property="scrollView" destination="BwS-bR-evj" id="EXA-62-AY9"/>
+                        <outlet property="topicColorBtn" destination="Rnx-oK-8v2" id="M73-56-Alc"/>
+                        <outlet property="topicForm" destination="5VZ-Cm-Ctt" id="73O-gJ-DsL"/>
+                        <outlet property="topicTxt" destination="4Th-kD-d80" id="nk8-oi-TnD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2KN-S2-424" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -141,11 +188,11 @@
             <objects>
                 <viewController id="vLw-Kg-ksN" customClass="DisplayOutline" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EuQ-wf-MKk">
-                        <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="xqk-Sj-rZq">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="704"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="xqk-Sj-rZq">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -157,6 +204,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="tableView" destination="xqk-Sj-rZq" id="wiv-NH-OBu"/>
                     </connections>
@@ -170,11 +218,11 @@
             <objects>
                 <viewController id="bVJ-h5-lPW" customClass="CitationViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BN9-wa-Vwu">
-                        <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="Xf9-Yx-0ru">
-                                <rect key="frame" x="0.0" y="44" width="768" height="960"/>
+                                <rect key="frame" x="0.0" y="44" width="768" height="980"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -197,6 +245,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="citationTV" destination="Xf9-Yx-0ru" id="XsR-dU-gJU"/>
                         <outlet property="navBar" destination="Fcj-00-KUY" id="5fD-Cm-Z37"/>
@@ -211,11 +260,11 @@
             <objects>
                 <viewController id="faL-YK-jdc" customClass="CreateEssayViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FY6-bl-HfI">
-                        <rect key="frame" x="0.0" y="20" width="1024" height="748"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="ORy-AT-nRg">
-                                <rect key="frame" x="0.0" y="44" width="1024" height="704"/>
+                                <rect key="frame" x="0.0" y="44" width="1024" height="724"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -226,6 +275,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="essayTV" destination="ORy-AT-nRg" id="oR8-AD-25n"/>
@@ -236,56 +286,8 @@
             <point key="canvasLocation" x="1830" y="787"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="AddCardViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddCardViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addCard:"/>
-                <relationship kind="action" name="cancel:"/>
-                <relationship kind="action" name="chooseColor:"/>
-                <relationship kind="outlet" name="citationTxt" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="colorPickerButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="explanationTxt" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="pointTxt" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="quoteTxt" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="CitationViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CitationViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pop:"/>
-                <relationship kind="outlet" name="citationTV" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
-            </relationships>
-        </class>
-        <class className="CreateEssayViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CreateEssayViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pop:"/>
-                <relationship kind="outlet" name="essayTV" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationItem"/>
-            </relationships>
-        </class>
-        <class className="DisplayCardsViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayCardsViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="chooseColor:"/>
-                <relationship kind="action" name="clearAll:"/>
-            </relationships>
-        </class>
-        <class className="DisplayOutline" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DisplayOutline.h"/>
-            <relationships>
-                <relationship kind="action" name="EditTable:"/>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationItem"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
+        <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>

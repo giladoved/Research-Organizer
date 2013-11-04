@@ -189,6 +189,11 @@
 				CLASSPREFIX = DisplayCards;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Gilad Oved";
+				TargetAttributes = {
+					61CEC9C217792D6400820AA9 = {
+						DevelopmentTeam = L2JS3CUT43;
+					};
+				};
 			};
 			buildConfigurationList = 61CEC9BE17792D6400820AA9 /* Build configuration list for PBXProject "TermPaper2" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -317,14 +322,15 @@
 		61CEC9E617792D6400820AA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dror Oved (XG726H4U35)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dror Oved (XG726H4U35)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TermPaper2/TermPaper2-Prefix.pch";
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "85F36C21-E215-4D91-9236-7E169131A925";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "85F36C21-E215-4D91-9236-7E169131A925";
+				PROVISIONING_PROFILE = "013D5A51-4504-4089-A570-D6D894388B92";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "013D5A51-4504-4089-A570-D6D894388B92";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -332,14 +338,15 @@
 		61CEC9E717792D6400820AA9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dror Oved (XG726H4U35)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dror Oved (XG726H4U35)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TermPaper2/TermPaper2-Prefix.pch";
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "85F36C21-E215-4D91-9236-7E169131A925";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "85F36C21-E215-4D91-9236-7E169131A925";
+				PROVISIONING_PROFILE = "013D5A51-4504-4089-A570-D6D894388B92";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "013D5A51-4504-4089-A570-D6D894388B92";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

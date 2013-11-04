@@ -165,7 +165,7 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
         [self.tableView setEditing:NO animated:NO];
         [self.tableView reloadData];
         [self.navigationItem.leftBarButtonItems[1] setTitle:@"Edit"];
-        [self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStylePlain];
+        //[self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStylePlain];
         editing = NO;
     }
     else
@@ -174,7 +174,7 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
         [self.tableView setEditing:YES animated:YES];
         [self.tableView reloadData];
         [self.navigationItem.leftBarButtonItems[1] setTitle:@"Done"];
-        [self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStyleDone];
+        //[self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStyleDone];
         editing = YES;
     }
 }

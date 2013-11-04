@@ -20,10 +20,17 @@
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIButton *colorPickerButton;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *cardChooser;
 
+@property (weak, nonatomic) IBOutlet UIView *pieForm;
+@property (weak, nonatomic) IBOutlet UIView *topicForm;
+
+@property (weak, nonatomic) IBOutlet UITextField *topicTxt;
+@property (weak, nonatomic) IBOutlet UIButton *topicColorBtn;
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)addCard:(id)sender;
 - (IBAction)chooseColor:(id)sender;
+- (IBAction)changeCardType:(id)sender;
 
 @end

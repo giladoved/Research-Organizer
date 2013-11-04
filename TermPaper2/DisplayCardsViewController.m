@@ -66,7 +66,12 @@ UITextView *explanation;
             
             float x = [[card valueForKey:@"locationX"] floatValue];
             float y = [[card valueForKey:@"locationY"] floatValue];
-            Card *currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
+            Card *currentCard;
+            if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"])
+                currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
+            else
+                currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 250.0,75.0)];
+
             currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
             NSLog(@"%@: %f by %f", currentCard.text, x, y);
             currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
@@ -74,9 +79,15 @@ UITextView *explanation;
             currentCard.backgroundColor = currentCard.color;
             UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.text = currentCard.text;
-            [titleLabel setFrame:CGRectMake(5, 5, 190, 110)];
+            if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"]) {
+                titleLabel.numberOfLines = 5;
+                [titleLabel setFrame:CGRectMake(5, 5, 190, 110)];
+            }
+            else {
+                [titleLabel setFrame:CGRectMake(5, 5, 240, 65)];
+                titleLabel.numberOfLines = 3;
+            }
             titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-            titleLabel.numberOfLines = 5;
             titleLabel.backgroundColor = [UIColor clearColor];
             [currentCard addSubview:titleLabel];
             [self.view addSubview:currentCard];

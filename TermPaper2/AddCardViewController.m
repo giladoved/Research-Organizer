@@ -25,23 +25,37 @@
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
     
-    if ([self.pointTxt.text isEqualToString:@""])
-        self.pointTxt.text = @" ";
-    if ([self.quoteTxt.text isEqualToString:@""])
-        self.quoteTxt.text = @" ";
-    if ([self.citationTxt.text isEqualToString:@""])
-        self.citationTxt.text = @" ";
-    if ([self.explanationTxt.text isEqualToString:@""])
-        self.explanationTxt.text = @" ";
-    
     float xPos = [self currentScreenBoundsBasedOnOrientation].size.width / 2 - 100;
     float yPos = [self currentScreenBoundsBasedOnOrientation].size.height / 2 - 60;
     
-    [newCard setValue:self.pointTxt.text forKey:@"point"];
-    [newCard setValue:self.quoteTxt.text forKey:@"quote"];
-    [newCard setValue:self.citationTxt.text forKey:@"citation"];
-    [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
-    [newCard setValue:colorChoice forKey:@"color"];
+    if (self.cardChooser.selectedSegmentIndex == 1) {
+    
+        if ([self.pointTxt.text isEqualToString:@""])
+            self.pointTxt.text = @" ";
+        if ([self.quoteTxt.text isEqualToString:@""])
+            self.quoteTxt.text = @" ";
+        if ([self.citationTxt.text isEqualToString:@""])
+            self.citationTxt.text = @" ";
+        if ([self.explanationTxt.text isEqualToString:@""])
+            self.explanationTxt.text = @" ";
+        
+        [newCard setValue:self.pointTxt.text forKey:@"point"];
+        [newCard setValue:self.quoteTxt.text forKey:@"quote"];
+        [newCard setValue:self.citationTxt.text forKey:@"citation"];
+        [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
+        [newCard setValue:colorChoice forKey:@"color"];
+    } else if (self.cardChooser.selectedSegmentIndex == 0) {
+        if ([self.topicTxt.text isEqualToString:@""])
+            self.topicTxt.text = @" ";
+        
+        [newCard setValue:self.topicTxt.text forKey:@"point"];
+        [newCard setValue:@"-999" forKey:@"quote"];
+        [newCard setValue:@"-999" forKey:@"citation"];
+        [newCard setValue:@"-999" forKey:@"explanation"];
+        [newCard setValue:colorChoice forKey:@"color"];
+    }
+    
+    
     [newCard setValue:[NSNumber numberWithFloat:xPos] forKey:@"locationX"];
     [newCard setValue:[NSNumber numberWithFloat:yPos] forKey:@"locationY"];
     
@@ -50,7 +64,7 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Added"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Card Added: %@", colorChoice]
                                                     message:@"Card was successfully added!"
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
@@ -95,6 +109,17 @@
     [pickerView selectRow:0 inComponent:0 animated:NO];
     
     [popover presentPopoverFromRect:self.colorPickerButton.bounds inView:self.colorPickerButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (IBAction)changeCardType:(id)sender {
+    if (self.cardChooser.selectedSegmentIndex == 0) {
+        self.topicForm.hidden = NO;
+        self.pieForm.hidden = YES;
+    }
+    else if (self.cardChooser.selectedSegmentIndex == 1) {
+        self.topicForm.hidden = YES;
+        self.pieForm.hidden = NO;
+    }
 }
 
 - (IBAction)cancel:(id)sender {
