@@ -129,26 +129,37 @@ UITextView *explanation;
 }
 
 - (void)cardTapped:(UITapGestureRecognizer *)rec {
-    UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
-    scrollview.showsVerticalScrollIndicator=YES;
-    scrollview.scrollEnabled=YES;
-    scrollview.userInteractionEnabled=YES;
-    
     Card *tappedLabel = (Card *)rec.view;
     indexCard = tappedLabel.index;
     self.cardInfo = [[UIViewController alloc] init];
     self.cardInfo.modalPresentationStyle = UIModalPresentationFormSheet;
     self.cardInfo.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [self presentViewController:self.cardInfo animated:YES completion:nil];
-    self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720); 
     self.cardInfo.view.superview.center = self.view.center;
+    
+    UIScrollView *scrollview;
+    if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+        scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
+        scrollview.showsVerticalScrollIndicator=YES;
+        scrollview.scrollEnabled=YES;
+        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720);
+    }
+    else {
+        scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 320)];
+        scrollview.showsVerticalScrollIndicator=NO;
+        scrollview.scrollEnabled=NO;
+        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 320);
+    }
+    
+    scrollview.userInteractionEnabled=YES;
     
     UIFont *theFont = [[UIFont alloc] init];
     theFont = [UIFont fontWithName:@"Helvetica" size:14];
     
     chooseColorBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
-    
+    chooseColorBtn.backgroundColor = [UIColor lightGrayColor];
+    [chooseColorBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [chooseColorBtn setTitle:@"Choose Color" forState:UIControlStateNormal];
     [[chooseColorBtn titleLabel] setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16.0f]];
     [[chooseColorBtn titleLabel] setTextColor:[UIColor blackColor]];
@@ -170,41 +181,47 @@ UITextView *explanation;
     pointLbl.backgroundColor = [UIColor clearColor];
     pointLbl.frame = CGRectMake(25, 45, 100, 50);
     
-    quote = [[UITextView alloc] init];
-    quote.frame = CGRectMake(125, 130, 400, 200);
-    quote.backgroundColor = [UIColor whiteColor];
-    quote.tag = 1;
-    quote.font = theFont;
-    quote.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"]];
+    UILabel *quoteLbl;
+    UILabel *citationLbl;
+    UILabel *explanationLbl;
     
-    UILabel *quoteLbl = [UILabel new];
-    quoteLbl.text = @"Quote";
-    quoteLbl.backgroundColor = [UIColor clearColor];
-    quoteLbl.frame = CGRectMake(25, 125, 100, 50);
-    
-    citation = [[UITextView alloc] init];
-    citation.frame = CGRectMake(125, 365, 400, 50);
-    citation.backgroundColor = [UIColor whiteColor];
-    citation.tag = 2;
-    citation.font = theFont;
-    citation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
-    
-    UILabel *citationLbl = [UILabel new];
-    citationLbl.text = @"Citation";
-    citationLbl.backgroundColor = [UIColor clearColor];
-    citationLbl.frame = CGRectMake(25, 360, 100, 50);
-    
-    explanation = [[UITextView alloc] init];
-    explanation.frame = CGRectMake(125, 450, 400, 200);
-    explanation.backgroundColor = [UIColor whiteColor];
-    explanation.tag = 3;
-    explanation.font = theFont;
-    explanation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
-    
-    UILabel *explanationLbl = [UILabel new];
-    explanationLbl.text = @"Explanation";
-    explanationLbl.backgroundColor = [UIColor clearColor];
-    explanationLbl.frame = CGRectMake(25, 445, 100, 50);
+    if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+        quote = [[UITextView alloc] init];
+        quote.frame = CGRectMake(125, 130, 400, 200);
+        quote.backgroundColor = [UIColor whiteColor];
+        quote.tag = 1;
+        quote.font = theFont;
+        quote.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"]];
+        
+        quoteLbl = [UILabel new];
+        quoteLbl.text = @"Quote";
+        quoteLbl.backgroundColor = [UIColor clearColor];
+        quoteLbl.frame = CGRectMake(25, 125, 100, 50);
+        
+        citation = [[UITextView alloc] init];
+        citation.frame = CGRectMake(125, 365, 400, 50);
+        citation.backgroundColor = [UIColor whiteColor];
+        citation.tag = 2;
+        citation.font = theFont;
+        citation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
+        
+        citationLbl = [UILabel new];
+        citationLbl.text = @"Citation";
+        citationLbl.backgroundColor = [UIColor clearColor];
+        citationLbl.frame = CGRectMake(25, 360, 100, 50);
+        
+        explanation = [[UITextView alloc] init];
+        explanation.frame = CGRectMake(125, 450, 400, 200);
+        explanation.backgroundColor = [UIColor whiteColor];
+        explanation.tag = 3;
+        explanation.font = theFont;
+        explanation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
+        
+        explanationLbl = [UILabel new];
+        explanationLbl.text = @"Explanation";
+        explanationLbl.backgroundColor = [UIColor clearColor];
+        explanationLbl.frame = CGRectMake(25, 445, 100, 50);
+    }
     
     UIButton *cancelButton = [[UIButton alloc] init];
     cancelButton.frame = CGRectMake(20, 670, 150, 35);
@@ -231,6 +248,12 @@ UITextView *explanation;
                    action:@selector(deleteCard)
          forControlEvents:UIControlEventTouchUpInside];
     
+    if ([[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+        cancelButton.frame = CGRectMake(20, 270, 150, 35);
+        saveButton.frame = CGRectMake(350, 270, 150, 35);
+        deleteButton.frame = CGRectMake(185, 270, 150, 35);
+    }
+    
     int row = [colorOptions indexOfObject:[[self.cards objectAtIndex:indexCard] valueForKey:@"color"]];
     colorChoice = [colorOptions objectAtIndex:row];
     currentColorIndex = row;
@@ -239,12 +262,14 @@ UITextView *explanation;
 
     [scrollview addSubview:point];
     [scrollview addSubview:pointLbl];
-    [scrollview addSubview:quote];
-    [scrollview addSubview:quoteLbl];
-    [scrollview addSubview:citation];
-    [scrollview addSubview:citationLbl];
-    [scrollview addSubview:explanation];
-    [scrollview addSubview:explanationLbl];
+    if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+        [scrollview addSubview:quote];
+        [scrollview addSubview:quoteLbl];
+        [scrollview addSubview:citation];
+        [scrollview addSubview:citationLbl];
+        [scrollview addSubview:explanation];
+        [scrollview addSubview:explanationLbl];
+    }
     [scrollview addSubview:chooseColorBtn];
     [scrollview addSubview:cancelButton];
     [scrollview addSubview:saveButton];
@@ -305,12 +330,12 @@ UITextView *explanation;
     }
     
         
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Delete"
-                                                    message:@"Card was successfully deleted!"
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Delete"
+    //                                                message:@"Card was successfully deleted!"
+    //                                               delegate:nil
+    //                                      cancelButtonTitle:@"OK"
+    //                                      otherButtonTitles:nil];
+    //[alert show];
     [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
     [self viewDidAppear:YES];
 }
@@ -324,11 +349,13 @@ UITextView *explanation;
         citation.text = @" ";
     if ([explanation.text isEqualToString:@""])
         explanation.text = @" ";
-    
+
     [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
-    [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
-    [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
-    [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
+    if (citation.text) {
+        [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
+        [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
+        [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
+    }
     [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
     //float frameX = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
     //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameX] forKey:@"locationX"];
@@ -343,12 +370,12 @@ UITextView *explanation;
     
     [self viewDidAppear:YES];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
-                                                    message:@"Card was successfully modified!"
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
+    //                                                message:@"Card was successfully modified!"
+    //                                               delegate:nil
+    //                                      cancelButtonTitle:@"OK"
+    //                                      otherButtonTitles:nil];
+    //[alert show];
     [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
     [self viewDidAppear:YES];
 }

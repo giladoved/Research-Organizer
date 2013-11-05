@@ -46,7 +46,7 @@
         [newCard setValue:colorChoice forKey:@"color"];
     } else if (self.cardChooser.selectedSegmentIndex == 0) {
         if ([self.topicTxt.text isEqualToString:@""])
-            self.topicTxt.text = @" ";
+            self.topicTxt.text = @"------";
         
         [newCard setValue:self.topicTxt.text forKey:@"point"];
         [newCard setValue:@"-999" forKey:@"quote"];
@@ -64,20 +64,20 @@
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Card Added: %@", colorChoice]
-                                                    message:@"Card was successfully added!"
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Card Added: %@", colorChoice]
+    //                                                message:@"Card was successfully added!"
+    //                                               delegate:nil
+    //                                      cancelButtonTitle:@"OK"
+    //                                      otherButtonTitles:nil];
+    //[alert show];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)chooseColor:(id)sender {
-    colorChoice = [colorOptions objectAtIndex:0];
-    currentColorIndex = 0;
-    self.colorPickerButton.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
-    self.colorPickerButton.layer.borderWidth = 3.0f;
+    self.colorPickerButtonPIE.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButtonPIE.layer.borderWidth = 3.0f;
+    self.colorPickerButtonTopic.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButtonTopic.layer.borderWidth = 3.0f;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     toolbar.barStyle = UIBarStyleDefault;
 
@@ -106,9 +106,12 @@
     pickerView.dataSource = self;
     pickerView.delegate = self;
     
-    [pickerView selectRow:0 inComponent:0 animated:NO];
+    [pickerView selectRow:currentColorIndex inComponent:0 animated:NO];
     
-    [popover presentPopoverFromRect:self.colorPickerButton.bounds inView:self.colorPickerButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    if (self.pieForm.hidden)
+    [popover presentPopoverFromRect:self.colorPickerButtonTopic.bounds inView:self.colorPickerButtonTopic permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    else
+    [popover presentPopoverFromRect:self.colorPickerButtonPIE.bounds inView:self.colorPickerButtonPIE permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 - (IBAction)changeCardType:(id)sender {
@@ -162,8 +165,10 @@
 -(void)pickerView:(UIPickerView *)pv didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     colorChoice = [colorOptions objectAtIndex:row];
     currentColorIndex = row;
-    self.colorPickerButton.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
-    self.colorPickerButton.layer.borderWidth = 3.0f;
+    self.colorPickerButtonPIE.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButtonPIE.layer.borderWidth = 3.0f;
+    self.colorPickerButtonTopic.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButtonTopic.layer.borderWidth = 3.0f;
 }
 
 
@@ -186,17 +191,27 @@
     [super viewDidLoad];
     colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
     colorChoice = [NSString new];
-    self.colorPickerButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    if (!self.pieForm.hidden)
+    self.colorPickerButtonPIE.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    else
+    self.colorPickerButtonTopic.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.scrollView setContentSize:CGSizeMake(1024,1100.0)];
+    [self.scrollView setContentSize:CGSizeMake(1024,1250.0)];
     colorChoice = [colorOptions objectAtIndex:0];
     currentColorIndex = 0;
-    self.colorPickerButton.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
-    self.colorPickerButton.layer.borderWidth = 3.0f;
+    if (self.pieForm.hidden) {
+    self.colorPickerButtonTopic.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButtonTopic.layer.borderWidth = 3.0f;
+    }
+    else {
+    self.colorPickerButtonPIE.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    self.colorPickerButtonPIE.layer.borderWidth = 3.0f;
+    }
     NSLog(@"colorchoice: %@", colorChoice);
 }
 

@@ -19,7 +19,9 @@
 @property (weak, nonatomic) IBOutlet UITextView *explanationTxt;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (weak, nonatomic) IBOutlet UIButton *colorPickerButton;
+@property (weak, nonatomic) IBOutlet UIButton *colorPickerButtonPIE;
+@property (weak, nonatomic) IBOutlet UIButton *colorPickerButtonTopic;
+
 @property (weak, nonatomic) IBOutlet UISegmentedControl *cardChooser;
 
 @property (weak, nonatomic) IBOutlet UIView *pieForm;
