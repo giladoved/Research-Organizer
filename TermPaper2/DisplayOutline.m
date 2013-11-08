@@ -9,6 +9,7 @@
 #import "DisplayOutline.h"
 #import "DisplayCardsViewController.h"
 #import "SimpleTableCell.h"
+#import "TopicCell.h"
 #import "CreateEssayViewController.h"
 
 @implementation DisplayOutline
@@ -43,7 +44,7 @@
     self.quotes = [NSMutableArray new];
     self.citations = [NSMutableArray new];
     self.explanations = [NSMutableArray new];
-    self.colors = [NSMutableArray new];
+    self.colors = [NSMutableArray new];    
     
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequestF = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
@@ -51,11 +52,24 @@
     
     for (int i = 0; i < self.cards.count; i++) {
         [self.points addObject:[[self.cards objectAtIndex:i] valueForKey:@"point"]];
-        [self.quotes addObject:[[self.cards objectAtIndex:i] valueForKey:@"quote"]];
-        [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
-        [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
+        if ([[self.cards objectAtIndex:i] valueForKey:@"quote"])
+            [self.quotes addObject:[[self.cards objectAtIndex:i] valueForKey:@"quote"]];
+        else
+            [self.quotes addObject:@"-999"];
+        
+        if ([[self.cards objectAtIndex:i] valueForKey:@"citation"])
+            [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
+        else
+            [self.citations addObject:@"-999"];
+        
+        if ([[self.cards objectAtIndex:i] valueForKey:@"explanation"])
+            [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
+        else
+            [self.explanations addObject:@"-999"];
+        
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
     }
+    NSLog(@"%@", self.quotes);
 }
 
 -(IBAction)goEssay:(id)sender {
@@ -74,28 +88,40 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 330;
+    if (![[self.quotes objectAtIndex:indexPath.row] isEqualToString:@"-999"])
+        return 330;
+    return 120;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *simpleTableIdentifier = @"SimpleTableItem";
     tableview = tableView;
     indexpath = indexPath;
-
-    SimpleTableCell *cell = (SimpleTableCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    if (cell == nil)
-    {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"SimpleTableCell" owner:self options:nil];
-        cell = [nib objectAtIndex:0];
+    
+    if (![[self.quotes objectAtIndex:indexPath.row] isEqualToString:@"-999"]) {
+        SimpleTableCell *cell = (SimpleTableCell *)[tableView dequeueReusableCellWithIdentifier:@"SimpleTableItem"];
+        if (cell == nil) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"SimpleTableCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        cell.quoteText.text = [self.quotes objectAtIndex:indexPath.row];
+        cell.explanationText.text = [self.explanations objectAtIndex:indexPath.row];
+        cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
+        cell.pointText.text = [self.points objectAtIndex:indexPath.row];
+        
+        return cell;
     }
-    
-    cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
-    cell.pointText.text = [self.points objectAtIndex:indexPath.row];
-    cell.quoteText.text = [self.quotes objectAtIndex:indexPath.row];
-    cell.explanationText.text = [self.explanations objectAtIndex:indexPath.row];
-    
-    return cell;
+    else {
+        TopicCell *cell = (TopicCell *)[tableView dequeueReusableCellWithIdentifier:@"TopicCell"];
+        if (cell == nil) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TopicCell" owner:self options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
+        cell.topicTxt.text = [self.points objectAtIndex:indexPath.row];
+        
+        return cell;
+    }
 }
 
 - (NSManagedObjectContext *)managedObjectContext

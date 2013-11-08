@@ -139,10 +139,10 @@ UITextView *explanation;
     
     UIScrollView *scrollview;
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
-        scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
+        scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 620)];
         scrollview.showsVerticalScrollIndicator=YES;
         scrollview.scrollEnabled=YES;
-        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720);
+        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 620);
     }
     else {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 320)];
@@ -170,7 +170,7 @@ UITextView *explanation;
     [self.cardInfo.view addSubview:chooseColorBtn];
     
     point = [[UITextView alloc] init];
-    point.frame = CGRectMake(125, 50, 400, 50);
+    point.frame = CGRectMake(125, 10, 400, 50);
     point.backgroundColor = [UIColor whiteColor];
     point.tag = 0;
     point.font = theFont;
@@ -179,7 +179,7 @@ UITextView *explanation;
     UILabel *pointLbl = [UILabel new];
     pointLbl.text = @"Point";
     pointLbl.backgroundColor = [UIColor clearColor];
-    pointLbl.frame = CGRectMake(25, 45, 100, 50);
+    pointLbl.frame = CGRectMake(25, 5, 100, 50);
     
     UILabel *quoteLbl;
     UILabel *citationLbl;
@@ -187,7 +187,7 @@ UITextView *explanation;
     
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
         quote = [[UITextView alloc] init];
-        quote.frame = CGRectMake(125, 130, 400, 200);
+        quote.frame = CGRectMake(125, 90, 400, 200);
         quote.backgroundColor = [UIColor whiteColor];
         quote.tag = 1;
         quote.font = theFont;
@@ -196,10 +196,10 @@ UITextView *explanation;
         quoteLbl = [UILabel new];
         quoteLbl.text = @"Quote";
         quoteLbl.backgroundColor = [UIColor clearColor];
-        quoteLbl.frame = CGRectMake(25, 125, 100, 50);
+        quoteLbl.frame = CGRectMake(25, 85, 100, 50);
         
         citation = [[UITextView alloc] init];
-        citation.frame = CGRectMake(125, 365, 400, 50);
+        citation.frame = CGRectMake(125, 325, 400, 50);
         citation.backgroundColor = [UIColor whiteColor];
         citation.tag = 2;
         citation.font = theFont;
@@ -208,10 +208,10 @@ UITextView *explanation;
         citationLbl = [UILabel new];
         citationLbl.text = @"Citation";
         citationLbl.backgroundColor = [UIColor clearColor];
-        citationLbl.frame = CGRectMake(25, 360, 100, 50);
+        citationLbl.frame = CGRectMake(25, 320, 100, 50);
         
         explanation = [[UITextView alloc] init];
-        explanation.frame = CGRectMake(125, 450, 400, 200);
+        explanation.frame = CGRectMake(125, 410, 400, 200);
         explanation.backgroundColor = [UIColor whiteColor];
         explanation.tag = 3;
         explanation.font = theFont;
@@ -220,11 +220,11 @@ UITextView *explanation;
         explanationLbl = [UILabel new];
         explanationLbl.text = @"Explanation";
         explanationLbl.backgroundColor = [UIColor clearColor];
-        explanationLbl.frame = CGRectMake(25, 445, 100, 50);
+        explanationLbl.frame = CGRectMake(25, 405, 100, 50);
     }
     
     UIButton *cancelButton = [[UIButton alloc] init];
-    cancelButton.frame = CGRectMake(20, 670, 150, 35);
+    cancelButton.frame = CGRectMake(20, 630, 150, 35);
     cancelButton.backgroundColor = [UIColor redColor];
     [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [cancelButton addTarget:self
@@ -232,7 +232,7 @@ UITextView *explanation;
        forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *saveButton = [[UIButton alloc] init];
-    saveButton.frame = CGRectMake(350, 670, 150, 35);
+    saveButton.frame = CGRectMake(350, 630, 150, 35);
     saveButton.backgroundColor = [UIColor blueColor];
     [saveButton setTitle:@"Save" forState:UIControlStateNormal];
     [saveButton addTarget:self
@@ -240,7 +240,7 @@ UITextView *explanation;
            forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *deleteButton = [[UIButton alloc] init];
-    deleteButton.frame = CGRectMake(185, 670, 150, 35);
+    deleteButton.frame = CGRectMake(185, 630, 150, 35);
     deleteButton.backgroundColor = [UIColor blackColor];
     [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [deleteButton setTitle:@"Delete Card" forState:UIControlStateNormal];
@@ -285,7 +285,7 @@ UITextView *explanation;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     toolbar.barStyle = UIBarStyleDefault;
     
-    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:@"Choose" style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIBarButtonItem *chooseButton = [[UIBarButtonItem alloc] initWithTitle:@"Choose Color" style:UIBarButtonItemStylePlain target:nil action:nil];
     UIBarButtonItem *fixed1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIBarButtonItem *fixed2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     

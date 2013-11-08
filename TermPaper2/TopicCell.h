@@ -8,9 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SimpleTableCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *pointText;
-@property (weak, nonatomic) IBOutlet UILabel *quoteText;
+@interface TopicCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIView *backView;
-@property (weak, nonatomic) IBOutlet UILabel *explanationText;
+@property (weak, nonatomic) IBOutlet UILabel *topicTxt;
 @end

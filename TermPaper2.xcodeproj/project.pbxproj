@@ -28,6 +28,8 @@
 		61CEC9E217792D6400820AA9 /* TermPaper2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9E017792D6400820AA9 /* TermPaper2.xcdatamodeld */; };
 		61CEC9EC17792E1A00820AA9 /* AddCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9EB17792E1A00820AA9 /* AddCardViewController.m */; };
 		61CEC9EF17792FC600820AA9 /* DisplayCardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CEC9EE17792FC600820AA9 /* DisplayCardsViewController.m */; };
+		61CF5B4F182D907400F86321 /* TopicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61CF5B4D182D907400F86321 /* TopicCell.m */; };
+		61CF5B50182D907400F86321 /* TopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61CF5B4E182D907400F86321 /* TopicCell.xib */; };
 		61EBFA3E17AF0B3E00F1FEBC /* ExportPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */; };
 		61EBFA4017AF138B00F1FEBC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61EBFA3F17AF138B00F1FEBC /* MessageUI.framework */; };
 /* End PBXBuildFile section */
@@ -65,6 +67,9 @@
 		61CEC9EB17792E1A00820AA9 /* AddCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCardViewController.m; sourceTree = "<group>"; };
 		61CEC9ED17792FC600820AA9 /* DisplayCardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCardsViewController.h; sourceTree = "<group>"; };
 		61CEC9EE17792FC600820AA9 /* DisplayCardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCardsViewController.m; sourceTree = "<group>"; };
+		61CF5B4C182D907400F86321 /* TopicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicCell.h; sourceTree = "<group>"; };
+		61CF5B4D182D907400F86321 /* TopicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicCell.m; sourceTree = "<group>"; };
+		61CF5B4E182D907400F86321 /* TopicCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicCell.xib; sourceTree = "<group>"; };
 		61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPickerViewController.h; sourceTree = "<group>"; };
 		61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportPickerViewController.m; sourceTree = "<group>"; };
 		61EBFA3F17AF138B00F1FEBC /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -140,6 +145,9 @@
 				61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */,
 				61C2D1D1179746EC00B7566E /* SimpleTableCell.h */,
 				61C2D1D2179746EC00B7566E /* SimpleTableCell.m */,
+				61CF5B4C182D907400F86321 /* TopicCell.h */,
+				61CF5B4D182D907400F86321 /* TopicCell.m */,
+				61CF5B4E182D907400F86321 /* TopicCell.xib */,
 				61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */,
 				61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */,
 			);
@@ -223,6 +231,7 @@
 				61CEC9DF17792D6400820AA9 /* Default-568h@2x.png in Resources */,
 				61996358178D07E5006B8706 /* Storyboard.storyboard in Resources */,
 				61C2D1D01797462A00B7566E /* SimpleTableCell.xib in Resources */,
+				61CF5B50182D907400F86321 /* TopicCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +248,7 @@
 				61CEC9EC17792E1A00820AA9 /* AddCardViewController.m in Sources */,
 				61CEC9EF17792FC600820AA9 /* DisplayCardsViewController.m in Sources */,
 				61C04E3B1783D0BC006BC2C0 /* Card.m in Sources */,
+				61CF5B4F182D907400F86321 /* TopicCell.m in Sources */,
 				610A1C4E1794275D005B6351 /* DisplayOutline.m in Sources */,
 				61C2D1D3179746EC00B7566E /* SimpleTableCell.m in Sources */,
 				617F792117ACA00300E82B22 /* CreateEssayViewController.m in Sources */,
