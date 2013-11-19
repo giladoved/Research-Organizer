@@ -193,7 +193,7 @@
         <!--Display Outline-->
         <scene sceneID="fiS-do-8dg">
             <objects>
-                <viewController id="vLw-Kg-ksN" customClass="DisplayOutline" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DisplayOutlineVC" id="vLw-Kg-ksN" customClass="DisplayOutline" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EuQ-wf-MKk">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -220,10 +220,10 @@
             </objects>
             <point key="canvasLocation" x="589" y="664"/>
         </scene>
-        <!--Citation View Controller-->
+        <!--Citation View Controller - CitationViewController-->
         <scene sceneID="Qhl-9N-UBU">
             <objects>
-                <viewController id="bVJ-h5-lPW" customClass="CitationViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CitationViewController" title="CitationViewController" id="bVJ-h5-lPW" customClass="CitationViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BN9-wa-Vwu">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -246,6 +246,7 @@
                                                 <segue destination="faL-YK-jdc" kind="modal" modalTransitionStyle="flipHorizontal" id="5WV-Zc-r8y"/>
                                             </connections>
                                         </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" title="Export" id="2n9-jm-KAE"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -262,10 +263,10 @@
             </objects>
             <point key="canvasLocation" x="1821" y="-359"/>
         </scene>
-        <!--Create Essay View Controller-->
+        <!--Create Essay View Controller - CreateEssayViewController-->
         <scene sceneID="OeZ-E4-7WY">
             <objects>
-                <viewController id="faL-YK-jdc" customClass="CreateEssayViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CreateEssayViewController" title="CreateEssayViewController" id="faL-YK-jdc" customClass="CreateEssayViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FY6-bl-HfI">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -278,6 +279,19 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <navigationBar contentMode="scaleToFill" id="1P7-BX-rjM">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Essay" id="qiQ-rP-Ikd">
+                                        <barButtonItem key="rightBarButtonItem" title="Export" id="7ZH-c7-hxZ">
+                                            <connections>
+                                                <action selector="pop:" destination="faL-YK-jdc" id="f8C-yI-F6a"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -286,6 +300,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="essayTV" destination="ORy-AT-nRg" id="oR8-AD-25n"/>
+                        <outlet property="navBar" destination="qiQ-rP-Ikd" id="Y8s-es-mYc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZs-JV-C0j" userLabel="First Responder" sceneMemberID="firstResponder"/>

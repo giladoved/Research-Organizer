@@ -8,9 +8,12 @@
 
 #import "CreateEssayViewController.h"
 #import "CitationViewController.h"
+#import "DisplayOutline.h"
 
 @interface CreateEssayViewController (){
     UIBarButtonItem *_exportBarButton;
+    UIAlertView *alertBox;
+    NSString *foundEssay;
 }
 
 @end
@@ -30,50 +33,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-            
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
     self.savedEssay = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    NSString *foundEssay = @"";
     if (self.savedEssay.count > 0)
         foundEssay = [[self.savedEssay objectAtIndex:0] valueForKey:@"essay"];
     self.essay = [NSMutableString string];
     self.essayTV.delegate = self;
-    if (![foundEssay isEqualToString:@""]) {
-        self.essay = [NSString stringWithString:foundEssay];
+    if ([[foundEssay stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || self.savedEssay.count == 0) {
+        NSLog(@"not found");
+        self.essay = [[NSString stringWithString:foundEssay] mutableCopy];
     }
     else {
-        NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
-        self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
+        NSLog(@"found");
+        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
+                                                           message:@"Would you like to bring up your last auto-saved essay?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         
-        for (int i = 0; i < self.cards.count; i++) {
-            NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
-            currentPoint = [currentPoint stringByTrimmingCharactersInSet:
-                            [NSCharacterSet whitespaceCharacterSet]];
-            if (![[currentPoint substringFromIndex:[currentPoint length] - 1] isEqualToString:@"."])
-                currentPoint = [NSString stringWithFormat:@"%@.", currentPoint];
-            
-            NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
-            currentQuote = [currentQuote stringByTrimmingCharactersInSet:
-                            [NSCharacterSet whitespaceCharacterSet]];
-            if (![[currentQuote substringFromIndex:[currentQuote length] - 1] isEqualToString:@"."])
-                currentQuote = [NSString stringWithFormat:@"%@.", currentQuote];
-            
-            NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
-            currentExplanation = [currentExplanation stringByTrimmingCharactersInSet:
-                                  [NSCharacterSet whitespaceCharacterSet]];
-            if (![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"."])
-                currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
-            
-            [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
-        }
-        NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
-        
-        [firstEssay setValue:self.essay forKey:@"essay"];
-        
-        NSError *error = nil;
-        if (![[self managedObjectContext] save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        }
+        [alertBox show];
     }
     
     self.essayTV.text = [self.essay copy];
@@ -94,17 +70,69 @@
                                action:@selector(goCitation:)];
     
     NSArray *arrBtns = [[NSArray alloc]initWithObjects:goBack,goCitation, nil];
-    self.navigationItem.leftBarButtonItems = arrBtns;
+    self.navBar.leftBarButtonItems = arrBtns;
     self.navBar.title = @"Essay";
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(alertView == alertBox)
+    {
+        if(buttonIndex == 0) {
+            //create new one
+            NSLog(@"he chose no");
+            NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
+            self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
+            
+            for (int i = 0; i < self.cards.count; i++) {
+                NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
+                currentPoint = [currentPoint stringByTrimmingCharactersInSet:
+                                [NSCharacterSet whitespaceCharacterSet]];
+                if (![[currentPoint substringFromIndex:[currentPoint length] - 1] isEqualToString:@"."])
+                    currentPoint = [NSString stringWithFormat:@"%@.", currentPoint];
+                
+                NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
+                if (![currentQuote isEqualToString:@"-999"]) {
+                    currentQuote = [currentQuote stringByTrimmingCharactersInSet:
+                                    [NSCharacterSet whitespaceCharacterSet]];
+                    if (![[currentQuote substringFromIndex:[currentQuote length] - 1] isEqualToString:@"."])
+                        currentQuote = [NSString stringWithFormat:@"%@.", currentQuote];
+                    
+                    NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
+                    currentExplanation = [currentExplanation stringByTrimmingCharactersInSet:
+                                          [NSCharacterSet whitespaceCharacterSet]];
+                    if (![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"."])
+                        currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
+                    
+                    [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
+                }
+            }
+            NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
+            
+            [firstEssay setValue:self.essay forKey:@"essay"];
+            self.essayTV.text = [self.essay copy];
+            
+            NSError *error = nil;
+            if (![[self managedObjectContext] save:&error]) {
+                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+            }
+
+        }
+        else {
+            //would like to get saved copy
+            NSLog(@"he chose yes");
+            self.essayTV.text = [foundEssay copy];
+        }
+    }
+}
+
 -(IBAction)goCitation:(id)sender {
-    CitationViewController *vc = [[CitationViewController alloc] initWithNibName:@"CitationViewController" bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    UIStoryboard *storyBoard = [self storyboard];
+    CitationViewController *citationVC  = [storyBoard instantiateViewControllerWithIdentifier:@"CitationViewController"];
+    [self presentViewController:citationVC animated:YES completion:nil];
 }
 
 -(IBAction)goBack:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 -(IBAction)pop:(id)sender
@@ -194,7 +222,7 @@
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView {
-    self.essay = [NSString stringWithString:_essayTV.text];
+    self.essay = [[NSString stringWithString:_essayTV.text]mutableCopy];
     [[self.savedEssay objectAtIndex:0] setValue:_essayTV.text forKey:@"essay"];
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {

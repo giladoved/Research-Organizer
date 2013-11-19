@@ -65,8 +65,9 @@
 }
 
 -(IBAction)goEssay:(id)sender {
-    CreateEssayViewController *vcx = [[CreateEssayViewController alloc] initWithNibName:@"CreateEssay" bundle:nil];
-    [self.navigationController pushViewController:vcx animated:YES];
+    UIStoryboard *storyBoard = [self storyboard];
+    CreateEssayViewController *createEssayVC  = [storyBoard instantiateViewControllerWithIdentifier:@"CreateEssayViewController"];
+    [self presentViewController:createEssayVC animated:YES completion:nil];
 }
 
 -(IBAction)goBack:(id)sender {
@@ -220,6 +221,11 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         }
         
+        if (self.points.count > 0)
+            [self.navigationItem.rightBarButtonItem setEnabled:YES];
+        else
+            [self.navigationItem.rightBarButtonItem setEnabled:NO];
+        
         [self.tableView reloadData];
         [self.navigationItem.leftBarButtonItems[1] setTitle:@"Edit"];
         editing = NO;
@@ -228,6 +234,7 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     {
         [super setEditing:YES animated:YES];
         [self.tableView setEditing:YES animated:YES];
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
         [self.tableView reloadData];
         [self.navigationItem.leftBarButtonItems[1] setTitle:@"Done"];
         editing = YES;
