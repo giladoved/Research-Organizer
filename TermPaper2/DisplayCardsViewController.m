@@ -59,6 +59,7 @@ UITextView *explanation;
      [self.retrievedViewLocations removeAllObjects];
      [self.cardViews removeAllObjects];*/
     
+    NSLog(@"%@", self.quotes);
     if (self.cards.count > 0) {
         self.navigationItem.leftBarButtonItem.enabled = YES;
         for (int i = 0; i < [self.cards count]; i++) {
@@ -139,10 +140,10 @@ UITextView *explanation;
     
     UIScrollView *scrollview;
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
-        scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 620)];
+        scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
         scrollview.showsVerticalScrollIndicator=YES;
         scrollview.scrollEnabled=YES;
-        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 620);
+        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720);
     }
     else {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 320)];
@@ -157,7 +158,7 @@ UITextView *explanation;
     theFont = [UIFont fontWithName:@"Helvetica" size:14];
     
     chooseColorBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
+    chooseColorBtn.frame = CGRectMake(25, 100, 78, 60);
     chooseColorBtn.backgroundColor = [UIColor lightGrayColor];
     [chooseColorBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [chooseColorBtn setTitle:@"Choose Color" forState:UIControlStateNormal];
@@ -186,6 +187,8 @@ UITextView *explanation;
     UILabel *explanationLbl;
     
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+        chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
+
         quote = [[UITextView alloc] init];
         quote.frame = CGRectMake(125, 90, 400, 200);
         quote.backgroundColor = [UIColor whiteColor];

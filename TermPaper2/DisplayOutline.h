@@ -16,6 +16,8 @@
 @property (nonatomic, strong) NSMutableArray *citations;
 @property (nonatomic, strong) NSMutableArray *explanations;
 @property (nonatomic, strong) NSMutableArray *colors;
+@property (nonatomic, strong) NSMutableArray *xs;
+@property (nonatomic, strong) NSMutableArray *ys;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navBar;
 
 @property (weak, nonatomic) IBOutlet UINavigationController *navCon;

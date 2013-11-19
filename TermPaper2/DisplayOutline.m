@@ -44,7 +44,9 @@
     self.quotes = [NSMutableArray new];
     self.citations = [NSMutableArray new];
     self.explanations = [NSMutableArray new];
-    self.colors = [NSMutableArray new];    
+    self.colors = [NSMutableArray new];
+    self.xs = [NSMutableArray new];
+    self.ys = [NSMutableArray new];
     
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequestF = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
@@ -52,22 +54,12 @@
     
     for (int i = 0; i < self.cards.count; i++) {
         [self.points addObject:[[self.cards objectAtIndex:i] valueForKey:@"point"]];
-        if ([[self.cards objectAtIndex:i] valueForKey:@"quote"])
-            [self.quotes addObject:[[self.cards objectAtIndex:i] valueForKey:@"quote"]];
-        else
-            [self.quotes addObject:@"-999"];
-        
-        if ([[self.cards objectAtIndex:i] valueForKey:@"citation"])
-            [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
-        else
-            [self.citations addObject:@"-999"];
-        
-        if ([[self.cards objectAtIndex:i] valueForKey:@"explanation"])
-            [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
-        else
-            [self.explanations addObject:@"-999"];
-        
+        [self.quotes addObject:[[self.cards objectAtIndex:i] valueForKey:@"quote"]];
+        [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
+        [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
+        [self.xs addObject:[[self.cards objectAtIndex:i] valueForKey:@"locationX"]];
+        [self.ys addObject:[[self.cards objectAtIndex:i] valueForKey:@"locationY"]];
     }
     NSLog(@"%@", self.quotes);
 }
@@ -83,7 +75,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.points count];
+    return [self.cards count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -91,6 +83,22 @@
     if (![[self.quotes objectAtIndex:indexPath.row] isEqualToString:@"-999"])
         return 330;
     return 120;
+}
+
+-(void)deleteAllObjectsForEntity:(NSString*)entityName andContext:(NSManagedObjectContext *)managedObjectContext
+{
+    NSFetchRequest * allCards = [[NSFetchRequest alloc] init];
+    [allCards setEntity:[NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext]];
+    [allCards setIncludesPropertyValues:NO];
+    
+    NSError *error = nil;
+    NSArray *cards = [managedObjectContext executeFetchRequest:allCards error:&error];
+    
+    for (NSManagedObject *card in cards) {
+        [managedObjectContext deleteObject:card];
+    }
+    NSError *saveError = nil;
+    [managedObjectContext save:&saveError];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -108,7 +116,7 @@
         cell.explanationText.text = [self.explanations objectAtIndex:indexPath.row];
         cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
         cell.pointText.text = [self.points objectAtIndex:indexPath.row];
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
     }
     else {
@@ -119,7 +127,8 @@
         }
         cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
         cell.topicTxt.text = [self.points objectAtIndex:indexPath.row];
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
         return cell;
     }
 }
@@ -172,7 +181,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         [self.citations removeObjectAtIndex:row];
         [self.explanations removeObjectAtIndex:row];
         [self.colors removeObjectAtIndex:row];
-        
+        [self.xs removeObjectAtIndex:row];
+        [self.ys removeObjectAtIndex:row];
         [self.cards removeObjectAtIndex:row];
         
         [self.tableView reloadData];
@@ -189,9 +199,29 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     {
         [super setEditing:NO animated:NO];
         [self.tableView setEditing:NO animated:NO];
+        [self deleteAllObjectsForEntity:@"Flashcards" andContext:[self managedObjectContext]];
+        for (int i = 0; i < self.cards.count; i++) {
+            NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:[self managedObjectContext]];
+            NSLog(@"current point %@", self.points[i]);
+            [newCard setValue:self.points[i] forKey:@"point"];
+            [newCard setValue:self.quotes[i]  forKey:@"quote"];
+            [newCard setValue:self.citations[i] forKey:@"citation"];
+            [newCard setValue:self.explanations[i] forKey:@"explanation"];
+            [newCard setValue:self.colors[i] forKey:@"color"];
+            [newCard setValue:self.xs[i] forKey:@"locationX"];
+            [newCard setValue:self.ys[i] forKey:@"locationY"];
+            NSError *error = nil;
+            if (![[self managedObjectContext] save:&error]) {
+                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+            }
+        }
+        NSError *error = nil;
+        if (![[self managedObjectContext] save:&error]) {
+            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+        }
+        
         [self.tableView reloadData];
         [self.navigationItem.leftBarButtonItems[1] setTitle:@"Edit"];
-        //[self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStylePlain];
         editing = NO;
     }
     else
@@ -200,7 +230,6 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
         [self.tableView setEditing:YES animated:YES];
         [self.tableView reloadData];
         [self.navigationItem.leftBarButtonItems[1] setTitle:@"Done"];
-        //[self.navigationItem.leftBarButtonItems[1] setStyle:UIBarButtonItemStyleDone];
         editing = YES;
     }
 }
@@ -242,22 +271,13 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.colors removeObjectAtIndex:fromIndexPath.row];
     [self.colors insertObject:color atIndex:toIndexPath.row];
     
-    NSManagedObjectContext *context = [self managedObjectContext];
-    for (int i = 0; i < self.cards.count; i++) {
-        NSManagedObject *updatedCard = [self.cards objectAtIndex:i];
+    id theX = [self.xs objectAtIndex:fromIndexPath.row];
+    [self.xs removeObjectAtIndex:fromIndexPath.row];
+    [self.xs insertObject:theX atIndex:toIndexPath.row];
     
-        [updatedCard setValue:self.points[i] forKey:@"point"];
-        [updatedCard setValue:self.quotes[i] forKey:@"quote"];
-        [updatedCard setValue:self.citations[i] forKey:@"citation"];
-        [updatedCard setValue:self.explanations[i] forKey:@"explanation"];
-    
-        NSError *error = nil;
-        if (![context save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        }
-    
-        NSLog(@"%i: Layout Saved", i);
-    }
+    id theY = [self.ys objectAtIndex:fromIndexPath.row];
+    [self.ys removeObjectAtIndex:fromIndexPath.row];
+    [self.ys insertObject:theY atIndex:toIndexPath.row];
 }
 
 @end
