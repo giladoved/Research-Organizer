@@ -34,6 +34,24 @@
 {
     [super viewDidLoad];
     
+    UIBarButtonItem *citationButton = [[UIBarButtonItem alloc] initWithTitle:@"Citation Page" style:UIBarButtonItemStyleBordered target:self action:@selector(goCitation:)];
+    
+    UIBarButtonItem *goBack = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Back"
+                               style:UIBarButtonItemStyleBordered
+                               target:self
+                               action:@selector(goBack:)];
+    
+    NSArray *arrBtns = [[NSArray alloc]initWithObjects:goBack,citationButton, nil];
+    self.navigationItem.leftBarButtonItems = arrBtns;
+    self.navigationItem.title = @"Essay";
+    
+    //_navBar = self.navigationItem
+    _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
+    self.navigationItem.rightBarButtonItem = _exportBarButton;
+    
+    
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
     self.savedEssay = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
     if (self.savedEssay.count > 0)
@@ -54,25 +72,6 @@
     }
     
     self.essayTV.text = [self.essay copy];
-
-    _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
-    _navBar.rightBarButtonItem = _exportBarButton;
-    
-    UIBarButtonItem *goBack = [[UIBarButtonItem alloc]
-                               initWithTitle:@"Back"
-                               style:UIBarButtonItemStyleBordered
-                               target:self
-                               action:@selector(goBack:)];
-    
-    UIBarButtonItem *goCitation = [[UIBarButtonItem alloc]
-                               initWithTitle:@"Citation Page"
-                               style:UIBarButtonItemStyleBordered
-                               target:self
-                               action:@selector(goCitation:)];
-    
-    NSArray *arrBtns = [[NSArray alloc]initWithObjects:goBack,goCitation, nil];
-    self.navBar.leftBarButtonItems = arrBtns;
-    self.navBar.title = @"Essay";
 }
 
 /*- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -127,13 +126,14 @@
 }
 
 -(IBAction)goCitation:(id)sender {
-    UIStoryboard *storyBoard = [self storyboard];
-    CitationViewController *citationVC  = [storyBoard instantiateViewControllerWithIdentifier:@"CitationViewController"];
-    [self presentViewController:citationVC animated:YES completion:nil];
+    UIStoryboard *storyboard = [self storyboard];
+    CitationViewController *citationVC = (CitationViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CitationViewController"];
+    citationVC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:citationVC animated:YES];
 }
 
 -(IBAction)goBack:(id)sender {
-    [self.navigationController popToViewController:self animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(IBAction)pop:(id)sender

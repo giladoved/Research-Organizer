@@ -65,9 +65,10 @@
 }
 
 -(IBAction)goEssay:(id)sender {
-    UIStoryboard *storyBoard = [self storyboard];
-    CreateEssayViewController *createEssayVC  = [storyBoard instantiateViewControllerWithIdentifier:@"CreateEssayViewController"];
-    [self presentViewController:createEssayVC animated:YES completion:nil];
+    UIStoryboard *storyboard = [self storyboard];
+    CreateEssayViewController *createEssayVC = (CreateEssayViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CreateEssayViewController"];
+    createEssayVC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:createEssayVC animated:YES];
 }
 
 -(IBAction)goBack:(id)sender {

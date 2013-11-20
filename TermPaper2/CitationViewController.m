@@ -54,7 +54,8 @@
     self.citationTV.text = [self.citation copy];
     
     _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
-    _navBar.rightBarButtonItem = _exportBarButton;
+    self.navigationItem.rightBarButtonItem = _exportBarButton;
+    self.navigationItem.title = @"Citation";
 }
 
 
