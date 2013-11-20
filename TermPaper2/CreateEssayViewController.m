@@ -41,15 +41,16 @@
     self.essay = [NSMutableString string];
     self.essayTV.delegate = self;
     if ([[foundEssay stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || self.savedEssay.count == 0) {
-        NSLog(@"not found");
-        self.essay = [[NSString stringWithString:foundEssay] mutableCopy];
+        [self formulateEssay];
     }
     else {
-        NSLog(@"found");
-        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
+        self.essay = [[NSString stringWithString:foundEssay] mutableCopy];
+        self.essayTV.text = [foundEssay copy];
+        
+        /*alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
                                                            message:@"Would you like to bring up your last auto-saved essay?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         
-        [alertBox show];
+        [alertBox show];*/
     }
     
     self.essayTV.text = [self.essay copy];
@@ -74,54 +75,54 @@
     self.navBar.title = @"Essay";
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+/*- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(alertView == alertBox)
     {
         if(buttonIndex == 0) {
-            //create new one
-            NSLog(@"he chose no");
-            NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
-            self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
-            
-            for (int i = 0; i < self.cards.count; i++) {
-                NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
-                currentPoint = [currentPoint stringByTrimmingCharactersInSet:
-                                [NSCharacterSet whitespaceCharacterSet]];
-                if (![[currentPoint substringFromIndex:[currentPoint length] - 1] isEqualToString:@"."])
-                    currentPoint = [NSString stringWithFormat:@"%@.", currentPoint];
-                
-                NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
-                if (![currentQuote isEqualToString:@"-999"]) {
-                    currentQuote = [currentQuote stringByTrimmingCharactersInSet:
-                                    [NSCharacterSet whitespaceCharacterSet]];
-                    if (![[currentQuote substringFromIndex:[currentQuote length] - 1] isEqualToString:@"."])
-                        currentQuote = [NSString stringWithFormat:@"%@.", currentQuote];
-                    
-                    NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
-                    currentExplanation = [currentExplanation stringByTrimmingCharactersInSet:
-                                          [NSCharacterSet whitespaceCharacterSet]];
-                    if (![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"."])
-                        currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
-                    
-                    [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
-                }
-            }
-            NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
-            
-            [firstEssay setValue:self.essay forKey:@"essay"];
-            self.essayTV.text = [self.essay copy];
-            
-            NSError *error = nil;
-            if (![[self managedObjectContext] save:&error]) {
-                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-            }
+            [self formulateEssay];
 
         }
         else {
-            //would like to get saved copy
-            NSLog(@"he chose yes");
             self.essayTV.text = [foundEssay copy];
         }
+    }
+}*/
+
+-(void) formulateEssay {
+    NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
+    self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
+    
+    for (int i = 0; i < self.cards.count; i++) {
+        NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
+        currentPoint = [currentPoint stringByTrimmingCharactersInSet:
+                        [NSCharacterSet whitespaceCharacterSet]];
+        if (![[currentPoint substringFromIndex:[currentPoint length] - 1] isEqualToString:@"."])
+            currentPoint = [NSString stringWithFormat:@"%@.", currentPoint];
+        
+        NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
+        if (![currentQuote isEqualToString:@"-999"]) {
+            currentQuote = [currentQuote stringByTrimmingCharactersInSet:
+                            [NSCharacterSet whitespaceCharacterSet]];
+            if (![[currentQuote substringFromIndex:[currentQuote length] - 1] isEqualToString:@"."])
+                currentQuote = [NSString stringWithFormat:@"%@.", currentQuote];
+            
+            NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
+            currentExplanation = [currentExplanation stringByTrimmingCharactersInSet:
+                                  [NSCharacterSet whitespaceCharacterSet]];
+            if (![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"."])
+                currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
+            
+            [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
+        }
+    }
+    NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
+    
+    [firstEssay setValue:self.essay forKey:@"essay"];
+    self.essayTV.text = [self.essay copy];
+    
+    NSError *error = nil;
+    if (![[self managedObjectContext] save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -234,12 +235,12 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    NSManagedObjectContext *context = nil;
+    NSManagedObjectContext *c = nil;
     id delegate = [[UIApplication sharedApplication] delegate];
     if ([delegate performSelector:@selector(managedObjectContext)]) {
-        context = [delegate managedObjectContext];
+        c = [delegate managedObjectContext];
     }
-    return context;
+    return c;
 }
 
 - (void)didReceiveMemoryWarning

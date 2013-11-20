@@ -39,15 +39,16 @@
     self.citation = [NSMutableString string];
     self.citationTV.delegate = self;
     if ([[foundCitation stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || self.savedCitation.count == 0) {
-        NSLog(@"not found");
-        self.citation = [[NSString stringWithString:foundCitation] mutableCopy];
+        [self formulateCitation];
     }
     else {
-        NSLog(@"found");
-        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
+        self.citation = [[NSString stringWithString:foundCitation] mutableCopy];
+        self.citationTV.text = [foundCitation copy];
+        
+        /*alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
                                               message:@"Would you like to bring up your last auto-saved citation page?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         
-        [alertBox show];
+        [alertBox show];*/
     }
     
     self.citationTV.text = [self.citation copy];
@@ -57,39 +58,39 @@
 }
 
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+/*- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(alertView == alertBox)
     {
         if(buttonIndex == 0) {
-            //create new one
-            NSLog(@"he chose no");
-            NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
-            self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
-            
-            for (int i = 0; i < self.cards.count; i++) {
-                NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
-                currentCitation = [currentCitation stringByReplacingOccurrencesOfString:@" " withString:@""];
-                
-                if (![currentCitation isEqualToString:@"-999"]) {
-                    [self.citation appendFormat:@"%@ \n", currentCitation];
-                }
-            }
-            NSManagedObject *firstCitation = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
-            
-            [firstCitation setValue:self.citation forKey:@"citation"];
-            self.citationTV.text = [self.citation copy];
-            
-            NSError *error = nil;
-            if (![[self managedObjectContext] save:&error]) {
-                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-            }
+            [self formulateCitation];
             
         }
         else {
-            //would like to get saved copy
-            NSLog(@"he chose yes");
             self.citationTV.text = [foundCitation copy];
         }
+    }
+}*/
+
+-(void) formulateCitation {
+    NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
+    self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
+    
+    for (int i = 0; i < self.cards.count; i++) {
+        NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
+        currentCitation = [currentCitation stringByReplacingOccurrencesOfString:@" " withString:@""];
+        
+        if (![currentCitation isEqualToString:@"-999"]) {
+            [self.citation appendFormat:@"%@ \n", currentCitation];
+        }
+    }
+    NSManagedObject *firstCitation = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
+    
+    [firstCitation setValue:self.citation forKey:@"citation"];
+    self.citationTV.text = [self.citation copy];
+    
+    NSError *error = nil;
+    if (![[self managedObjectContext] save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
 }
 
