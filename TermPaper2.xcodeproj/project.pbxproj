@@ -13,6 +13,24 @@
 		61996358178D07E5006B8706 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61996357178D07E5006B8706 /* Storyboard.storyboard */; };
 		6199635A178D08E9006B8706 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61996359178D08E9006B8706 /* QuartzCore.framework */; };
 		61C04E3B1783D0BC006BC2C0 /* Card.m in Sources */ = {isa = PBXBuildFile; fileRef = 61C04E3A1783D0BC006BC2C0 /* Card.m */; };
+		61C109EC183D75C600AD8E62 /* BlueCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109DF183D75C600AD8E62 /* BlueCard.png */; };
+		61C109ED183D75C600AD8E62 /* BrownCard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E0183D75C600AD8E62 /* BrownCard.jpg */; };
+		61C109EE183D75C600AD8E62 /* CyanCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E1183D75C600AD8E62 /* CyanCard.png */; };
+		61C109EF183D75C600AD8E62 /* EditCardBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E2183D75C600AD8E62 /* EditCardBackground.png */; };
+		61C109F0183D75C600AD8E62 /* GreenCard.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E3183D75C600AD8E62 /* GreenCard.jpg */; };
+		61C109F1183D75C600AD8E62 /* GrayCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E4183D75C600AD8E62 /* GrayCard.png */; };
+		61C109F2183D75C600AD8E62 /* Icon152.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E5183D75C600AD8E62 /* Icon152.png */; };
+		61C109F3183D75C600AD8E62 /* MagentaCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E6183D75C600AD8E62 /* MagentaCard.png */; };
+		61C109F4183D75C600AD8E62 /* OrangeCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E7183D75C600AD8E62 /* OrangeCard.png */; };
+		61C109F5183D75C600AD8E62 /* PurpleCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E8183D75C600AD8E62 /* PurpleCard.png */; };
+		61C109F6183D75C600AD8E62 /* RedCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109E9183D75C600AD8E62 /* RedCard.png */; };
+		61C109F7183D75C600AD8E62 /* WhiteBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109EA183D75C600AD8E62 /* WhiteBackground.png */; };
+		61C109F8183D75C600AD8E62 /* YellowCard.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109EB183D75C600AD8E62 /* YellowCard.png */; };
+		61C109FA183D766200AD8E62 /* Icon76.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109F9183D766200AD8E62 /* Icon76.png */; };
+		61C109FC183D769500AD8E62 /* Icon40.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109FB183D769500AD8E62 /* Icon40.png */; };
+		61C109FE183D76C000AD8E62 /* Icon80.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109FD183D76C000AD8E62 /* Icon80.png */; };
+		61C10A00183D76F600AD8E62 /* Icon29.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C109FF183D76F600AD8E62 /* Icon29.png */; };
+		61C10A02183D771B00AD8E62 /* Icon58.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C10A01183D771B00AD8E62 /* Icon58.png */; };
 		61C2D1D01797462A00B7566E /* SimpleTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */; };
 		61C2D1D3179746EC00B7566E /* SimpleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61C2D1D2179746EC00B7566E /* SimpleTableCell.m */; };
 		61CEC9C717792D6400820AA9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CEC9C617792D6400820AA9 /* UIKit.framework */; };
@@ -45,6 +63,24 @@
 		61996359178D08E9006B8706 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		61C04E391783D0BC006BC2C0 /* Card.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Card.h; sourceTree = "<group>"; };
 		61C04E3A1783D0BC006BC2C0 /* Card.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Card.m; sourceTree = "<group>"; };
+		61C109DF183D75C600AD8E62 /* BlueCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueCard.png; sourceTree = "<group>"; };
+		61C109E0183D75C600AD8E62 /* BrownCard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BrownCard.jpg; sourceTree = "<group>"; };
+		61C109E1183D75C600AD8E62 /* CyanCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CyanCard.png; sourceTree = "<group>"; };
+		61C109E2183D75C600AD8E62 /* EditCardBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EditCardBackground.png; sourceTree = "<group>"; };
+		61C109E3183D75C600AD8E62 /* GreenCard.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = GreenCard.jpg; sourceTree = "<group>"; };
+		61C109E4183D75C600AD8E62 /* GrayCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GrayCard.png; sourceTree = "<group>"; };
+		61C109E5183D75C600AD8E62 /* Icon152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon152.png; sourceTree = "<group>"; };
+		61C109E6183D75C600AD8E62 /* MagentaCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MagentaCard.png; sourceTree = "<group>"; };
+		61C109E7183D75C600AD8E62 /* OrangeCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeCard.png; sourceTree = "<group>"; };
+		61C109E8183D75C600AD8E62 /* PurpleCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PurpleCard.png; sourceTree = "<group>"; };
+		61C109E9183D75C600AD8E62 /* RedCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedCard.png; sourceTree = "<group>"; };
+		61C109EA183D75C600AD8E62 /* WhiteBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WhiteBackground.png; sourceTree = "<group>"; };
+		61C109EB183D75C600AD8E62 /* YellowCard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = YellowCard.png; sourceTree = "<group>"; };
+		61C109F9183D766200AD8E62 /* Icon76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon76.png; sourceTree = "<group>"; };
+		61C109FB183D769500AD8E62 /* Icon40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon40.png; sourceTree = "<group>"; };
+		61C109FD183D76C000AD8E62 /* Icon80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon80.png; sourceTree = "<group>"; };
+		61C109FF183D76F600AD8E62 /* Icon29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon29.png; sourceTree = "<group>"; };
+		61C10A01183D771B00AD8E62 /* Icon58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon58.png; sourceTree = "<group>"; };
 		61C2D1CF1797462A00B7566E /* SimpleTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleTableCell.xib; sourceTree = "<group>"; };
 		61C2D1D1179746EC00B7566E /* SimpleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTableCell.h; sourceTree = "<group>"; };
 		61C2D1D2179746EC00B7566E /* SimpleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTableCell.m; sourceTree = "<group>"; };
@@ -150,6 +186,24 @@
 				61CF5B4E182D907400F86321 /* TopicCell.xib */,
 				61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */,
 				61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */,
+				61C109DF183D75C600AD8E62 /* BlueCard.png */,
+				61C109E0183D75C600AD8E62 /* BrownCard.jpg */,
+				61C109E1183D75C600AD8E62 /* CyanCard.png */,
+				61C109E2183D75C600AD8E62 /* EditCardBackground.png */,
+				61C109E3183D75C600AD8E62 /* GreenCard.jpg */,
+				61C109E4183D75C600AD8E62 /* GrayCard.png */,
+				61C109FF183D76F600AD8E62 /* Icon29.png */,
+				61C10A01183D771B00AD8E62 /* Icon58.png */,
+				61C109FB183D769500AD8E62 /* Icon40.png */,
+				61C109FD183D76C000AD8E62 /* Icon80.png */,
+				61C109F9183D766200AD8E62 /* Icon76.png */,
+				61C109E5183D75C600AD8E62 /* Icon152.png */,
+				61C109E6183D75C600AD8E62 /* MagentaCard.png */,
+				61C109E7183D75C600AD8E62 /* OrangeCard.png */,
+				61C109E8183D75C600AD8E62 /* PurpleCard.png */,
+				61C109E9183D75C600AD8E62 /* RedCard.png */,
+				61C109EA183D75C600AD8E62 /* WhiteBackground.png */,
+				61C109EB183D75C600AD8E62 /* YellowCard.png */,
 			);
 			path = TermPaper2;
 			sourceTree = "<group>";
@@ -226,12 +280,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				61CEC9D317792D6400820AA9 /* InfoPlist.strings in Resources */,
+				61C109EE183D75C600AD8E62 /* CyanCard.png in Resources */,
+				61C10A02183D771B00AD8E62 /* Icon58.png in Resources */,
 				61CEC9DB17792D6400820AA9 /* Default.png in Resources */,
+				61C109EC183D75C600AD8E62 /* BlueCard.png in Resources */,
+				61C109F8183D75C600AD8E62 /* YellowCard.png in Resources */,
+				61C109F0183D75C600AD8E62 /* GreenCard.jpg in Resources */,
+				61C109F1183D75C600AD8E62 /* GrayCard.png in Resources */,
+				61C109F6183D75C600AD8E62 /* RedCard.png in Resources */,
+				61C109FC183D769500AD8E62 /* Icon40.png in Resources */,
+				61C109FE183D76C000AD8E62 /* Icon80.png in Resources */,
 				61CEC9DD17792D6400820AA9 /* Default@2x.png in Resources */,
+				61C109EF183D75C600AD8E62 /* EditCardBackground.png in Resources */,
+				61C10A00183D76F600AD8E62 /* Icon29.png in Resources */,
+				61C109F4183D75C600AD8E62 /* OrangeCard.png in Resources */,
+				61C109ED183D75C600AD8E62 /* BrownCard.jpg in Resources */,
+				61C109FA183D766200AD8E62 /* Icon76.png in Resources */,
+				61C109F7183D75C600AD8E62 /* WhiteBackground.png in Resources */,
 				61CEC9DF17792D6400820AA9 /* Default-568h@2x.png in Resources */,
+				61C109F3183D75C600AD8E62 /* MagentaCard.png in Resources */,
 				61996358178D07E5006B8706 /* Storyboard.storyboard in Resources */,
 				61C2D1D01797462A00B7566E /* SimpleTableCell.xib in Resources */,
+				61C109F2183D75C600AD8E62 /* Icon152.png in Resources */,
 				61CF5B50182D907400F86321 /* TopicCell.xib in Resources */,
+				61C109F5183D75C600AD8E62 /* PurpleCard.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

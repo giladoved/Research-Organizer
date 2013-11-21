@@ -64,30 +64,31 @@
     else {
         self.essay = [[NSString stringWithString:foundEssay] mutableCopy];
         self.essayTV.text = [foundEssay copy];
-        
-        /*alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
+        self.essayTV.text = @"";
+        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
                                                            message:@"Would you like to bring up your last auto-saved essay?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         
-        [alertBox show];*/
+        [alertBox show];
     }
     
-    self.essayTV.text = [self.essay copy];
+    //self.essayTV.text = [self.essay copy];
 }
 
-/*- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(alertView == alertBox)
     {
         if(buttonIndex == 0) {
+            self.essayTV.text = @"";
             [self formulateEssay];
-
         }
         else {
             self.essayTV.text = [foundEssay copy];
         }
     }
-}*/
+}
 
 -(void) formulateEssay {
+    self.essay = [NSMutableString new];
     NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
     self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
     
@@ -112,6 +113,8 @@
                 currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
             
             [self.essay appendFormat:@"%@ %@ %@ ", currentPoint, currentQuote, currentExplanation];
+        } else {
+            [self.essay appendFormat:@"%@ ", currentPoint];
         }
     }
     NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
@@ -223,7 +226,6 @@
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView {
-    self.essay = [[NSString stringWithString:_essayTV.text]mutableCopy];
     [[self.savedEssay objectAtIndex:0] setValue:_essayTV.text forKey:@"essay"];
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {

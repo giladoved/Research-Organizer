@@ -8,6 +8,22 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIcons~ipad</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>Icon58</string>
+				<string>Icon29</string>
+				<string>Icon80</string>
+				<string>Icon40</string>
+				<string>Icon152</string>
+				<string>Icon76</string>
+				<string>Icon</string>
+			</array>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>gilad.oved.TermPaperApp</string>
 	<key>CFBundleInfoDictionaryVersion</key>

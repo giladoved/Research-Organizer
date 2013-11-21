@@ -42,13 +42,16 @@
         [self formulateCitation];
     }
     else {
+        if (!foundCitation) {
+            foundCitation = @"";
+        }
         self.citation = [[NSString stringWithString:foundCitation] mutableCopy];
         self.citationTV.text = [foundCitation copy];
         
-        /*alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
+        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
                                               message:@"Would you like to bring up your last auto-saved citation page?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         
-        [alertBox show];*/
+        [alertBox show];
     }
     
     self.citationTV.text = [self.citation copy];
@@ -59,7 +62,7 @@
 }
 
 
-/*- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(alertView == alertBox)
     {
         if(buttonIndex == 0) {
@@ -70,9 +73,10 @@
             self.citationTV.text = [foundCitation copy];
         }
     }
-}*/
+}
 
 -(void) formulateCitation {
+    self.citation = [NSMutableString new];
     NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
     self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
     
@@ -183,7 +187,6 @@
 }
 
 -(void)textViewDidEndEditing:(UITextView *)textView {
-    self.citation = [[NSString stringWithString:_citationTV.text] mutableCopy];
     [[self.savedCitation objectAtIndex:0] setValue:_citationTV.text forKey:@"citation"];
     NSError *error = nil;
     if (![[self managedObjectContext] save:&error]) {

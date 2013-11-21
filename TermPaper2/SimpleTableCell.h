@@ -11,6 +11,6 @@
 @interface SimpleTableCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *pointText;
 @property (weak, nonatomic) IBOutlet UILabel *quoteText;
-@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageBack;
 @property (weak, nonatomic) IBOutlet UILabel *explanationText;
 @end

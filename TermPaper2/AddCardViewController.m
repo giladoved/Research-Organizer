@@ -195,7 +195,6 @@
     self.colorPickerButtonPIE.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     else
     self.colorPickerButtonTopic.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-
 }
 
 - (void)viewDidAppear:(BOOL)animated

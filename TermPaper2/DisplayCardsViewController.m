@@ -39,7 +39,12 @@ UITextView *explanation;
     [super viewDidAppear:animated];
     
     colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
-
+    
+    UIImage *backImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"WhiteBackground" ofType:@"png"]];
+    UIImageView *backIV = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    backIV.image = backImage;
+    backIV.contentMode = UIViewContentModeScaleToFill;
+    [self.view addSubview:backIV];
     
     for (UIView *view in self.view.subviews)
     {
@@ -77,18 +82,31 @@ UITextView *explanation;
             NSLog(@"%@: %f by %f", currentCard.text, x, y);
             currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
             currentCard.index = i;
-            currentCard.backgroundColor = currentCard.color;
+            
+            NSString *chosenColor = [card valueForKey:@"color"];
+            UIImage *colorImage;
+            if ([chosenColor isEqualToString:@"Brown"] || [chosenColor isEqualToString:@"Green"]) {
+                colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"jpg"]];
+            } else {
+                colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"png"]];
+            }
+            
+            UIImageView *colorIV = [[UIImageView alloc] initWithFrame:currentCard.bounds];
+            colorIV.image = colorImage;
+            colorIV.contentMode = UIViewContentModeScaleToFill;
+            [currentCard addSubview:colorIV];
+            
             UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.text = currentCard.text;
             if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"]) {
                 titleLabel.numberOfLines = 5;
-                [titleLabel setFrame:CGRectMake(5, 5, 190, 110)];
+                [titleLabel setFrame:CGRectMake(30, 10, 150, 95)];
             }
             else {
-                [titleLabel setFrame:CGRectMake(5, 5, 240, 65)];
+                [titleLabel setFrame:CGRectMake(35, 10, 195, 55)];
                 titleLabel.numberOfLines = 3;
             }
-            titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
             titleLabel.backgroundColor = [UIColor clearColor];
             [currentCard addSubview:titleLabel];
             [self.view addSubview:currentCard];
@@ -152,6 +170,13 @@ UITextView *explanation;
         self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 320);
     }
     
+    UIImage *colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"EditCardBackground" ofType:@"png"]];
+    
+    UIImageView *colorIV = [[UIImageView alloc] initWithFrame:self.cardInfo.view.bounds];
+    colorIV.image = colorImage;
+    colorIV.contentMode = UIViewContentModeScaleToFill;
+    [self.cardInfo.view addSubview:colorIV];
+    
     scrollview.userInteractionEnabled=YES;
     
     UIFont *theFont = [[UIFont alloc] init];
@@ -180,6 +205,7 @@ UITextView *explanation;
     UILabel *pointLbl = [UILabel new];
     pointLbl.text = @"Point";
     pointLbl.backgroundColor = [UIColor clearColor];
+    pointLbl.textColor = [UIColor whiteColor];
     pointLbl.frame = CGRectMake(25, 5, 100, 50);
     
     UILabel *quoteLbl;
@@ -198,6 +224,7 @@ UITextView *explanation;
         
         quoteLbl = [UILabel new];
         quoteLbl.text = @"Quote";
+        quoteLbl.textColor = [UIColor whiteColor];
         quoteLbl.backgroundColor = [UIColor clearColor];
         quoteLbl.frame = CGRectMake(25, 85, 100, 50);
         
@@ -210,6 +237,7 @@ UITextView *explanation;
         
         citationLbl = [UILabel new];
         citationLbl.text = @"Citation";
+        citationLbl.textColor = [UIColor whiteColor];
         citationLbl.backgroundColor = [UIColor clearColor];
         citationLbl.frame = CGRectMake(25, 320, 100, 50);
         
@@ -222,6 +250,7 @@ UITextView *explanation;
         
         explanationLbl = [UILabel new];
         explanationLbl.text = @"Explanation";
+        explanationLbl.textColor = [UIColor whiteColor];
         explanationLbl.backgroundColor = [UIColor clearColor];
         explanationLbl.frame = CGRectMake(25, 405, 100, 50);
     }

@@ -116,7 +116,15 @@
         }
         cell.quoteText.text = [self.quotes objectAtIndex:indexPath.row];
         cell.explanationText.text = [self.explanations objectAtIndex:indexPath.row];
-        cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
+        
+        NSString *chosenColor = [self.colors objectAtIndex:indexPath.row];
+        UIImage *colorImage;
+        if ([chosenColor isEqualToString:@"Brown"] || [chosenColor isEqualToString:@"Green"]) {
+            colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"jpg"]];
+        } else {
+            colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"png"]];
+        }
+        cell.imageBack.image = colorImage;
         cell.pointText.text = [self.points objectAtIndex:indexPath.row];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         return cell;
@@ -127,7 +135,14 @@
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TopicCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        cell.backView.backgroundColor = [self getColorWithString:[self.colors objectAtIndex:indexPath.row]];
+        NSString *chosenColor = [self.colors objectAtIndex:indexPath.row];
+        UIImage *colorImage;
+        if ([chosenColor isEqualToString:@"Brown"] || [chosenColor isEqualToString:@"Green"]) {
+            colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"jpg"]];
+        } else {
+            colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"png"]];
+        }
+        cell.imageBack.image = colorImage;
         cell.topicTxt.text = [self.points objectAtIndex:indexPath.row];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
 

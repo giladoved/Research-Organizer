@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface TopicCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UIView *backView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageBack;
 @property (weak, nonatomic) IBOutlet UILabel *topicTxt;
 @end
