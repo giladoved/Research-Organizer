@@ -38,6 +38,11 @@ UITextView *explanation;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    self.points = [NSMutableArray new];
+    self.quotes = [NSMutableArray new];
+    self.citations = [NSMutableArray new];
+    self.explanations = [NSMutableArray new];
+    
     colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
     
     UIImage *backImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"WhiteBackground" ofType:@"png"]];
@@ -63,6 +68,14 @@ UITextView *explanation;
      [self.coordinates removeAllObjects];
      [self.retrievedViewLocations removeAllObjects];
      [self.cardViews removeAllObjects];*/
+    
+    UIBarButtonItem *exportBtn = [[UIBarButtonItem alloc]
+                               initWithTitle:@"Export"
+                               style:UIBarButtonItemStyleBordered
+                               target:self
+                               action:@selector(exportCards:)];
+
+    self.navigationItem.rightBarButtonItems =  @[self.navigationItem.rightBarButtonItem, exportBtn];
     
     NSLog(@"%@", self.quotes);
     if (self.cards.count > 0) {
@@ -146,6 +159,96 @@ UITextView *explanation;
     
     return nil;
 }
+
+
+-(IBAction)exportCards:(id)sender {
+    NSLog(@"exporting cards");
+    
+    for (int i = 0; i < self.cards.count; i++) {
+        NSManagedObject *card = [self.cards objectAtIndex:i];
+        [self.points addObject:[card valueForKey:@"point"]];
+        [self.quotes addObject:[card valueForKey:@"quote"]];
+        [self.explanations addObject:[card valueForKey:@"explanation"]];
+        [self.citations addObject:[card valueForKey:@"citation"]];
+    }
+
+    NSMutableString *emailText = [NSMutableString new];
+    [emailText appendString:@"<html><body>"];
+    
+    BOOL withTopics = NO;
+    for (int i = 0; i < self.quotes.count; i++) {
+        if ([[self.quotes objectAtIndex:i] isEqualToString:@"-999"]) {
+            withTopics = YES;
+            [emailText appendString:@"<h3>Topic Sentences</h3>"];
+            break;
+        }
+    }
+    if (withTopics) {
+        for (int i = 0; i < self.quotes.count; i++) {
+            Card *currentCard = [self.cards objectAtIndex:i];
+            if ([[self.quotes objectAtIndex:i] isEqualToString:@"-999"]){
+                [emailText appendFormat:@"<p style=\"color:%@\">%@</p>", [currentCard valueForKey:@"color"], self.points[i]];
+            }
+        }
+        [emailText appendString:@"</br>"];
+    }
+
+    [emailText appendString:@"<h3>PIE Cards</h3>"];
+    for (int i = 0; i < self.quotes.count; i++) {
+        Card *currentCard = [self.cards objectAtIndex:i];
+        if (![[self.quotes objectAtIndex:i] isEqualToString:@"-999"]){
+            [emailText appendFormat:@"<p style=\"color:%@\">Point: %@</p>", [currentCard valueForKey:@"color"], self.points[i]];
+            [emailText appendFormat:@"<p style=\"color:%@\">Illustration: %@</p>", [currentCard valueForKey:@"color"], self.quotes[i]];
+            [emailText appendFormat:@"<p style=\"color:%@\">Explanation: %@</p>", [currentCard valueForKey:@"color"], self.explanations[i]];
+            [emailText appendFormat:@"<p style=\"color:%@\">Citation: %@</p>", [currentCard valueForKey:@"color"], self.citations[i]];
+        }
+        [emailText appendString:@"</br>"];
+    }
+    
+    [emailText appendString:@"</body></html>"];
+    NSLog(@"emailText : %@", emailText);
+    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+    mc.mailComposeDelegate = self;
+    [mc setSubject:@"Note Cards"];
+    [mc setMessageBody:[emailText copy] isHTML:YES];
+    
+    [self presentViewController:mc animated:YES completion:NULL];
+}
+
+- (void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail cancelled");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Email sent");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail sent failure: %@", [error localizedDescription]);
+            break;
+        default:
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if (result == MessageComposeResultCancelled)
+        NSLog(@"Message cancelled");
+    else if (result == MessageComposeResultSent)
+        NSLog(@"Message sent");
+    else
+        NSLog(@"Message failed");
+}
+
 
 - (void)cardTapped:(UITapGestureRecognizer *)rec {
     Card *tappedLabel = (Card *)rec.view;
