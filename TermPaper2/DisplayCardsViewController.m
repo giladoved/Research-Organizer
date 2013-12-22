@@ -383,7 +383,7 @@ UITextView *explanation;
         explanation.text = @" ";
 
     [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
-    if (citation.text) {
+    if (citation.text || [citation.text isEqualToString:@"-999"]) {
         [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
         [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
         [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
