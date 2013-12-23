@@ -10,7 +10,7 @@
 #import "AddCardViewController.h"
 #import <MessageUI/MessageUI.h>
 
-@interface DisplayCardsViewController : UIViewController <MFMailComposeViewControllerDelegate,
+@interface DisplayCardsViewController : UIViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate,
 MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate> {
     UIPopoverController *popover;
 }

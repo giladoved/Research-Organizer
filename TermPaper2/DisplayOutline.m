@@ -114,7 +114,31 @@
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"SimpleTableCell" owner:self options:nil];
             cell = [nib objectAtIndex:0];
         }
-        cell.quoteText.text = [self.quotes objectAtIndex:indexPath.row];
+        NSString *currentQuote = [self.quotes objectAtIndex:indexPath.row];
+        currentQuote = [currentQuote stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if ([currentQuote characterAtIndex:0] == '<' && [currentQuote characterAtIndex:currentQuote.length-1] == '>') {
+            NSLog(@"show image");
+            cell.quoteText.hidden = YES;
+            cell.quoteIV.hidden = NO;
+            NSString *imageStr = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
+            NSLog(@"imageStr: %@", imageStr);
+            NSURL *imageURL = [NSURL URLWithString:imageStr];
+            if (imageURL) {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                    NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+                    NSLog(@"image data: %@", imageData);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        cell.quoteIV.image = [UIImage imageWithData:imageData];
+                    });
+                });
+            }
+        } else {
+            NSLog(@"show text");
+            cell.quoteText.hidden = NO;
+            cell.quoteIV.hidden = YES;
+            cell.quoteText.text = currentQuote;
+        }
+        
         cell.explanationText.text = [self.explanations objectAtIndex:indexPath.row];
         
         NSString *chosenColor = [self.colors objectAtIndex:indexPath.row];

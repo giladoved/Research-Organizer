@@ -17,6 +17,7 @@
     NSString *colorChoice;
     int currentColorIndex;
     UIPickerView *pickerView;
+    UIImageView *quoteIV;
 }
 @property (nonatomic) NSMutableArray *coordinates;
 @property (strong) UIViewController *cardInfo;
@@ -314,22 +315,69 @@ UITextView *explanation;
     UILabel *quoteLbl;
     UILabel *citationLbl;
     UILabel *explanationLbl;
+    UIButton *changeMediaBtn;
+    UIButton *removeMediaBtn;
     
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
         chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
 
+        NSString *quoteStr = [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"];
+        quoteStr = [quoteStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         quote = [[UITextView alloc] init];
         quote.frame = CGRectMake(125, 90, 400, 200);
         quote.backgroundColor = [UIColor whiteColor];
         quote.tag = 1;
         quote.font = theFont;
-        quote.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"]];
+        quote.text = [NSString stringWithFormat:@"%@ ", quoteStr];
+        quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
+        quoteIV.contentMode = UIViewContentModeScaleAspectFit;
+        NSString *imageStr = [quoteStr substringWithRange:NSMakeRange(1, quoteStr.length - 2)];
+        NSLog(@"imageStr: %@", imageStr);
+        NSURL *imageURL = [NSURL URLWithString:imageStr];
+        if (imageURL) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    quoteIV.image = [UIImage imageWithData:imageData];
+                });
+            });
+        }
+        
+        if ([quoteStr characterAtIndex:0] == '<' && [quoteStr characterAtIndex:quoteStr.length-1] == '>') {
+            NSLog(@"show text");
+            quote.hidden = YES;
+            quoteIV.hidden = NO;
+        } else {
+            NSLog(@"show image");
+            quote.hidden = NO;
+            quoteIV.hidden = YES;
+        }
         
         quoteLbl = [UILabel new];
-        quoteLbl.text = @"Quote";
+        quoteLbl.text = @"Illustration";
         quoteLbl.textColor = [UIColor whiteColor];
         quoteLbl.backgroundColor = [UIColor clearColor];
         quoteLbl.frame = CGRectMake(25, 85, 100, 50);
+        
+        changeMediaBtn = [[UIButton alloc] init];
+        changeMediaBtn.frame = CGRectMake(15, 130, 100, 80);
+        [[changeMediaBtn titleLabel] setFont:[UIFont fontWithName:@"Arial" size:14.0]];
+        [[changeMediaBtn titleLabel] setLineBreakMode:NSLineBreakByWordWrapping];
+        changeMediaBtn.backgroundColor = [UIColor lightGrayColor];
+        [changeMediaBtn setTitle:@"Change Media" forState:UIControlStateNormal];
+        [changeMediaBtn addTarget:self
+                         action:@selector(changeMedia)
+               forControlEvents:UIControlEventTouchUpInside];
+        
+        removeMediaBtn = [[UIButton alloc] init];
+        removeMediaBtn.frame = CGRectMake(15, 220, 100, 80);
+        removeMediaBtn.backgroundColor = [UIColor lightGrayColor];
+        [[removeMediaBtn titleLabel] setFont:[UIFont fontWithName:@"Arial" size:14.0]];
+        [[removeMediaBtn titleLabel] setLineBreakMode:NSLineBreakByWordWrapping];
+        [removeMediaBtn setTitle:@"Remove Illustration" forState:UIControlStateNormal];
+        [removeMediaBtn addTarget:self
+                         action:@selector(removeMedia)
+               forControlEvents:UIControlEventTouchUpInside];
         
         citation = [[UITextView alloc] init];
         citation.frame = CGRectMake(125, 325, 400, 50);
@@ -400,10 +448,13 @@ UITextView *explanation;
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
         [scrollview addSubview:quote];
         [scrollview addSubview:quoteLbl];
+        [scrollview addSubview:quoteIV];
         [scrollview addSubview:citation];
         [scrollview addSubview:citationLbl];
         [scrollview addSubview:explanation];
         [scrollview addSubview:explanationLbl];
+        [scrollview addSubview:removeMediaBtn];
+        [scrollview addSubview:changeMediaBtn];
     }
     [scrollview addSubview:chooseColorBtn];
     [scrollview addSubview:cancelButton];
@@ -411,6 +462,38 @@ UITextView *explanation;
     [scrollview addSubview:deleteButton];
     [self.cardInfo.view addSubview:scrollview];
     scrollview.contentSize = CGSizeMake(self.cardInfo.view.frame.size.width, self.cardInfo.view.frame.size.height + 265);
+}
+
+-(void)changeMedia {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Add" otherButtonTitles:nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+-(void)removeMedia {
+    quote.text = @"";
+    quote.hidden = NO;
+    quoteIV.image = nil;
+    quoteIV.hidden = YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    quote.hidden = YES;
+    quoteIV.hidden = NO;
+    NSString *imageStr = [[alertView textFieldAtIndex:0] text];
+    imageStr = [imageStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSLog(@"imageStr: %@", imageStr);
+    NSURL *imageURL = [NSURL URLWithString:imageStr];
+    if (imageURL) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+            NSLog(@"image data: %@", imageData);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                quoteIV.image = [UIImage imageWithData:imageData];
+            });
+        });
+    }
+    quote.text = [NSString stringWithFormat:@"<%@>", imageStr];
 }
 
 -(IBAction)chooseColor:(id)sender {

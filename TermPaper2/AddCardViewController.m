@@ -240,4 +240,15 @@
 }
 
 
+- (IBAction)chooseMedia:(id)sender {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Add" otherButtonTitles:nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSString *mediaLink = [NSString stringWithFormat:@"<%@>", [[alertView textFieldAtIndex:0] text]];
+    NSLog(@"media Link: %@", mediaLink);
+    self.quoteTxt.text = mediaLink;
+}
 @end

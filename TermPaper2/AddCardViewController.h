@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "Card.h"
 
-@interface AddCardViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate> {
+@interface AddCardViewController : UIViewController <UIAlertViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate> {
     UIPopoverController *popover;
 }
 @property (weak, nonatomic) IBOutlet UITextField *pointTxt;
@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *colorPickerButtonTopic;
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *cardChooser;
+- (IBAction)chooseMedia:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIView *pieForm;
 @property (weak, nonatomic) IBOutlet UIView *topicForm;
