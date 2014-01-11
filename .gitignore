@@ -20,7 +20,7 @@ build/
 # Automatic backup files
 *~.nib/
 *.swp
-*~
+*~ 
 *.dat
 *.dep
 
