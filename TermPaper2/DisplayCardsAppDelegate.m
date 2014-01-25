@@ -7,6 +7,7 @@
 //
 
 #import "DisplayCardsAppDelegate.h"
+#import <Parse/Parse.h>
 
 @implementation DisplayCardsAppDelegate
 
@@ -16,6 +17,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Parse setApplicationId:@"2yEsyZwoBymit3EsNljCBj1ziET5yR6xSKh4tZgm"
+                  clientKey:@"VzArkGr8qqHpRlHaW4v7Zij0PmMNWuFLg0tbEASX"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     return YES;
 }
 

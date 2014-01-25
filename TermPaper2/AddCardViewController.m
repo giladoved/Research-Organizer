@@ -9,6 +9,7 @@
 #import "AddCardViewController.h"
 #import "Card.h"
 #import <QuartzCore/QuartzCore.h>
+#import <Parse/Parse.h>
 
 @interface AddCardViewController () 
 {
@@ -25,6 +26,8 @@
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
     
+    PFObject *newCardPF = [PFObject objectWithClassName:@"Flashcards"];
+    
     float xPos = [self currentScreenBoundsBasedOnOrientation].size.width / 2 - 100;
     float yPos = [self currentScreenBoundsBasedOnOrientation].size.height / 2 - 60;
     
@@ -40,19 +43,32 @@
             self.explanationTxt.text = @" ";
         
         [newCard setValue:self.pointTxt.text forKey:@"point"];
+        newCardPF[@"point"] = self.pointTxt.text;
         [newCard setValue:self.quoteTxt.text forKey:@"quote"];
+        newCardPF[@"illustration"] = self.quoteTxt.text;
         [newCard setValue:self.citationTxt.text forKey:@"citation"];
+        newCardPF[@"citation"] = self.citationTxt.text;
         [newCard setValue:self.explanationTxt.text forKey:@"explanation"];
+        newCardPF[@"explanation"] = self.explanationTxt.text;
         [newCard setValue:colorChoice forKey:@"color"];
+        newCardPF[@"color"] = colorChoice;
+        [newCardPF setObject:[PFUser currentUser].username forKey:@"user"];
+        
     } else if (self.cardChooser.selectedSegmentIndex == 0) {
         if ([self.topicTxt.text isEqualToString:@""])
             self.topicTxt.text = @"------";
         
         [newCard setValue:self.topicTxt.text forKey:@"point"];
+        newCardPF[@"point"] = self.topicTxt.text;
         [newCard setValue:@"-999" forKey:@"quote"];
+        newCardPF[@"illustration"] = @"-999";
         [newCard setValue:@"-999" forKey:@"citation"];
+        newCardPF[@"citation"] = @"-999";
         [newCard setValue:@"-999" forKey:@"explanation"];
+        newCardPF[@"explanation"] = @"-999";
         [newCard setValue:colorChoice forKey:@"color"];
+        newCardPF[@"color"] = colorChoice;
+        [newCardPF setObject:[PFUser currentUser].username forKey:@"user"];
     }
     
     
@@ -63,6 +79,8 @@
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
+    
+    [newCardPF saveInBackground];
     
     //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Card Added: %@", colorChoice]
     //                                                message:@"Card was successfully added!"

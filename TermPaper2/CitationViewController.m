@@ -32,30 +32,9 @@
 {
     [super viewDidLoad];
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
-    self.savedCitation = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    if (self.savedCitation.count > 0)
-        foundCitation = [[self.savedCitation objectAtIndex:0] valueForKey:@"citation"];
     self.citation = [NSMutableString string];
-    self.citationTV.delegate = self;
-    if ([[foundCitation stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || self.savedCitation.count == 0) {
-        [self formulateCitation];
-    }
-    else {
-        if (!foundCitation) {
-            foundCitation = @"";
-        }
-        self.citation = [[NSString stringWithString:foundCitation] mutableCopy];
-        self.citationTV.text = [foundCitation copy];
+    [self formulateCitation];
         
-        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
-                                              message:@"Would you like to bring up your last auto-saved citation page?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-        
-        [alertBox show];
-    }
-    
-    self.citationTV.text = [self.citation copy];
-    
     _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
     self.navigationItem.rightBarButtonItem = _exportBarButton;
     self.navigationItem.title = @"Citation";
@@ -83,20 +62,15 @@
     for (int i = 0; i < self.cards.count; i++) {
         NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
         currentCitation = [currentCitation stringByReplacingOccurrencesOfString:@" " withString:@""];
-        
+        NSLog(@"currentCitation: %@", currentCitation);
         if (![currentCitation isEqualToString:@"-999"]) {
             [self.citation appendFormat:@"%@ \n", currentCitation];
+        } else {
+            if (i != 0)
+                [self.citation appendString:@"\n"];
         }
     }
-    NSManagedObject *firstCitation = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
-    
-    [firstCitation setValue:self.citation forKey:@"citation"];
     self.citationTV.text = [self.citation copy];
-    
-    NSError *error = nil;
-    if (![[self managedObjectContext] save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-    }
 }
 
 
@@ -184,15 +158,6 @@
         NSLog(@"Message sent");
     else
         NSLog(@"Message failed");
-}
-
--(void)textViewDidEndEditing:(UITextView *)textView {
-    [[self.savedCitation objectAtIndex:0] setValue:_citationTV.text forKey:@"citation"];
-    NSError *error = nil;
-    if (![[self managedObjectContext] save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-    }
-    NSLog(@"Saved Citation");
 }
 
 

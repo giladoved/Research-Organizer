@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12E55" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Flashcards" syncable="YES">
         <attribute name="citation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
@@ -9,12 +9,7 @@
         <attribute name="point" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="quote" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Results" syncable="YES">
-        <attribute name="citation" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="essay" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <elements>
-        <element name="Flashcards" positionX="160" positionY="192" width="128" height="150"/>
-        <element name="Results" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Flashcards" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

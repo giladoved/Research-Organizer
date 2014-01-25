@@ -11,7 +11,7 @@
 #import "ExportPickerViewController.h"
 #import "MessageUI/MessageUI.h"
 
-@interface CreateEssayViewController : UIViewController <UITextViewDelegate, MFMailComposeViewControllerDelegate,
+@interface CreateEssayViewController : UIViewController <MFMailComposeViewControllerDelegate,
 MFMessageComposeViewControllerDelegate, ExportPickerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *cards;

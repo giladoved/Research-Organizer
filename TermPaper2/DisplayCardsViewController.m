@@ -10,6 +10,7 @@
 #import "AddCardViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Card.h"
+#import <Parse/Parse.h>
 
 @interface DisplayCardsViewController () {
     UIButton *chooseColorBtn;
@@ -39,6 +40,10 @@ UITextView *explanation;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    PFUser *currentUser = [PFUser currentUser];
+    NSLog(@"currentUser::: %@", currentUser.username);
+    
+    
     self.points = [NSMutableArray new];
     self.quotes = [NSMutableArray new];
     self.citations = [NSMutableArray new];
@@ -63,8 +68,24 @@ UITextView *explanation;
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     self.cardViews = [NSMutableArray new];
     
+    PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
+    [query whereKey:@"user" equalTo:currentUser.username];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSLog(@"Successfully retrieved: %@", objects);
+            self.parseCards = [objects mutableCopy];
+        } else {
+            NSString *errorString = [[error userInfo] objectForKey:@"error"];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Info From Parse"
+                                                            message:errorString
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }];
+    
      /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
-     [self deleteAllObjectsForEntity:@"Results" andContext:managedObjectContext];
      [self.cards removeAllObjects];
      [self.coordinates removeAllObjects];
      [self.retrievedViewLocations removeAllObjects];
@@ -81,6 +102,7 @@ UITextView *explanation;
     NSLog(@"%@", self.quotes);
     if (self.cards.count > 0) {
         self.navigationItem.leftBarButtonItem.enabled = YES;
+        [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:YES];
         for (int i = 0; i < [self.cards count]; i++) {
             NSManagedObject *card = [self.cards objectAtIndex:i];
             
@@ -132,6 +154,7 @@ UITextView *explanation;
         }
     } else {
         self.navigationItem.leftBarButtonItem.enabled = NO;
+        [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:NO];
     }
     
 }
@@ -307,7 +330,7 @@ UITextView *explanation;
     point.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
     
     UILabel *pointLbl = [UILabel new];
-    pointLbl.text = @"Point";
+    pointLbl.text = @"Point/Title";
     pointLbl.backgroundColor = [UIColor clearColor];
     pointLbl.textColor = [UIColor whiteColor];
     pointLbl.frame = CGRectMake(25, 5, 100, 50);
@@ -354,23 +377,25 @@ UITextView *explanation;
         }
         
         quoteLbl = [UILabel new];
-        quoteLbl.text = @"Illustration";
+        quoteLbl.text = @"Illustration/\nEvidence";
+        quoteLbl.numberOfLines = 2;
+        quoteLbl.lineBreakMode = NSLineBreakByWordWrapping;
         quoteLbl.textColor = [UIColor whiteColor];
         quoteLbl.backgroundColor = [UIColor clearColor];
         quoteLbl.frame = CGRectMake(25, 85, 100, 50);
         
         changeMediaBtn = [[UIButton alloc] init];
-        changeMediaBtn.frame = CGRectMake(15, 130, 100, 80);
+        changeMediaBtn.frame = CGRectMake(15, 150, 100, 60);
         [[changeMediaBtn titleLabel] setFont:[UIFont fontWithName:@"Arial" size:14.0]];
         [[changeMediaBtn titleLabel] setLineBreakMode:NSLineBreakByWordWrapping];
         changeMediaBtn.backgroundColor = [UIColor lightGrayColor];
-        [changeMediaBtn setTitle:@"Change Media" forState:UIControlStateNormal];
+        [changeMediaBtn setTitle:@"Add Media" forState:UIControlStateNormal];
         [changeMediaBtn addTarget:self
                          action:@selector(changeMedia)
                forControlEvents:UIControlEventTouchUpInside];
         
         removeMediaBtn = [[UIButton alloc] init];
-        removeMediaBtn.frame = CGRectMake(15, 220, 100, 80);
+        removeMediaBtn.frame = CGRectMake(15, 220, 100, 60);
         removeMediaBtn.backgroundColor = [UIColor lightGrayColor];
         [[removeMediaBtn titleLabel] setFont:[UIFont fontWithName:@"Arial" size:14.0]];
         [[removeMediaBtn titleLabel] setLineBreakMode:NSLineBreakByWordWrapping];

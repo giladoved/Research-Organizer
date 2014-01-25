@@ -50,28 +50,8 @@
     _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
     self.navigationItem.rightBarButtonItem = _exportBarButton;
     
-    
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Results"];
-    self.savedEssay = [[[self managedObjectContext] executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    if (self.savedEssay.count > 0)
-        foundEssay = [[self.savedEssay objectAtIndex:0] valueForKey:@"essay"];
     self.essay = [NSMutableString string];
-    self.essayTV.delegate = self;
-    if ([[foundEssay stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""] || self.savedEssay.count == 0) {
-        [self formulateEssay];
-    }
-    else {
-        self.essay = [[NSString stringWithString:foundEssay] mutableCopy];
-        self.essayTV.text = [foundEssay copy];
-        self.essayTV.text = @"";
-        alertBox = [[UIAlertView alloc] initWithTitle:@"Found Auto-Saved Version"
-                                                           message:@"Would you like to bring up your last auto-saved essay?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-        
-        [alertBox show];
-    }
-    
-    //self.essayTV.text = [self.essay copy];
+    [self formulateEssay];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -119,15 +99,8 @@
             [self.essay appendFormat:@"%@\n\n", currentPoint];
         }
     }
-    NSManagedObject *firstEssay = [NSEntityDescription insertNewObjectForEntityForName:@"Results" inManagedObjectContext:[self managedObjectContext]];
     
-    [firstEssay setValue:self.essay forKey:@"essay"];
     self.essayTV.text = [self.essay copy];
-    
-    NSError *error = nil;
-    if (![[self managedObjectContext] save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-    }
 }
 
 -(IBAction)goCitation:(id)sender {
@@ -188,8 +161,33 @@
 - (void)sendEmail {
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     mc.mailComposeDelegate = self;
-    [mc setMessageBody:_essayTV.text isHTML:NO];
     
+    NSMutableString *emailEssayText = [NSMutableString new];
+    [emailEssayText appendString:@"<html><body>"];
+    for (int i = 0; i < self.cards.count; i++) {
+        NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
+        NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
+        NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
+        NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
+        
+        [emailEssayText appendFormat:@"<p>%@</p>", currentPoint];
+        if (![currentQuote isEqualToString:@"-999"]) {
+            if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
+                NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
+                [emailEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\">", tempQuote];
+            }
+            else {
+                [emailEssayText appendFormat:@"<p>%@</p>", currentQuote];
+            }
+            [emailEssayText appendFormat:@"<p>%@</p>", currentCitation];
+            [emailEssayText appendFormat:@"<p>%@</p>", currentExplanation];
+        }
+        else {
+            [emailEssayText appendString:@"</br>"];
+        }
+    }
+    
+    [mc setMessageBody:[emailEssayText copy] isHTML:YES];
     [self presentViewController:mc animated:YES completion:NULL];    
 }
 
@@ -226,16 +224,6 @@
     else
         NSLog(@"Message failed");
 }
-
--(void)textViewDidEndEditing:(UITextView *)textView {
-    [[self.savedEssay objectAtIndex:0] setValue:_essayTV.text forKey:@"essay"];
-    NSError *error = nil;
-    if (![[self managedObjectContext] save:&error]) {
-        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-    }
-    NSLog(@"Saved essay");
-}
-
 
 - (NSManagedObjectContext *)managedObjectContext
 {

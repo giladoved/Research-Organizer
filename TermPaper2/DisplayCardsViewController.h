@@ -15,6 +15,7 @@ MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDele
     UIPopoverController *popover;
 }
 @property (strong) NSMutableArray *cards;
+@property (strong) NSMutableArray *parseCards;
 @property (strong) NSMutableArray *cardViews;
 @property (strong) NSMutableArray *retrievedViewLocations;
 
