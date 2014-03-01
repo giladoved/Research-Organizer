@@ -12,8 +12,7 @@
 
 @interface CreateEssayViewController (){
     UIBarButtonItem *_exportBarButton;
-    UIAlertView *alertBox;
-    NSString *foundEssay;
+    NSMutableString *htmlEssayText;
 }
 
 @end
@@ -54,18 +53,6 @@
     [self formulateEssay];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if(alertView == alertBox)
-    {
-        if(buttonIndex == 0) {
-            self.essayTV.text = @"";
-            [self formulateEssay];
-        }
-        else {
-            self.essayTV.text = [foundEssay copy];
-        }
-    }
-}
 
 -(void) formulateEssay {
     self.essay = [NSMutableString new];
@@ -100,7 +87,36 @@
         }
     }
     
-    self.essayTV.text = [self.essay copy];
+    //self.essayTV.text = [self.essay copy];
+    
+    
+    htmlEssayText = [NSMutableString new];
+    [htmlEssayText appendString:@"<html><body>"];
+    for (int i = 0; i < self.cards.count; i++) {
+        NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
+        NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
+        NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
+        NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
+        
+        [htmlEssayText appendFormat:@"<p>%@</p>", currentPoint];
+        if (![currentQuote isEqualToString:@"-999"]) {
+            if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
+                NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
+                [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\">", tempQuote];
+            }
+            else {
+                [htmlEssayText appendFormat:@"<p>%@</p>", currentQuote];
+            }
+            [htmlEssayText appendFormat:@"<p>%@</p>", currentCitation];
+            [htmlEssayText appendFormat:@"<p>%@</p>", currentExplanation];
+        }
+        else {
+            [htmlEssayText appendString:@"</br>"];
+        }
+    }
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:htmlEssayText]];
+    [self.essayWebView loadRequest:request];
 }
 
 -(IBAction)goCitation:(id)sender {
@@ -135,7 +151,7 @@
 {
     if ([chosenOption isEqualToString:@"Copy"]) {
         NSLog(@"Pasted!");
-        [[UIPasteboard generalPasteboard] setString:_essayTV.text];
+        [[UIPasteboard generalPasteboard] setString:self.essay];
     } else if ([chosenOption isEqualToString:@"Email"]){
         [self sendEmail];
     } else if ([chosenOption isEqualToString:@"iMessage"]) {
@@ -152,7 +168,7 @@
     MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
     if([MFMessageComposeViewController canSendText])
     {
-        controller.body = _essayTV.text;
+        controller.body = self.essay;
         controller.messageComposeDelegate = self;
         [self presentViewController:controller animated:YES completion:nil];
     }
@@ -162,32 +178,7 @@
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     mc.mailComposeDelegate = self;
     
-    NSMutableString *emailEssayText = [NSMutableString new];
-    [emailEssayText appendString:@"<html><body>"];
-    for (int i = 0; i < self.cards.count; i++) {
-        NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
-        NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
-        NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
-        NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
-        
-        [emailEssayText appendFormat:@"<p>%@</p>", currentPoint];
-        if (![currentQuote isEqualToString:@"-999"]) {
-            if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
-                NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
-                [emailEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\">", tempQuote];
-            }
-            else {
-                [emailEssayText appendFormat:@"<p>%@</p>", currentQuote];
-            }
-            [emailEssayText appendFormat:@"<p>%@</p>", currentCitation];
-            [emailEssayText appendFormat:@"<p>%@</p>", currentExplanation];
-        }
-        else {
-            [emailEssayText appendString:@"</br>"];
-        }
-    }
-    
-    [mc setMessageBody:[emailEssayText copy] isHTML:YES];
+    [mc setMessageBody:[htmlEssayText copy] isHTML:YES];
     [self presentViewController:mc animated:YES completion:NULL];    
 }
 

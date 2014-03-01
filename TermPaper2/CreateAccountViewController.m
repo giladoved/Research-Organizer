@@ -26,6 +26,20 @@
     return self;
 }
 
+- (IBAction)tapBackground:(id)sender {
+    [self.usernameTxt resignFirstResponder];
+    [self.passwordTxt resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    if (theTextField == self.usernameTxt) {
+        [self.usernameTxt resignFirstResponder];
+        [self.passwordTxt becomeFirstResponder];
+    } else if (theTextField == self.passwordTxt) {
+        [self createAccount:nil];
+    }
+    return YES;
+}
 
 - (IBAction)createAccount:(id)sender {
     NSString *username = self.usernameTxt.text;
@@ -34,7 +48,7 @@
     NSLog(@"password: %@", password);
     
     PFUser *user = [PFUser user];
-    user.username = username;
+    user.username = [username lowercaseString];
     user.password = password;
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -65,6 +79,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.usernameTxt.delegate = self;
+    self.passwordTxt.delegate = self;
     PFUser *currentUser = [PFUser currentUser];
     if (currentUser) {
         UIStoryboard *storyboard = [self storyboard];

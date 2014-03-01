@@ -48,7 +48,7 @@
         CGFloat popoverWidth = largestLabelWidth + 100;
         
         //Set the property to tell the popover container how big this view will be.
-        self.contentSizeForViewInPopover = CGSizeMake(popoverWidth, totalRowsHeight);
+        self.preferredContentSize = CGSizeMake(popoverWidth, totalRowsHeight);
     }
     
     return self;

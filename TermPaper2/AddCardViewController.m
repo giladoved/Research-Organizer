@@ -116,7 +116,7 @@
     
     UIViewController *colorVC = [[UIViewController alloc] init];
     [colorVC setView:colorPopupView];
-    [colorVC setContentSizeForViewInPopover:CGSizeMake(320, 260)];
+    [colorVC setPreferredContentSize:CGSizeMake(320, 260)];
     
     popover = [[UIPopoverController alloc] initWithContentViewController:colorVC];
     

@@ -19,6 +19,7 @@
     int currentColorIndex;
     UIPickerView *pickerView;
     UIImageView *quoteIV;
+    NSString *writtenPoint;
 }
 @property (nonatomic) NSMutableArray *coordinates;
 @property (strong) UIViewController *cardInfo;
@@ -96,8 +97,13 @@ UITextView *explanation;
                                style:UIBarButtonItemStyleBordered
                                target:self
                                action:@selector(exportCards:)];
+    UIBarButtonItem *resetBtn = [[UIBarButtonItem alloc]
+                                  initWithTitle:@"Reset Data"
+                                  style:UIBarButtonItemStyleBordered
+                                  target:self
+                                  action:@selector(resetData:)];
 
-    self.navigationItem.rightBarButtonItems =  @[self.navigationItem.rightBarButtonItem, exportBtn];
+    self.navigationItem.rightBarButtonItems =  @[self.navigationItem.rightBarButtonItem, resetBtn, exportBtn];
     
     NSLog(@"%@", self.quotes);
     if (self.cards.count > 0) {
@@ -182,6 +188,15 @@ UITextView *explanation;
      return [UIColor magentaColor];
     
     return nil;
+}
+
+-(IBAction)resetData:(id)sender {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Reset Data"
+                                                      message:@"Are you sure you want to reset all of your data? This will delete all of the data and work you have done on your ipad and will restore the data saved for you on the cloud?"
+                                                     delegate:self
+                                            cancelButtonTitle:@"Yes"
+                                            otherButtonTitles:@"No", nil];
+    [message show];
 }
 
 
@@ -328,6 +343,7 @@ UITextView *explanation;
     point.tag = 0;
     point.font = theFont;
     point.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
+    writtenPoint = point.text;
     
     UILabel *pointLbl = [UILabel new];
     pointLbl.text = @"Point/Title";
@@ -503,22 +519,83 @@ UITextView *explanation;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    quote.hidden = YES;
-    quoteIV.hidden = NO;
-    NSString *imageStr = [[alertView textFieldAtIndex:0] text];
-    imageStr = [imageStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSLog(@"imageStr: %@", imageStr);
-    NSURL *imageURL = [NSURL URLWithString:imageStr];
-    if (imageURL) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-            NSLog(@"image data: %@", imageData);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                quoteIV.image = [UIImage imageWithData:imageData];
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if([title isEqualToString:@"Add"])
+    {
+        quote.hidden = YES;
+        quoteIV.hidden = NO;
+        NSString *imageStr = [[alertView textFieldAtIndex:0] text];
+        imageStr = [imageStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSLog(@"imageStr: %@", imageStr);
+        NSURL *imageURL = [NSURL URLWithString:imageStr];
+        if (imageURL) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+                NSLog(@"image data: %@", imageData);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    quoteIV.image = [UIImage imageWithData:imageData];
+                });
             });
-        });
+        }
+        quote.text = [NSString stringWithFormat:@"<%@>", imageStr];
     }
-    quote.text = [NSString stringWithFormat:@"<%@>", imageStr];
+    else if([title isEqualToString:@"Yes"])
+    {
+        NSLog(@"Yes");
+        
+        PFUser *currentUser = [PFUser currentUser];
+        if (currentUser) {
+            PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
+            [query whereKey:@"user" equalTo:[PFUser currentUser].username];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *foundObjects, NSError *error) {
+                if (!error) {
+                    NSLog(@"Successfully retrieved %d cards.", foundObjects.count);
+                    
+                    if (foundObjects.count > 0) {
+                        //clear core data
+                        [self deleteAllObjectsForEntity:@"Flashcards" andContext:[self managedObjectContext]];
+                        [self.cards removeAllObjects];
+                        [self.coordinates removeAllObjects];
+                        [self.retrievedViewLocations removeAllObjects];
+                        [self.cardViews removeAllObjects];
+                        
+                        NSLog(@"object found: %@", foundObjects[0]);
+                        
+                        //add each value
+                        for (int i = 0; i < foundObjects.count; i++) {
+                            NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:[self managedObjectContext]];
+                            NSDictionary *currentObject = [foundObjects objectAtIndex:i];
+                            [newCard setValue:currentObject[@"point"] forKey:@"point"];
+                            [newCard setValue:currentObject[@"illustration"] forKey:@"quote"];
+                            [newCard setValue:currentObject[@"citation"] forKey:@"citation"];
+                            [newCard setValue:currentObject[@"explanation"] forKey:@"explanation"];
+                            [newCard setValue:currentObject[@"color"] forKey:@"color"];
+                        }
+                        
+                        NSError *error = nil;
+                        if (![[self managedObjectContext] save:&error]) {
+                            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+                        }
+                        
+                        //reload viewcontroler
+                        [self viewDidLoad];
+                        
+                        NSLog(@"Done");
+                        
+                    } else {
+                        NSLog(@"0 objects found");
+                    }
+                    
+                    
+                } else {
+                    NSLog(@"Error: %@ %@", error, [error userInfo]);
+                }
+            }];
+            
+        }
+    }
+    
 }
 
 -(IBAction)chooseColor:(id)sender {
@@ -545,7 +622,7 @@ UITextView *explanation;
     
     UIViewController *colorVC = [[UIViewController alloc] init];
     [colorVC setView:colorPopupView];
-    [colorVC setContentSizeForViewInPopover:CGSizeMake(320, 260)];
+    [colorVC setPreferredContentSize:CGSizeMake(320, 260)];
     
     popover = [[UIPopoverController alloc] initWithContentViewController:colorVC];
     
@@ -572,13 +649,16 @@ UITextView *explanation;
     	NSLog(@"Error deleting card:%@",error);
     }
     
+    PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
+    [query whereKey:@"user" equalTo:[PFUser currentUser].username];
+    [query whereKey:@"point" equalTo:writtenPoint];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *foundCard, NSError *error) {
         
-    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Delete"
-    //                                                message:@"Card was successfully deleted!"
-    //                                               delegate:nil
-    //                                      cancelButtonTitle:@"OK"
-    //                                      otherButtonTitles:nil];
-    //[alert show];
+        NSLog(@"found card: %@", foundCard);
+        [foundCard deleteInBackground];
+    }];
+
+
     [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
     [self viewDidAppear:YES];
 }
@@ -600,6 +680,27 @@ UITextView *explanation;
         [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
     }
     [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
+    [query whereKey:@"user" equalTo:[PFUser currentUser].username];
+    [query whereKey:@"point" equalTo:writtenPoint];
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *foundCard, NSError *error) {
+        
+        NSLog(@"found card: %@", foundCard);
+
+        foundCard[@"point"] = point.text;
+        if (![citation.text isEqualToString:@"-999"]) {
+            foundCard[@"illustration"] = quote.text;
+            foundCard[@"citation"] = citation.text;
+            foundCard[@"explanation"] = explanation.text;
+        }
+        foundCard[@"color"] = colorChoice;
+        [foundCard saveInBackground];
+        NSLog(@"saving card again");
+    }];
+    
+    
+    
     //float frameX = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
     //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameX] forKey:@"locationX"];
     //float frameY = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;

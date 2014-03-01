@@ -28,15 +28,16 @@
 
 - (IBAction)login:(id)sender {
     NSString *username = self.usernameTxt.text;
+    username = [username lowercaseString];
     NSString *password = self.passwordTxt.text;
     
     [PFUser logInWithUsernameInBackground:username password:password
         block:^(PFUser *user, NSError *error) {
             if (user) {
                 UIStoryboard *storyboard = [self storyboard];
-                LoginViewController *loginVC = (LoginViewController *)[storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-                loginVC.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:loginVC animated:YES];
+                DisplayCardsViewController *displayVC = (DisplayCardsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"DisplayCardsViewController"];
+                displayVC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:displayVC animated:YES];
             } else {
                 NSString *errorString = [error userInfo][@"error"];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Creating Account"

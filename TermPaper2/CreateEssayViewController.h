@@ -17,7 +17,7 @@ MFMessageComposeViewControllerDelegate, ExportPickerDelegate>
 @property (nonatomic, strong) NSMutableArray *cards;
 @property (nonatomic, strong) NSMutableArray *savedEssay;
 @property (nonatomic, strong) NSMutableString *essay;
-@property (strong, nonatomic) IBOutlet UITextView *essayTV;
+@property (weak, nonatomic) IBOutlet UIWebView *essayWebView;
 @property (strong, nonatomic) IBOutlet UINavigationItem *navBar;
 @property (nonatomic, strong) ExportPickerViewController *exportPicker;
 @property (nonatomic, strong) UIPopoverController *exportPickerPopover;
