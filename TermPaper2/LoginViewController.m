@@ -25,6 +25,22 @@
     return self;
 }
 
+- (IBAction)tapBackground:(id)sender {
+    [self.usernameTxt resignFirstResponder];
+    [self.passwordTxt resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    if (theTextField == self.usernameTxt) {
+        [self.usernameTxt resignFirstResponder];
+        [self.passwordTxt becomeFirstResponder];
+    } else if (theTextField == self.passwordTxt) {
+        [self login:nil];
+    }
+    return YES;
+}
+
+
 
 - (IBAction)login:(id)sender {
     NSString *username = self.usernameTxt.text;
@@ -54,7 +70,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    self.usernameTxt.delegate = self;
+    self.passwordTxt.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning

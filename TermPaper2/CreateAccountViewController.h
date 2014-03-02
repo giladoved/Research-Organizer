@@ -11,7 +11,6 @@
 @interface CreateAccountViewController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *usernameTxt;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTxt;
-- (IBAction)hideKeyboard:(id)sender;
 - (IBAction)tapBackground:(id)sender;
 - (IBAction)createAccount:(id)sender;
 @end
