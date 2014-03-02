@@ -69,7 +69,7 @@ UITextView *explanation;
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
     self.cardViews = [NSMutableArray new];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
+    /*PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
     [query whereKey:@"user" equalTo:currentUser.username];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -84,7 +84,7 @@ UITextView *explanation;
                                                   otherButtonTitles:nil];
             [alert show];
         }
-    }];
+    }];*/
     
      /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
      [self.cards removeAllObjects];
@@ -683,7 +683,7 @@ UITextView *explanation;
         NSLog(@"found card: %@", foundCard);
 
         foundCard[@"point"] = point.text;
-        if (![citation.text isEqualToString:@"-999"]) {
+        if (![citation.text isEqualToString:@"-999"] && citation) {
             foundCard[@"illustration"] = quote.text;
             foundCard[@"citation"] = citation.text;
             foundCard[@"explanation"] = explanation.text;

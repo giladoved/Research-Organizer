@@ -47,7 +47,7 @@
     NSLog(@"password: %@", password);
     
     
-    if ([username isEqualToString:@""] && [password isEqualToString:@""]) {
+    if (![username isEqualToString:@""] && ![password isEqualToString:@""]) {
         PFUser *user = [PFUser user];
         user.username = [username lowercaseString];
         user.password = password;
@@ -75,8 +75,8 @@
             }
         }];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Password left blank"
-                                                        message:@"Please enter a password. Don't leave it blank."
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Field left blank"
+                                                        message:@"Please enter a username and password. Don't leave them blank."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];

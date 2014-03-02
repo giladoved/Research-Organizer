@@ -99,12 +99,16 @@
         NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
         
         [htmlEssayText appendFormat:@"<p>%@</p>", currentPoint];
-        if (![currentQuote isEqualToString:@"-999"]) {
+        NSLog(@"current citation: %@", currentCitation);
+        if (![currentCitation isEqualToString:@"-999"] && currentCitation) {
+            NSLog(@"pie card");
             if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
                 NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
                 [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\">", tempQuote];
+                NSLog(@"pic");
             }
             else {
+                NSLog(@"quote");
                 [htmlEssayText appendFormat:@"<p>%@</p>", currentQuote];
             }
             [htmlEssayText appendFormat:@"<p>%@</p>", currentCitation];
@@ -114,9 +118,11 @@
             [htmlEssayText appendString:@"</br>"];
         }
     }
+    [htmlEssayText appendString:@"</body></html>"];
+
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:htmlEssayText]];
-    [self.essayWebView loadRequest:request];
+    NSLog(@"html is: %@", htmlEssayText);
+    [self.essayWebView loadHTMLString:htmlEssayText baseURL:[NSURL URLWithString:@""]];
 }
 
 -(IBAction)goCitation:(id)sender {
