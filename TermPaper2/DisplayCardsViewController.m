@@ -572,11 +572,16 @@ UITextView *explanation;
                             [newCard setValue:currentObject[@"citation"] forKey:@"citation"];
                             [newCard setValue:currentObject[@"explanation"] forKey:@"explanation"];
                             [newCard setValue:currentObject[@"color"] forKey:@"color"];
-                        }
-                        
-                        NSError *error = nil;
-                        if (![[self managedObjectContext] save:&error]) {
-                            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+                            float locX =[self currentScreenBoundsBasedOnOrientation].size.width/2;
+                            float locY =[self currentScreenBoundsBasedOnOrientation].size.height/2;
+
+                            [newCard setValue:[NSNumber numberWithFloat:locX] forKey:@"locationX"];
+                            [newCard setValue:[NSNumber numberWithFloat:locY] forKey:@"locationY"];
+                            
+                            NSError *error = nil;
+                            if (![[self managedObjectContext] save:&error]) {
+                                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+                            }
                         }
                         
                         //reload viewcontroler
@@ -746,6 +751,7 @@ UITextView *explanation;
             clickedCard = (Card *)touch.view;
         }
         
+        if (self.cards.count > 0) {
         NSManagedObjectContext *context = [self managedObjectContext];
         NSManagedObject *updatedCard = [self.cards objectAtIndex:indexCard];
         
@@ -758,6 +764,7 @@ UITextView *explanation;
         }
         
         NSLog(@"Layout Saved");
+        }
     }
 }
 

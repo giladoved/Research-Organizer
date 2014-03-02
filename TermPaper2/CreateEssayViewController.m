@@ -111,7 +111,9 @@
                 NSLog(@"quote");
                 [htmlEssayText appendFormat:@"<p>%@</p>", currentQuote];
             }
-            [htmlEssayText appendFormat:@"<p>%@</p></br>", currentExplanation];
+            [htmlEssayText appendFormat:@"<p>%@</p>", currentExplanation];
+            if (i < self.cards.count - 1)
+                [htmlEssayText appendString:@"</br>"];
         }
         else {
             [htmlEssayText appendString:@"</br>"];
