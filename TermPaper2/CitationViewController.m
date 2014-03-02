@@ -49,7 +49,7 @@
         if (![currentCitation isEqualToString:@"-999"]) {
             [self.citation appendFormat:@"%@\n", currentCitation];
         }
-    }
+    } 
     self.citationTV.text = [self.citation copy];
 }
 
