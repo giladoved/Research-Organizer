@@ -230,6 +230,17 @@
     self.colorPickerButtonPIE.layer.borderWidth = 3.0f;
     }
     NSLog(@"colorchoice: %@", colorChoice);
+    
+    self.pointTxt.delegate = self;
+    self.pointTxt.returnKeyType = UIReturnKeyNext;
+    self.topicTxt.delegate = self;
+    self.topicTxt.returnKeyType = UIReturnKeyDone;
+    self.quoteTxt.delegate = self;
+    self.quoteTxt.returnKeyType = UIReturnKeyNext;
+    self.citationTxt.delegate = self;
+    self.citationTxt.returnKeyType = UIReturnKeyNext;
+    self.explanationTxt.delegate = self;
+    self.explanationTxt.returnKeyType = UIReturnKeyDone;
 }
 
 -(UIColor *) getColorWithString:(NSString *)colorStr {
@@ -255,6 +266,38 @@
         return [UIColor magentaColor];
     
     return [UIColor grayColor];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField == self.topicTxt) {
+        [textField resignFirstResponder];
+    } else if (textField == self.pointTxt) {
+        [textField resignFirstResponder];
+        [self.quoteTxt becomeFirstResponder];
+    }
+    else if (textField == self.citationTxt) {
+        [textField resignFirstResponder];
+        [self.explanationTxt becomeFirstResponder];
+    }
+    return NO;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
+ replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        if (textView == self.quoteTxt) {
+            [textView resignFirstResponder];
+            [self.citationTxt becomeFirstResponder];
+        }
+        else if (textView == self.explanationTxt) {
+            [textView resignFirstResponder];
+        }
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 
