@@ -7,7 +7,6 @@
 //
 
 #import "CreateAccountViewController.h"
-#import "LoginViewController.h"
 #import "DisplayCardsViewController.h"
 #import <Parse/Parse.h>
 
@@ -47,32 +46,42 @@
     NSLog(@"username: %@", username);
     NSLog(@"password: %@", password);
     
-    PFUser *user = [PFUser user];
-    user.username = [username lowercaseString];
-    user.password = password;
     
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Created Account Successfully"
-                                                            message:@"Successfully created the account"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            UIStoryboard *storyboard = [self storyboard];
-            LoginViewController *loginVC = (LoginViewController *)[storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-            loginVC.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:loginVC animated:YES];
-        } else {
-            NSString *errorString = [error userInfo][@"error"];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Creating Account"
-                                                            message:errorString
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-    }];
+    if ([username isEqualToString:@""] && [password isEqualToString:@""]) {
+        PFUser *user = [PFUser user];
+        user.username = [username lowercaseString];
+        user.password = password;
+        
+        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Created Account Successfully"
+                                                                message:@"Successfully created the account"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                UIStoryboard *storyboard = [self storyboard];
+                DisplayCardsViewController *displayVC = (DisplayCardsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"DisplayCardsViewController"];
+                displayVC.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:displayVC animated:YES];
+            } else {
+                NSString *errorString = [error userInfo][@"error"];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Creating Account"
+                                                                message:errorString
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+        }];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Password left blank"
+                                                        message:@"Please enter a password. Don't leave it blank."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 

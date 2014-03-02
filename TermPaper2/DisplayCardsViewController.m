@@ -342,7 +342,7 @@ UITextView *explanation;
     point.backgroundColor = [UIColor whiteColor];
     point.tag = 0;
     point.font = theFont;
-    point.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
+    point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
     writtenPoint = point.text;
     NSLog(@"written point assigned: %@", writtenPoint);
     
@@ -368,7 +368,7 @@ UITextView *explanation;
         quote.backgroundColor = [UIColor whiteColor];
         quote.tag = 1;
         quote.font = theFont;
-        quote.text = [NSString stringWithFormat:@"%@ ", quoteStr];
+        quote.text = [NSString stringWithFormat:@"%@", quoteStr];
         quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
         quoteIV.contentMode = UIViewContentModeScaleAspectFit;
         NSString *imageStr = [quoteStr substringWithRange:NSMakeRange(1, quoteStr.length - 2)];
@@ -426,7 +426,7 @@ UITextView *explanation;
         citation.backgroundColor = [UIColor whiteColor];
         citation.tag = 2;
         citation.font = theFont;
-        citation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
+        citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
         
         citationLbl = [UILabel new];
         citationLbl.text = @"Citation";
@@ -439,7 +439,7 @@ UITextView *explanation;
         explanation.backgroundColor = [UIColor whiteColor];
         explanation.tag = 3;
         explanation.font = theFont;
-        explanation.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
+        explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
         
         explanationLbl = [UILabel new];
         explanationLbl.text = @"Explanation";
@@ -649,6 +649,8 @@ UITextView *explanation;
     if (![context save:&error]) {
     	NSLog(@"Error deleting card:%@",error);
     }
+    
+    NSLog(@"written point is still: %@.", writtenPoint);
     
     PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
     [query whereKey:@"user" equalTo:[PFUser currentUser].username];
