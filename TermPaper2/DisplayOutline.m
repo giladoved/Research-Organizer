@@ -121,12 +121,10 @@
             cell.quoteText.hidden = YES;
             cell.quoteIV.hidden = NO;
             NSString *imageStr = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
-            NSLog(@"imageStr: %@", imageStr);
             NSURL *imageURL = [NSURL URLWithString:imageStr];
             if (imageURL) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-                    NSLog(@"image data: %@", imageData);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         cell.quoteIV.image = [UIImage imageWithData:imageData];
                     });

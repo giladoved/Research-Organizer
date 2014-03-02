@@ -111,10 +111,12 @@
                 NSLog(@"quote");
                 [htmlEssayText appendFormat:@"<p>%@</p>", currentQuote];
             }
-            [htmlEssayText appendFormat:@"<p>%@</p>", currentCitation];
-            [htmlEssayText appendFormat:@"<p>%@</p>", currentExplanation];
+            [htmlEssayText appendFormat:@"<p>%@</p></br>", currentExplanation];
         }
         else {
+            [htmlEssayText appendString:@"</br>"];
+        }
+        if (i < self.cards.count - 2 && [[[self.cards objectAtIndex:i+1] valueForKey:@"citation"] isEqualToString:@"-999"]){
             [htmlEssayText appendString:@"</br>"];
         }
     }
