@@ -108,7 +108,7 @@ UITextView *explanation;
     NSLog(@"%@", self.quotes);
     if (self.cards.count > 0) {
         self.navigationItem.leftBarButtonItem.enabled = YES;
-        [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:YES];
+        [exportBtn setEnabled:YES];
         for (int i = 0; i < [self.cards count]; i++) {
             NSManagedObject *card = [self.cards objectAtIndex:i];
             
@@ -160,7 +160,7 @@ UITextView *explanation;
         }
     } else {
         self.navigationItem.leftBarButtonItem.enabled = NO;
-        [[self.navigationItem.rightBarButtonItems objectAtIndex:1] setEnabled:NO];
+        [exportBtn setEnabled:NO];
     }
     
 }
@@ -344,6 +344,7 @@ UITextView *explanation;
     point.font = theFont;
     point.text = [NSString stringWithFormat:@"%@ ", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
     writtenPoint = point.text;
+    NSLog(@"written point assigned: %@", writtenPoint);
     
     UILabel *pointLbl = [UILabel new];
     pointLbl.text = @"Point/Title";
@@ -664,17 +665,8 @@ UITextView *explanation;
 }
 
 -(void) savePopup {
-    if ([point.text isEqualToString:@""])
-        point.text = @" ";
-    if ([quote.text isEqualToString:@""])
-        quote.text = @" ";
-    if ([citation.text isEqualToString:@""])
-        citation.text = @" ";
-    if ([explanation.text isEqualToString:@""])
-        explanation.text = @" ";
-
     [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
-    if (citation.text || [citation.text isEqualToString:@"-999"]) {
+    if (citation.text && ![citation.text isEqualToString:@"-999"]) {
         [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
         [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
         [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
