@@ -20,6 +20,9 @@
     UIPickerView *pickerView;
     UIImageView *quoteIV;
     NSString *writtenPoint;
+    BOOL isTopic;
+    UIScrollView *scrollview;
+    UIButton *saveButton;
 }
 @property (nonatomic) NSMutableArray *coordinates;
 @property (strong) UIViewController *cardInfo;
@@ -98,7 +101,7 @@ UITextView *explanation;
                                target:self
                                action:@selector(exportCards:)];
     UIBarButtonItem *resetBtn = [[UIBarButtonItem alloc]
-                                  initWithTitle:@"Reset Data"
+                                  initWithTitle:@"Restore Data"
                                   style:UIBarButtonItemStyleBordered
                                   target:self
                                   action:@selector(resetData:)];
@@ -164,6 +167,7 @@ UITextView *explanation;
     }
     
 }
+
 
 -(UIColor *) getColorWithString:(NSString *)colorStr {
     if ([colorStr isEqualToString:@"Red"])
@@ -298,7 +302,6 @@ UITextView *explanation;
     [self presentViewController:self.cardInfo animated:YES completion:nil];
     self.cardInfo.view.superview.center = self.view.center;
     
-    UIScrollView *scrollview;
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
         scrollview.showsVerticalScrollIndicator=YES;
@@ -342,6 +345,9 @@ UITextView *explanation;
     point.backgroundColor = [UIColor whiteColor];
     point.tag = 0;
     point.font = theFont;
+    point.returnKeyType = UIReturnKeyDefault;
+    isTopic = YES;
+    point.delegate = self;
     point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
     writtenPoint = point.text;
     NSLog(@"written point assigned: %@", writtenPoint);
@@ -361,6 +367,9 @@ UITextView *explanation;
     if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
         chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
 
+        point.returnKeyType = UIReturnKeyNext;
+        isTopic = NO;
+
         NSString *quoteStr = [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"];
         quoteStr = [quoteStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         quote = [[UITextView alloc] init];
@@ -368,6 +377,8 @@ UITextView *explanation;
         quote.backgroundColor = [UIColor whiteColor];
         quote.tag = 1;
         quote.font = theFont;
+        quote.returnKeyType = UIReturnKeyNext;
+        quote.delegate = self;
         quote.text = [NSString stringWithFormat:@"%@", quoteStr];
         quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
         quoteIV.contentMode = UIViewContentModeScaleAspectFit;
@@ -425,7 +436,9 @@ UITextView *explanation;
         citation.frame = CGRectMake(125, 325, 400, 50);
         citation.backgroundColor = [UIColor whiteColor];
         citation.tag = 2;
+        citation.delegate = self;
         citation.font = theFont;
+        citation.returnKeyType = UIReturnKeyNext;
         citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
         
         citationLbl = [UILabel new];
@@ -439,6 +452,7 @@ UITextView *explanation;
         explanation.backgroundColor = [UIColor whiteColor];
         explanation.tag = 3;
         explanation.font = theFont;
+        explanation.returnKeyType = UIReturnKeyDefault;
         explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
         
         explanationLbl = [UILabel new];
@@ -456,7 +470,7 @@ UITextView *explanation;
                  action:@selector(cancelPopup)
        forControlEvents:UIControlEventTouchUpInside];
     
-    UIButton *saveButton = [[UIButton alloc] init];
+    saveButton = [[UIButton alloc] init];
     saveButton.frame = CGRectMake(350, 630, 150, 35);
     saveButton.backgroundColor = [UIColor blueColor];
     [saveButton setTitle:@"Save" forState:UIControlStateNormal];
@@ -506,6 +520,10 @@ UITextView *explanation;
     scrollview.contentSize = CGSizeMake(self.cardInfo.view.frame.size.width, self.cardInfo.view.frame.size.height + 265);
 }
 
+- (BOOL)disablesAutomaticKeyboardDismissal {
+    return NO;
+}
+
 -(void)changeMedia {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Add" otherButtonTitles:nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
@@ -517,6 +535,37 @@ UITextView *explanation;
     quote.hidden = NO;
     quoteIV.image = nil;
     quoteIV.hidden = YES;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
+ replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        if (textView == point) {
+            if (!isTopic) {
+                NSLog(@"point > quote");
+                [textView resignFirstResponder];
+                [quote becomeFirstResponder];
+            }
+            else {
+                return YES;
+            }
+        }
+        if (textView == quote) {
+            NSLog(@"quote > citation");
+            [textView resignFirstResponder];
+            [citation becomeFirstResponder];
+        }
+        if (textView == citation) {
+            NSLog(@"citation > explanation");
+            [textView resignFirstResponder];
+            [explanation becomeFirstResponder];
+        }
+        
+        return NO;
+    }
+
+    return YES;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -862,6 +911,32 @@ UITextView *explanation;
     // Dispose of any resources that can be recreated.
 }
 
+- (void)registerForKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+}
+
+- (void)deregisterFromKeyboardNotifications {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardDidHideNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    
+}
+
 -(CGRect)currentScreenBoundsBasedOnOrientation
 {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
@@ -875,6 +950,7 @@ UITextView *explanation;
     }
     return screenBounds;
 }
+
 
 - (void) viewDidLoad {
     [super viewDidLoad];

@@ -11,7 +11,7 @@
 #import <MessageUI/MessageUI.h>
 
 @interface DisplayCardsViewController : UIViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate,
-MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate> {
+MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextViewDelegate> {
     UIPopoverController *popover;
 }
 @property (strong) NSMutableArray *cards;
