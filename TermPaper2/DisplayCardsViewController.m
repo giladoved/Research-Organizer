@@ -634,9 +634,16 @@ UITextView *explanation;
                         }
                         
                         //reload viewcontroler
-                        [self viewDidLoad];
+                        [self viewDidAppear:YES];
+                        
                         
                         NSLog(@"Done");
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successfully restored data"
+                                                                        message:@"Your data was successfully restored back to this device."
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"OK"
+                                                              otherButtonTitles:nil];
+                        [alert show];
                         
                     } else {
                         NSLog(@"0 objects found");

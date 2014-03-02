@@ -95,36 +95,30 @@
     for (int i = 0; i < self.cards.count; i++) {
         NSString *currentPoint = [[self.cards objectAtIndex:i] valueForKey:@"point"];
         NSString *currentQuote = [[self.cards objectAtIndex:i] valueForKey:@"quote"];
-        NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
         NSString *currentExplanation = [[self.cards objectAtIndex:i] valueForKey:@"explanation"];
         
-        [htmlEssayText appendFormat:@"<p>%@</p>", currentPoint];
-        NSLog(@"current citation: %@", currentCitation);
-        if (![currentCitation isEqualToString:@"-999"] && currentCitation) {
-            NSLog(@"pie card");
+        if ([currentQuote isEqualToString:@"-999"]) {
+            if (i > 0)
+                [htmlEssayText appendString:@"</br>"];
+            [htmlEssayText appendFormat:@"<p><strong>%@</strong></p>", currentPoint];
+        }
+        else
+            [htmlEssayText appendFormat:@"<p>%@</p>", currentPoint];
+        if (![currentQuote isEqualToString:@"-999"]) {
             if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
                 NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
                 [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\">", tempQuote];
-                NSLog(@"pic");
             }
             else {
-                NSLog(@"quote");
                 [htmlEssayText appendFormat:@"<p>%@</p>", currentQuote];
             }
-            [htmlEssayText appendFormat:@"<p>%@</p>", currentExplanation];
-            if (i < self.cards.count - 1)
-                [htmlEssayText appendString:@"</br>"];
+            if (![currentExplanation isEqualToString:@"-999"])
+            [htmlEssayText appendFormat:@"<p>%@</p><br/>", currentExplanation];
         }
         else {
-            [htmlEssayText appendString:@"</br>"];
-        }
-        if (i < self.cards.count - 2 && [[[self.cards objectAtIndex:i+1] valueForKey:@"citation"] isEqualToString:@"-999"]){
-            [htmlEssayText appendString:@"</br>"];
+            //[htmlEssayText appendString:@"</br>"];
         }
     }
-    [htmlEssayText appendString:@"</body></html>"];
-
-    
     NSLog(@"html is: %@", htmlEssayText);
     [self.essayWebView loadHTMLString:htmlEssayText baseURL:[NSURL URLWithString:@""]];
 }

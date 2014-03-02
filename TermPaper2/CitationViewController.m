@@ -10,8 +10,6 @@
 
 @interface CitationViewController (){
     UIBarButtonItem *_exportBarButton;
-    UIAlertView *alertBox;
-    NSString *foundCitation;
 }
 
 @end
@@ -40,20 +38,6 @@
     self.navigationItem.title = @"Citation";
 }
 
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if(alertView == alertBox)
-    {
-        if(buttonIndex == 0) {
-            [self formulateCitation];
-            
-        }
-        else {
-            self.citationTV.text = [foundCitation copy];
-        }
-    }
-}
-
 -(void) formulateCitation {
     self.citation = [NSMutableString new];
     NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
@@ -62,12 +46,8 @@
     for (int i = 0; i < self.cards.count; i++) {
         NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
         currentCitation = [currentCitation stringByReplacingOccurrencesOfString:@" " withString:@""];
-        NSLog(@"currentCitation: %@", currentCitation);
         if (![currentCitation isEqualToString:@"-999"]) {
-            [self.citation appendFormat:@"%@ \n", currentCitation];
-        } else {
-            if (i != 0)
-                [self.citation appendString:@"\n"];
+            [self.citation appendFormat:@"%@\n", currentCitation];
         }
     }
     self.citationTV.text = [self.citation copy];
