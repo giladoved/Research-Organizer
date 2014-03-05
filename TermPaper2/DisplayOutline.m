@@ -17,6 +17,8 @@
     BOOL editing;
     UITableView *tableview;
     NSIndexPath *indexpath;
+    int footnoteCount;
+    NSMutableArray *footnotes;
 }
 
 -(void) viewDidLoad
@@ -47,21 +49,30 @@
     self.colors = [NSMutableArray new];
     self.xs = [NSMutableArray new];
     self.ys = [NSMutableArray new];
+    footnotes = [NSMutableArray new];
     
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequestF = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
     self.cards = [[managedObjectContext executeFetchRequest:fetchRequestF error:nil] mutableCopy];
     
+    footnoteCount = 1;
     for (int i = 0; i < self.cards.count; i++) {
         [self.points addObject:[[self.cards objectAtIndex:i] valueForKey:@"point"]];
         [self.quotes addObject:[[self.cards objectAtIndex:i] valueForKey:@"quote"]];
+        if (![[self.quotes objectAtIndex:i] isEqualToString:@"-999"]) {
+            [footnotes addObject:[NSNumber numberWithInt:footnoteCount]];
+            footnoteCount++;
+        }else {
+            [footnotes addObject:[NSNumber numberWithInt:0]];
+        }
         [self.citations addObject:[[self.cards objectAtIndex:i] valueForKey:@"citation"]];
         [self.explanations addObject:[[self.cards objectAtIndex:i] valueForKey:@"explanation"]];
         [self.colors addObject:[[self.cards objectAtIndex:i] valueForKey:@"color"]];
         [self.xs addObject:[[self.cards objectAtIndex:i] valueForKey:@"locationX"]];
         [self.ys addObject:[[self.cards objectAtIndex:i] valueForKey:@"locationY"]];
     }
-    NSLog(@"%@", self.quotes);
+    NSLog(@"%@", footnotes);
+    NSLog(@"citation: %@", self.citations);
 }
 
 -(IBAction)goEssay:(id)sender {
@@ -130,11 +141,15 @@
                     });
                 });
             }
+            cell.quoteText.hidden = NO;
+            if ([footnotes[indexPath.row] intValue] != 0)
+            cell.quoteText.text = [NSString stringWithFormat:@"[%i]", [footnotes[indexPath.row] intValue]];
         } else {
             NSLog(@"show text");
             cell.quoteText.hidden = NO;
             cell.quoteIV.hidden = YES;
-            cell.quoteText.text = currentQuote;
+            if ([footnotes[indexPath.row] intValue] != 0)
+            cell.quoteText.text = [NSString stringWithFormat:@"%@ [%i]", currentQuote, [footnotes[indexPath.row] intValue]];
         }
         
         cell.explanationText.text = [self.explanations objectAtIndex:indexPath.row];
@@ -312,6 +327,10 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.explanations removeObjectAtIndex:fromIndexPath.row];
     [self.explanations insertObject:expl atIndex:toIndexPath.row];
     
+    id cita = [self.citations objectAtIndex:fromIndexPath.row];
+    [self.citations removeObjectAtIndex:fromIndexPath.row];
+    [self.citations insertObject:cita atIndex:toIndexPath.row];
+    
     id color = [self.colors objectAtIndex:fromIndexPath.row];
     [self.colors removeObjectAtIndex:fromIndexPath.row];
     [self.colors insertObject:color atIndex:toIndexPath.row];
@@ -323,6 +342,9 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     id theY = [self.ys objectAtIndex:fromIndexPath.row];
     [self.ys removeObjectAtIndex:fromIndexPath.row];
     [self.ys insertObject:theY atIndex:toIndexPath.row];
+    
+    NSLog(@"citations: %@", self.citations);
+
 }
 
 @end

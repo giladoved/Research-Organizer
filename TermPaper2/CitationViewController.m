@@ -10,6 +10,7 @@
 
 @interface CitationViewController (){
     UIBarButtonItem *_exportBarButton;
+    int footnoteCount;
 }
 
 @end
@@ -30,6 +31,8 @@
 {
     [super viewDidLoad];
     
+    footnoteCount = 1;
+    
     self.citation = [NSMutableString string];
     [self formulateCitation];
         
@@ -47,9 +50,11 @@
         NSString *currentCitation = [[self.cards objectAtIndex:i] valueForKey:@"citation"];
         currentCitation = [currentCitation stringByReplacingOccurrencesOfString:@" " withString:@""];
         if (![currentCitation isEqualToString:@"-999"]) {
-            [self.citation appendFormat:@"%@\n", currentCitation];
+            [self.citation appendFormat:@"%@ [%i]\n", currentCitation, footnoteCount];
+            footnoteCount++;
         }
-    } 
+    }
+    
     self.citationTV.text = [self.citation copy];
 }
 

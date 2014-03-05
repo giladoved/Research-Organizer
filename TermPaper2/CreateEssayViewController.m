@@ -13,6 +13,8 @@
 @interface CreateEssayViewController (){
     UIBarButtonItem *_exportBarButton;
     NSMutableString *htmlEssayText;
+    int footnoteCount;
+    int footnoteCount1;
 }
 
 @end
@@ -33,6 +35,8 @@
 {
     [super viewDidLoad];
     
+    footnoteCount = 1;
+    footnoteCount1 = 1;
     UIBarButtonItem *citationButton = [[UIBarButtonItem alloc] initWithTitle:@"Citation Page" style:UIBarButtonItemStyleBordered target:self action:@selector(goCitation:)];
     
     UIBarButtonItem *goBack = [[UIBarButtonItem alloc]
@@ -79,7 +83,9 @@
             if (![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"."] || ![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"?"]  || ![[currentExplanation substringFromIndex:[currentExplanation length] - 1] isEqualToString:@"!"])
                 currentExplanation = [NSString stringWithFormat:@"%@.", currentExplanation];
             
+            currentQuote = [NSString stringWithFormat:@"%@[%i]", currentQuote, footnoteCount];
             [self.essay appendFormat:@"%@\n%@\n%@\n\n", currentPoint, currentQuote, currentExplanation];
+            footnoteCount++;
         } else {
             if (i != 0)
                 [self.essay appendString:@"\n"];
@@ -107,13 +113,14 @@
         if (![currentQuote isEqualToString:@"-999"]) {
             if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
                 NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
-                [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\">", tempQuote];
+                [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\"> [%i]", tempQuote, footnoteCount1];
             }
             else {
-                [htmlEssayText appendFormat:@"<p>%@</p>", currentQuote];
+                [htmlEssayText appendFormat:@"<p>%@ [%i]</p>", currentQuote, footnoteCount1];
             }
             if (![currentExplanation isEqualToString:@"-999"])
             [htmlEssayText appendFormat:@"<p>%@</p><br/>", currentExplanation];
+            footnoteCount1++;
         }
         else {
             //[htmlEssayText appendString:@"</br>"];
