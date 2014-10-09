@@ -44,128 +44,158 @@ UITextView *explanation;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    PFUser *currentUser = [PFUser currentUser];
-    NSLog(@"currentUser::: %@", currentUser.username);
+    //[PFUser logOut];
     
-    
-    self.points = [NSMutableArray new];
-    self.quotes = [NSMutableArray new];
-    self.citations = [NSMutableArray new];
-    self.explanations = [NSMutableArray new];
-    
-    colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
-    
-    UIImage *backImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"WhiteBackground" ofType:@"png"]];
-    UIImageView *backIV = [[UIImageView alloc] initWithFrame:self.view.bounds];
-    backIV.image = backImage;
-    backIV.contentMode = UIViewContentModeScaleToFill;
-    [self.view addSubview:backIV];
-    
-    for (UIView *view in self.view.subviews)
-    {
-        if ([view isKindOfClass:[Card class]])
-            [view removeFromSuperview];
-    }
+    if (![PFUser currentUser]) { // No user logged in
+        // Create the log in view controller
+        PFLogInViewController *logInViewController = [[PFLogInViewController alloc] init];
+        [logInViewController setDelegate:self]; // Set ourselves as the delegate
         
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
-    self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    self.cardViews = [NSMutableArray new];
-    
-    /*PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
-    [query whereKey:@"user" equalTo:currentUser.username];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSLog(@"Successfully retrieved: %@", objects);
-            self.parseCards = [objects mutableCopy];
+        // Create the sign up view controller
+        PFSignUpViewController *signUpViewController = [[PFSignUpViewController alloc] init];
+        [signUpViewController setDelegate:self]; // Set ourselves as the delegate
+        
+        // Assign our sign up controller to be displayed from the login controller
+        [logInViewController setSignUpController:signUpViewController];
+        
+        // Present the log in view controller
+        [self presentViewController:logInViewController animated:YES completion:NULL];
+    }
+    else {
+        
+        PFUser *currentUser = [PFUser currentUser];
+        NSLog(@"currentUser::: %@", currentUser.username);
+        
+        
+        self.points = [NSMutableArray new];
+        self.quotes = [NSMutableArray new];
+        self.citations = [NSMutableArray new];
+        self.explanations = [NSMutableArray new];
+        
+        colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
+        
+        UIImage *backImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"WhiteBackground" ofType:@"png"]];
+        UIImageView *backIV = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        backIV.image = backImage;
+        backIV.contentMode = UIViewContentModeScaleToFill;
+        [self.view addSubview:backIV];
+        
+        for (UIView *view in self.view.subviews)
+        {
+            if ([view isKindOfClass:[Card class]])
+                [view removeFromSuperview];
+        }
+        
+        NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
+        self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+        self.cardViews = [NSMutableArray new];
+        
+        /*PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
+         [query whereKey:@"user" equalTo:currentUser.username];
+         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+         if (!error) {
+         NSLog(@"Successfully retrieved: %@", objects);
+         self.parseCards = [objects mutableCopy];
+         } else {
+         NSString *errorString = [[error userInfo] objectForKey:@"error"];
+         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Info From Parse"
+         message:errorString
+         delegate:nil
+         cancelButtonTitle:@"OK"
+         otherButtonTitles:nil];
+         [alert show];
+         }
+         }];*/
+        
+        /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
+         [self.cards removeAllObjects];
+         [self.coordinates removeAllObjects];
+         [self.retrievedViewLocations removeAllObjects];
+         [self.cardViews removeAllObjects];*/
+        
+        UIBarButtonItem *exportBtn = [[UIBarButtonItem alloc]
+                                      initWithTitle:@"Export"
+                                      style:UIBarButtonItemStyleBordered
+                                      target:self
+                                      action:@selector(exportCards:)];
+        UIBarButtonItem *resetBtn = [[UIBarButtonItem alloc]
+                                     initWithTitle:@"Restore Data"
+                                     style:UIBarButtonItemStyleBordered
+                                     target:self
+                                     action:@selector(resetData:)];
+        UIBarButtonItem *logoutBtn = [[UIBarButtonItem alloc]
+                                     initWithTitle:@"Logout"
+                                     style:UIBarButtonItemStyleBordered
+                                     target:self
+                                     action:@selector(logOut:)];
+        
+        self.navigationItem.rightBarButtonItems =  @[self.navigationItem.rightBarButtonItem, resetBtn, logoutBtn, exportBtn];
+        
+        NSLog(@"%@", self.quotes);
+        if (self.cards.count > 0) {
+            self.navigationItem.leftBarButtonItem.enabled = YES;
+            [exportBtn setEnabled:YES];
+            for (int i = 0; i < [self.cards count]; i++) {
+                NSManagedObject *card = [self.cards objectAtIndex:i];
+                
+                float x = [[card valueForKey:@"locationX"] floatValue];
+                float y = [[card valueForKey:@"locationY"] floatValue];
+                Card *currentCard;
+                if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"])
+                    currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
+                else
+                    currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 250.0,75.0)];
+                
+                currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
+                NSLog(@"%@: %f by %f", currentCard.text, x, y);
+                currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
+                currentCard.index = i;
+                
+                NSString *chosenColor = [card valueForKey:@"color"];
+                UIImage *colorImage;
+                if ([chosenColor isEqualToString:@"Brown"] || [chosenColor isEqualToString:@"Green"]) {
+                    colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"jpg"]];
+                } else {
+                    colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"png"]];
+                }
+                
+                UIImageView *colorIV = [[UIImageView alloc] initWithFrame:currentCard.bounds];
+                colorIV.image = colorImage;
+                colorIV.contentMode = UIViewContentModeScaleToFill;
+                [currentCard addSubview:colorIV];
+                
+                UILabel *titleLabel = [[UILabel alloc] init];
+                titleLabel.text = currentCard.text;
+                if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"]) {
+                    titleLabel.numberOfLines = 5;
+                    [titleLabel setFrame:CGRectMake(30, 10, 150, 95)];
+                }
+                else {
+                    [titleLabel setFrame:CGRectMake(35, 10, 195, 55)];
+                    titleLabel.numberOfLines = 3;
+                }
+                titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                titleLabel.backgroundColor = [UIColor clearColor];
+                [currentCard addSubview:titleLabel];
+                [self.view addSubview:currentCard];
+                currentCard.userInteractionEnabled = YES;
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped:)];
+                [currentCard addGestureRecognizer:tap];
+                
+                [self.cardViews addObject:currentCard];
+            }
         } else {
-            NSString *errorString = [[error userInfo] objectForKey:@"error"];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Info From Parse"
-                                                            message:errorString
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
+            self.navigationItem.leftBarButtonItem.enabled = NO;
+            [exportBtn setEnabled:NO];
         }
-    }];*/
-    
-     /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
-     [self.cards removeAllObjects];
-     [self.coordinates removeAllObjects];
-     [self.retrievedViewLocations removeAllObjects];
-     [self.cardViews removeAllObjects];*/
-    
-    UIBarButtonItem *exportBtn = [[UIBarButtonItem alloc]
-                               initWithTitle:@"Export"
-                               style:UIBarButtonItemStyleBordered
-                               target:self
-                               action:@selector(exportCards:)];
-    UIBarButtonItem *resetBtn = [[UIBarButtonItem alloc]
-                                  initWithTitle:@"Restore Data"
-                                  style:UIBarButtonItemStyleBordered
-                                  target:self
-                                  action:@selector(resetData:)];
-
-    self.navigationItem.rightBarButtonItems =  @[self.navigationItem.rightBarButtonItem, resetBtn, exportBtn];
-    
-    NSLog(@"%@", self.quotes);
-    if (self.cards.count > 0) {
-        self.navigationItem.leftBarButtonItem.enabled = YES;
-        [exportBtn setEnabled:YES];
-        for (int i = 0; i < [self.cards count]; i++) {
-            NSManagedObject *card = [self.cards objectAtIndex:i];
-            
-            float x = [[card valueForKey:@"locationX"] floatValue];
-            float y = [[card valueForKey:@"locationY"] floatValue];
-            Card *currentCard;
-            if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"])
-                currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
-            else
-                currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 250.0,75.0)];
-
-            currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
-            NSLog(@"%@: %f by %f", currentCard.text, x, y);
-            currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
-            currentCard.index = i;
-            
-            NSString *chosenColor = [card valueForKey:@"color"];
-            UIImage *colorImage;
-            if ([chosenColor isEqualToString:@"Brown"] || [chosenColor isEqualToString:@"Green"]) {
-                colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"jpg"]];
-            } else {
-                colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@Card", chosenColor] ofType:@"png"]];
-            }
-            
-            UIImageView *colorIV = [[UIImageView alloc] initWithFrame:currentCard.bounds];
-            colorIV.image = colorImage;
-            colorIV.contentMode = UIViewContentModeScaleToFill;
-            [currentCard addSubview:colorIV];
-            
-            UILabel *titleLabel = [[UILabel alloc] init];
-            titleLabel.text = currentCard.text;
-            if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"]) {
-                titleLabel.numberOfLines = 5;
-                [titleLabel setFrame:CGRectMake(30, 10, 150, 95)];
-            }
-            else {
-                [titleLabel setFrame:CGRectMake(35, 10, 195, 55)];
-                titleLabel.numberOfLines = 3;
-            }
-            titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            titleLabel.backgroundColor = [UIColor clearColor];
-            [currentCard addSubview:titleLabel];
-            [self.view addSubview:currentCard];
-            currentCard.userInteractionEnabled = YES;
-            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped:)];
-            [currentCard addGestureRecognizer:tap];
-            
-            [self.cardViews addObject:currentCard];
-        }
-    } else {
-        self.navigationItem.leftBarButtonItem.enabled = NO;
-        [exportBtn setEnabled:NO];
     }
     
+}
+
+-(IBAction)logOut:(id)sender {
+    [PFUser logOut];
+    [self viewDidAppear:YES];
 }
 
 
@@ -968,6 +998,92 @@ UITextView *explanation;
     self.cardViews = [[NSMutableArray alloc] init];
     self.retrievedViewLocations = [[NSMutableArray alloc] init];
     self.coordinates = [[NSMutableArray alloc] init];
+}
+
+
+#pragma mark - PFLogInViewControllerDelegate
+
+// Sent to the delegate to determine whether the log in request should be submitted to the server.
+- (BOOL)logInViewController:(PFLogInViewController *)logInController shouldBeginLogInWithUsername:(NSString *)username password:(NSString *)password {
+    // Check if both fields are completed
+    if (username && password && username.length && password.length) {
+        return YES; // Begin login process
+    }
+    
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Information", nil) message:NSLocalizedString(@"Make sure you fill out all of the information!", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    return NO; // Interrupt login process
+}
+
+// Sent to the delegate when a PFUser is logged in.
+- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
+    [self dismissViewControllerAnimated:YES completion:^{
+        UIStoryboard *storyboard = [self storyboard];
+        DisplayCardsViewController *displayVC = (DisplayCardsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"DisplayCardsViewController"];
+        displayVC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:displayVC animated:YES];
+        NSLog(@"logginging");
+    }];
+}
+
+// Sent to the delegate when the log in attempt fails.
+- (void)logInViewController:(PFLogInViewController *)logInController didFailToLogInWithError:(NSError *)error {
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error Logging in", nil) message:NSLocalizedString(@"Make sure you are connected to the internet and your username and password are correct", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    NSLog(@"Failed to log in...");
+}
+
+// Sent to the delegate when the log in screen is dismissed.
+- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController {
+    NSLog(@"User dismissed the logInViewController");
+}
+
+
+#pragma mark - PFSignUpViewControllerDelegate
+
+// Sent to the delegate to determine whether the sign up request should be submitted to the server.
+- (BOOL)signUpViewController:(PFSignUpViewController *)signUpController shouldBeginSignUp:(NSDictionary *)info {
+    BOOL informationComplete = YES;
+    
+    // loop through all of the submitted data
+    for (id key in info) {
+        NSString *field = [info objectForKey:key];
+        if (!field || !field.length) { // check completion
+            informationComplete = NO;
+            break;
+        }
+    }
+    
+    // Display an alert if a field wasn't completed
+    if (!informationComplete) {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Missing Information", nil) message:NSLocalizedString(@"Make sure you fill out all of the information!", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
+    
+    return informationComplete;
+}
+
+// Sent to the delegate when a PFUser is signed up.
+- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+// Sent to the delegate when the sign up attempt fails.
+- (void)signUpViewController:(PFSignUpViewController *)signUpController didFailToSignUpWithError:(NSError *)error {
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error Registering", nil) message:NSLocalizedString(@"Error creating account. Check internet connection", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    NSLog(@"Failed to sign up...");
+}
+
+// Sent to the delegate when the sign up screen is dismissed.
+- (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
+    NSLog(@"User dismissed the signUpViewController");
+}
+
+
+#pragma mark - ()
+
+- (IBAction)logOutButtonTapAction:(id)sender {
+    if ([PFUser currentUser])
+    {
+        [PFUser logOut];
+    }
 }
 
 @end

@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "AddCardViewController.h"
 #import <MessageUI/MessageUI.h>
+#import <Parse/Parse.h>
 
 @interface DisplayCardsViewController : UIViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate,
-MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextViewDelegate> {
+MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextViewDelegate, PFSignUpViewControllerDelegate, PFLogInViewControllerDelegate> {
     UIPopoverController *popover;
 }
 @property (strong) NSMutableArray *cards;

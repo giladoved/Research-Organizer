@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6109C357189218AD001A1E77 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6109C356189218AD001A1E77 /* Parse.framework */; };
 		610A1C4E1794275D005B6351 /* DisplayOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 610A1C4D1794275D005B6351 /* DisplayOutline.m */; };
-		6127914B18944EBA00707137 /* CreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6127914A18944EBA00707137 /* CreateAccountViewController.m */; };
-		6127914E1894535D00707137 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6127914D1894535D00707137 /* LoginViewController.m */; };
 		617F792117ACA00300E82B22 /* CreateEssayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617F792017ACA00300E82B22 /* CreateEssayViewController.m */; };
 		617F792417ACA2AF00E82B22 /* CitationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 617F792317ACA2AF00E82B22 /* CitationViewController.m */; };
 		61996358178D07E5006B8706 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61996357178D07E5006B8706 /* Storyboard.storyboard */; };
@@ -57,10 +54,10 @@
 		61DF0BE518921ED400F03E3A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6109C35C1892194F001A1E77 /* MobileCoreServices.framework */; };
 		61DF0BE618921ED400F03E3A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61996359178D08E9006B8706 /* QuartzCore.framework */; };
 		61DF0BE718921ED400F03E3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6109C35D1892194F001A1E77 /* Security.framework */; };
-		61DF0BEA18921ED400F03E3A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61DF0BE818921ED400F03E3A /* StoreKit.framework */; };
 		61DF0BEB18921ED400F03E3A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61DF0BE918921ED400F03E3A /* SystemConfiguration.framework */; };
 		61EBFA3E17AF0B3E00F1FEBC /* ExportPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */; };
 		61EBFA4017AF138B00F1FEBC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61EBFA3F17AF138B00F1FEBC /* MessageUI.framework */; };
+		61EC778119D2464E0011383D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6109C356189218AD001A1E77 /* Parse.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,10 +70,6 @@
 		6109C35D1892194F001A1E77 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		610A1C4C1794275D005B6351 /* DisplayOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayOutline.h; sourceTree = "<group>"; };
 		610A1C4D1794275D005B6351 /* DisplayOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayOutline.m; sourceTree = "<group>"; };
-		6127914918944EBA00707137 /* CreateAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateAccountViewController.h; sourceTree = "<group>"; };
-		6127914A18944EBA00707137 /* CreateAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateAccountViewController.m; sourceTree = "<group>"; };
-		6127914C1894535D00707137 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		6127914D1894535D00707137 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		617F791F17ACA00300E82B22 /* CreateEssayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateEssayViewController.h; sourceTree = "<group>"; };
 		617F792017ACA00300E82B22 /* CreateEssayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateEssayViewController.m; sourceTree = "<group>"; };
 		617F792217ACA2AF00E82B22 /* CitationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CitationViewController.h; sourceTree = "<group>"; };
@@ -128,7 +121,6 @@
 		61CF5B4C182D907400F86321 /* TopicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicCell.h; sourceTree = "<group>"; };
 		61CF5B4D182D907400F86321 /* TopicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicCell.m; sourceTree = "<group>"; };
 		61CF5B4E182D907400F86321 /* TopicCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicCell.xib; sourceTree = "<group>"; };
-		61DF0BE818921ED400F03E3A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		61DF0BE918921ED400F03E3A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		61EBFA3C17AF0B3E00F1FEBC /* ExportPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExportPickerViewController.h; sourceTree = "<group>"; };
 		61EBFA3D17AF0B3E00F1FEBC /* ExportPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExportPickerViewController.m; sourceTree = "<group>"; };
@@ -140,7 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61DF0BEA18921ED400F03E3A /* StoreKit.framework in Frameworks */,
+				61EC778119D2464E0011383D /* Parse.framework in Frameworks */,
 				61DF0BEB18921ED400F03E3A /* SystemConfiguration.framework in Frameworks */,
 				61DF0BE018921ED400F03E3A /* AudioToolbox.framework in Frameworks */,
 				61DF0BE118921ED400F03E3A /* CFNetwork.framework in Frameworks */,
@@ -153,7 +145,6 @@
 				61CEC9C917792D6400820AA9 /* Foundation.framework in Frameworks */,
 				61EBFA4017AF138B00F1FEBC /* MessageUI.framework in Frameworks */,
 				61CEC9C717792D6400820AA9 /* UIKit.framework in Frameworks */,
-				6109C357189218AD001A1E77 /* Parse.framework in Frameworks */,
 				61CEC9CD17792D6400820AA9 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,7 +172,6 @@
 		61CEC9C517792D6400820AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				61DF0BE818921ED400F03E3A /* StoreKit.framework */,
 				61DF0BE918921ED400F03E3A /* SystemConfiguration.framework */,
 				6109C3581892194F001A1E77 /* AudioToolbox.framework */,
 				6109C3591892194F001A1E77 /* CFNetwork.framework */,
@@ -217,10 +207,6 @@
 				617F792017ACA00300E82B22 /* CreateEssayViewController.m */,
 				617F792217ACA2AF00E82B22 /* CitationViewController.h */,
 				617F792317ACA2AF00E82B22 /* CitationViewController.m */,
-				6127914918944EBA00707137 /* CreateAccountViewController.h */,
-				6127914A18944EBA00707137 /* CreateAccountViewController.m */,
-				6127914C1894535D00707137 /* LoginViewController.h */,
-				6127914D1894535D00707137 /* LoginViewController.m */,
 				61CEC9CF17792D6400820AA9 /* Supporting Files */,
 				61C04E391783D0BC006BC2C0 /* Card.h */,
 				61C04E3A1783D0BC006BC2C0 /* Card.m */,
@@ -300,6 +286,11 @@
 				TargetAttributes = {
 					61CEC9C217792D6400820AA9 = {
 						DevelopmentTeam = L2JS3CUT43;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -364,12 +355,10 @@
 				61CEC9D917792D6400820AA9 /* DisplayCardsAppDelegate.m in Sources */,
 				61CEC9E217792D6400820AA9 /* TermPaper2.xcdatamodeld in Sources */,
 				61CEC9EC17792E1A00820AA9 /* AddCardViewController.m in Sources */,
-				6127914E1894535D00707137 /* LoginViewController.m in Sources */,
 				61CEC9EF17792FC600820AA9 /* DisplayCardsViewController.m in Sources */,
 				61C04E3B1783D0BC006BC2C0 /* Card.m in Sources */,
 				61CF5B4F182D907400F86321 /* TopicCell.m in Sources */,
 				610A1C4E1794275D005B6351 /* DisplayOutline.m in Sources */,
-				6127914B18944EBA00707137 /* CreateAccountViewController.m in Sources */,
 				61C2D1D3179746EC00B7566E /* SimpleTableCell.m in Sources */,
 				617F792117ACA00300E82B22 /* CreateEssayViewController.m in Sources */,
 				617F792417ACA2AF00E82B22 /* CitationViewController.m in Sources */,
@@ -457,14 +446,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/giladoved/Documents/Developer/termpaper/term-paper-app",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TermPaper2/TermPaper2-Prefix.pch";
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "609D0AED-507B-4B2F-8D6C-9962CF3B6CEC";
+				PROVISIONING_PROFILE = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -478,14 +468,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/giladoved/Documents/Developer/termpaper/term-paper-app",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TermPaper2/TermPaper2-Prefix.pch";
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "609D0AED-507B-4B2F-8D6C-9962CF3B6CEC";
+				PROVISIONING_PROFILE = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
