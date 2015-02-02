@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Card.h"
 #import <Parse/Parse.h>
+#import "Constants.h"
 
 @interface DisplayCardsViewController () {
     UIButton *chooseColorBtn;
@@ -23,30 +24,43 @@
     BOOL isTopic;
     UIScrollView *scrollview;
     UIButton *saveButton;
+    NSDictionary *colorReferences;
+    PFUser *currentUser;
+    
+    UITextView *point;
+    UITextView *quote;
+    UITextView *citation;
+    UITextView *explanation;
+    
+    BOOL isCardBeingDragged;
+    float lastXLocation, lastYLocation;
+    int indexOfChosenCard;
+    
+    UIViewController *displayCardViewController;
 }
-@property (nonatomic) NSMutableArray *coordinates;
-@property (strong) UIViewController *cardInfo;
 @end
 
 @implementation DisplayCardsViewController
 
-BOOL dragging;
-float oldX, oldY;
-CGPoint touchLoc;
-int indexCard;
-
-UITextView *point;
-UITextView *quote;
-UITextView *citation;
-UITextView *explanation;
-
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    colorOptions = @[@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown"];
+    colorReferences = @{@"Gray":[UIColor grayColor], @"Red":[UIColor redColor], @"Green":[UIColor greenColor], @"Blue" : [UIColor blueColor], @"Cyan" : [UIColor cyanColor], @"Yellow": [UIColor yellowColor], @"Magenta" : [UIColor magentaColor], @"Orange" : [UIColor orangeColor], @"Purple" : [UIColor purpleColor], @"Brown" : [UIColor brownColor]};
+    
+    chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    
+    self.cards = [[NSMutableArray alloc] init];
+    self.cardViews = [[NSMutableArray alloc] init];
+    self.retrievedViewLocations = [[NSMutableArray alloc] init];
+}
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    //[PFUser logOut];
+    currentUser = [PFUser currentUser];
     
-    if (![PFUser currentUser]) { // No user logged in
+    //have the user login / register
+    if (!currentUser) { // No user logged in
         // Create the log in view controller
         PFLogInViewController *logInViewController = [[PFLogInViewController alloc] init];
         [logInViewController setDelegate:self]; // Set ourselves as the delegate
@@ -62,17 +76,10 @@ UITextView *explanation;
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }
     else {
-        
-        PFUser *currentUser = [PFUser currentUser];
-        NSLog(@"currentUser::: %@", currentUser.username);
-        
-        
         self.points = [NSMutableArray new];
         self.quotes = [NSMutableArray new];
         self.citations = [NSMutableArray new];
         self.explanations = [NSMutableArray new];
-        
-        colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
         
         UIImage *backImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"WhiteBackground" ofType:@"png"]];
         UIImageView *backIV = [[UIImageView alloc] initWithFrame:self.view.bounds];
@@ -80,6 +87,7 @@ UITextView *explanation;
         backIV.contentMode = UIViewContentModeScaleToFill;
         [self.view addSubview:backIV];
         
+        //remove all cards from the screen
         for (UIView *view in self.view.subviews)
         {
             if ([view isKindOfClass:[Card class]])
@@ -90,29 +98,6 @@ UITextView *explanation;
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
         self.cards = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
         self.cardViews = [NSMutableArray new];
-        
-        /*PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
-         [query whereKey:@"user" equalTo:currentUser.username];
-         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-         if (!error) {
-         NSLog(@"Successfully retrieved: %@", objects);
-         self.parseCards = [objects mutableCopy];
-         } else {
-         NSString *errorString = [[error userInfo] objectForKey:@"error"];
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Info From Parse"
-         message:errorString
-         delegate:nil
-         cancelButtonTitle:@"OK"
-         otherButtonTitles:nil];
-         [alert show];
-         }
-         }];*/
-        
-        /*[self deleteAllObjectsForEntity:@"Flashcards" andContext:managedObjectContext];
-         [self.cards removeAllObjects];
-         [self.coordinates removeAllObjects];
-         [self.retrievedViewLocations removeAllObjects];
-         [self.cardViews removeAllObjects];*/
         
         UIBarButtonItem *exportBtn = [[UIBarButtonItem alloc]
                                       initWithTitle:@"Export"
@@ -132,7 +117,6 @@ UITextView *explanation;
         
         self.navigationItem.rightBarButtonItems =  @[self.navigationItem.rightBarButtonItem, resetBtn, logoutBtn, exportBtn];
         
-        NSLog(@"%@", self.quotes);
         if (self.cards.count > 0) {
             self.navigationItem.leftBarButtonItem.enabled = YES;
             [exportBtn setEnabled:YES];
@@ -142,14 +126,13 @@ UITextView *explanation;
                 float x = [[card valueForKey:@"locationX"] floatValue];
                 float y = [[card valueForKey:@"locationY"] floatValue];
                 Card *currentCard;
-                if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"])
+                if (![[card valueForKey:@"explanation"] isEqualToString:kCardCheck])
                     currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 200.0,120.0)];
                 else
                     currentCard = [[Card alloc] initWithFrame:CGRectMake(x, y, 250.0,75.0)];
                 
                 currentCard.text = [NSString stringWithString:[card valueForKey:@"point"]];
-                NSLog(@"%@: %f by %f", currentCard.text, x, y);
-                currentCard.color = [self getColorWithString:[card valueForKey:@"color"]];
+                currentCard.color = colorReferences[[card valueForKey:@"color"]];
                 currentCard.index = i;
                 
                 NSString *chosenColor = [card valueForKey:@"color"];
@@ -167,7 +150,7 @@ UITextView *explanation;
                 
                 UILabel *titleLabel = [[UILabel alloc] init];
                 titleLabel.text = currentCard.text;
-                if (![[card valueForKey:@"explanation"] isEqualToString:@"-999"]) {
+                if (![[card valueForKey:@"explanation"] isEqualToString:kCardCheck]) {
                     titleLabel.numberOfLines = 5;
                     [titleLabel setFrame:CGRectMake(30, 10, 150, 95)];
                 }
@@ -198,32 +181,6 @@ UITextView *explanation;
     [self viewDidAppear:YES];
 }
 
-
--(UIColor *) getColorWithString:(NSString *)colorStr {
-    if ([colorStr isEqualToString:@"Red"])
-        return [UIColor redColor];
-    if ([colorStr isEqualToString:@"Orange"])
-     return [UIColor orangeColor];
-    if ([colorStr isEqualToString:@"Yellow"])
-        return [UIColor yellowColor];
-    if ([colorStr isEqualToString:@"Green"])
-        return [UIColor greenColor];
-    if ([colorStr isEqualToString:@"Cyan"])
-        return [UIColor cyanColor];
-    if ([colorStr isEqualToString:@"Blue"])
-        return [UIColor blueColor];
-    if ([colorStr isEqualToString:@"Brown"])
-        return [UIColor brownColor];
-    if ([colorStr isEqualToString:@"Gray"])
-        return [UIColor grayColor];
-    if ([colorStr isEqualToString:@"Purple"])
-        return [UIColor purpleColor];
-    if ([colorStr isEqualToString:@"Magenta"])
-     return [UIColor magentaColor];
-    
-    return nil;
-}
-
 -(IBAction)resetData:(id)sender {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Reset Data"
                                                       message:@"Are you sure you want to reset all of your data? This will delete all of the data and work you have done on your ipad and will restore the data saved for you on the cloud?"
@@ -235,8 +192,6 @@ UITextView *explanation;
 
 
 -(IBAction)exportCards:(id)sender {
-    NSLog(@"exporting cards");
-    
     for (int i = 0; i < self.cards.count; i++) {
         NSManagedObject *card = [self.cards objectAtIndex:i];
         [self.points addObject:[card valueForKey:@"point"]];
@@ -250,16 +205,17 @@ UITextView *explanation;
     
     BOOL withTopics = NO;
     for (int i = 0; i < self.quotes.count; i++) {
-        if ([[self.quotes objectAtIndex:i] isEqualToString:@"-999"]) {
+        if ([[self.quotes objectAtIndex:i] isEqualToString:kCardCheck]) {
             withTopics = YES;
             [emailText appendString:@"<h3>Topic Sentences</h3>"];
             break;
         }
     }
+    
     if (withTopics) {
         for (int i = 0; i < self.quotes.count; i++) {
             Card *currentCard = [self.cards objectAtIndex:i];
-            if ([[self.quotes objectAtIndex:i] isEqualToString:@"-999"]){
+            if ([[self.quotes objectAtIndex:i] isEqualToString:kCardCheck]){
                 [emailText appendFormat:@"<p style=\"color:%@\">%@</p>", [currentCard valueForKey:@"color"], self.points[i]];
             }
         }
@@ -269,7 +225,7 @@ UITextView *explanation;
     [emailText appendString:@"<h3>PIE Cards</h3>"];
     for (int i = 0; i < self.quotes.count; i++) {
         Card *currentCard = [self.cards objectAtIndex:i];
-        if (![[self.quotes objectAtIndex:i] isEqualToString:@"-999"]){
+        if (![[self.quotes objectAtIndex:i] isEqualToString:kCardCheck]){
             [emailText appendFormat:@"<p style=\"color:%@\">Point: %@</p>", [currentCard valueForKey:@"color"], self.points[i]];
             [emailText appendFormat:@"<p style=\"color:%@\">Illustration: %@</p>", [currentCard valueForKey:@"color"], self.quotes[i]];
             [emailText appendFormat:@"<p style=\"color:%@\">Explanation: %@</p>", [currentCard valueForKey:@"color"], self.explanations[i]];
@@ -325,37 +281,35 @@ UITextView *explanation;
 
 - (void)cardTapped:(UITapGestureRecognizer *)rec {
     Card *tappedLabel = (Card *)rec.view;
-    indexCard = tappedLabel.index;
-    self.cardInfo = [[UIViewController alloc] init];
-    self.cardInfo.modalPresentationStyle = UIModalPresentationFormSheet;
-    self.cardInfo.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self presentViewController:self.cardInfo animated:YES completion:nil];
-    self.cardInfo.view.superview.center = self.view.center;
+    indexOfChosenCard = tappedLabel.index;
+    displayCardViewController = [[UIViewController alloc] init];
+    displayCardViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+    displayCardViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self presentViewController:displayCardViewController animated:YES completion:nil];
+    displayCardViewController.view.superview.center = self.view.center;
     
-    if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+    if (![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
         scrollview.showsVerticalScrollIndicator=YES;
         scrollview.scrollEnabled=YES;
-        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 720);
+        displayCardViewController.view.superview.frame = CGRectMake(0, 0, 540, 720);
     }
     else {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 320)];
         scrollview.showsVerticalScrollIndicator=NO;
         scrollview.scrollEnabled=NO;
-        self.cardInfo.view.superview.frame = CGRectMake(0, 0, 540, 320);
+        displayCardViewController.view.superview.frame = CGRectMake(0, 0, 540, 320);
     }
     
-    UIImage *colorImage = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"EditCardBackground" ofType:@"png"]];
-    
-    UIImageView *colorIV = [[UIImageView alloc] initWithFrame:self.cardInfo.view.bounds];
-    colorIV.image = colorImage;
-    colorIV.contentMode = UIViewContentModeScaleToFill;
-    [self.cardInfo.view addSubview:colorIV];
+    UIImage *editCardBackground = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"EditCardBackground" ofType:@"png"]];
+    UIImageView *editCardImageView = [[UIImageView alloc] initWithFrame:displayCardViewController.view.bounds];
+    editCardImageView.image = editCardBackground;
+    editCardImageView.contentMode = UIViewContentModeScaleToFill;
+    [displayCardViewController.view addSubview:editCardImageView];
     
     scrollview.userInteractionEnabled=YES;
     
-    UIFont *theFont = [[UIFont alloc] init];
-    theFont = [UIFont fontWithName:@"Helvetica" size:14];
+    UIFont *theFont = [UIFont fontWithName:@"Helvetica" size:14];
     
     chooseColorBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     chooseColorBtn.frame = CGRectMake(25, 100, 78, 60);
@@ -368,7 +322,7 @@ UITextView *explanation;
     [chooseColorBtn addTarget:self
                action:@selector(chooseColor:)
      forControlEvents:UIControlEventTouchDown];
-    [self.cardInfo.view addSubview:chooseColorBtn];
+    [displayCardViewController.view addSubview:chooseColorBtn];
     
     point = [[UITextView alloc] init];
     point.frame = CGRectMake(125, 10, 400, 50);
@@ -378,9 +332,8 @@ UITextView *explanation;
     point.returnKeyType = UIReturnKeyDefault;
     isTopic = YES;
     point.delegate = self;
-    point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"point"]];
+    point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"point"]];
     writtenPoint = point.text;
-    NSLog(@"written point assigned: %@", writtenPoint);
     
     UILabel *pointLbl = [UILabel new];
     pointLbl.text = @"Point/Title";
@@ -394,13 +347,13 @@ UITextView *explanation;
     UIButton *changeMediaBtn;
     UIButton *removeMediaBtn;
     
-    if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+    if (![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
         chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
 
         point.returnKeyType = UIReturnKeyNext;
         isTopic = NO;
 
-        NSString *quoteStr = [[self.cards objectAtIndex:indexCard] valueForKey:@"quote"];
+        NSString *quoteStr = [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"];
         quoteStr = [quoteStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         quote = [[UITextView alloc] init];
         quote.frame = CGRectMake(125, 90, 400, 200);
@@ -413,7 +366,6 @@ UITextView *explanation;
         quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
         quoteIV.contentMode = UIViewContentModeScaleAspectFit;
         NSString *imageStr = [quoteStr substringWithRange:NSMakeRange(1, quoteStr.length - 2)];
-        NSLog(@"imageStr: %@", imageStr);
         NSURL *imageURL = [NSURL URLWithString:imageStr];
         if (imageURL) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -469,7 +421,7 @@ UITextView *explanation;
         citation.delegate = self;
         citation.font = theFont;
         citation.returnKeyType = UIReturnKeyNext;
-        citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"citation"]];
+        citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"citation"]];
         
         citationLbl = [UILabel new];
         citationLbl.text = @"Citation";
@@ -483,7 +435,7 @@ UITextView *explanation;
         explanation.tag = 3;
         explanation.font = theFont;
         explanation.returnKeyType = UIReturnKeyDefault;
-        explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexCard] valueForKey:@"explanation"]];
+        explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"explanation"]];
         
         explanationLbl = [UILabel new];
         explanationLbl.text = @"Explanation";
@@ -517,21 +469,21 @@ UITextView *explanation;
                    action:@selector(deleteCard)
          forControlEvents:UIControlEventTouchUpInside];
     
-    if ([[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+    if ([[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
         cancelButton.frame = CGRectMake(20, 270, 150, 35);
         saveButton.frame = CGRectMake(350, 270, 150, 35);
         deleteButton.frame = CGRectMake(185, 270, 150, 35);
     }
     
-    int row = [colorOptions indexOfObject:[[self.cards objectAtIndex:indexCard] valueForKey:@"color"]];
+    int row = (int)[colorOptions indexOfObject:[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"color"]];
     colorChoice = [colorOptions objectAtIndex:row];
     currentColorIndex = row;
-    chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    chooseColorBtn.layer.borderColor = [colorReferences[colorChoice] CGColor];
     chooseColorBtn.layer.borderWidth = 3.0f;
 
     [scrollview addSubview:point];
     [scrollview addSubview:pointLbl];
-    if (![[[self.cards objectAtIndex:indexCard] valueForKey:@"quote"] isEqualToString:@"-999"]) {
+    if (![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
         [scrollview addSubview:quote];
         [scrollview addSubview:quoteLbl];
         [scrollview addSubview:quoteIV];
@@ -546,8 +498,8 @@ UITextView *explanation;
     [scrollview addSubview:cancelButton];
     [scrollview addSubview:saveButton];
     [scrollview addSubview:deleteButton];
-    [self.cardInfo.view addSubview:scrollview];
-    scrollview.contentSize = CGSizeMake(self.cardInfo.view.frame.size.width, self.cardInfo.view.frame.size.height + 265);
+    [displayCardViewController.view addSubview:scrollview];
+    scrollview.contentSize = CGSizeMake(displayCardViewController.view.frame.size.width, displayCardViewController.view.frame.size.height + 265);
 }
 
 - (BOOL)disablesAutomaticKeyboardDismissal {
@@ -567,8 +519,7 @@ UITextView *explanation;
     quoteIV.hidden = YES;
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
- replacementText:(NSString *)text
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]) {
         if (textView == point) {
@@ -600,19 +551,16 @@ UITextView *explanation;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    
     if([title isEqualToString:@"Add"])
     {
         quote.hidden = YES;
         quoteIV.hidden = NO;
         NSString *imageStr = [[alertView textFieldAtIndex:0] text];
         imageStr = [imageStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSLog(@"imageStr: %@", imageStr);
         NSURL *imageURL = [NSURL URLWithString:imageStr];
         if (imageURL) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-                NSLog(@"image data: %@", imageData);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     quoteIV.image = [UIImage imageWithData:imageData];
                 });
@@ -622,26 +570,17 @@ UITextView *explanation;
     }
     else if([title isEqualToString:@"Yes"])
     {
-        NSLog(@"Yes");
-        
-        PFUser *currentUser = [PFUser currentUser];
         if (currentUser) {
             PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
             [query whereKey:@"user" equalTo:[PFUser currentUser].username];
             [query findObjectsInBackgroundWithBlock:^(NSArray *foundObjects, NSError *error) {
-                if (!error) {
-                    NSLog(@"Successfully retrieved %d cards.", foundObjects.count);
-                    
-                    if (foundObjects.count > 0) {
+                if (!error && foundObjects.count > 0) {
                         //clear core data
                         [self deleteAllObjectsForEntity:@"Flashcards" andContext:[self managedObjectContext]];
                         [self.cards removeAllObjects];
-                        [self.coordinates removeAllObjects];
                         [self.retrievedViewLocations removeAllObjects];
                         [self.cardViews removeAllObjects];
-                        
-                        NSLog(@"object found: %@", foundObjects[0]);
-                        
+  
                         //add each value
                         for (int i = 0; i < foundObjects.count; i++) {
                             NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:[self managedObjectContext]];
@@ -651,8 +590,9 @@ UITextView *explanation;
                             [newCard setValue:currentObject[@"citation"] forKey:@"citation"];
                             [newCard setValue:currentObject[@"explanation"] forKey:@"explanation"];
                             [newCard setValue:currentObject[@"color"] forKey:@"color"];
-                            float locX =[self currentScreenBoundsBasedOnOrientation].size.width/2;
-                            float locY =[self currentScreenBoundsBasedOnOrientation].size.height/2;
+                            //defaults to center screen
+                            float locX = [self currentScreenBoundsBasedOnOrientation].size.width/2;
+                            float locY = [self currentScreenBoundsBasedOnOrientation].size.height/2;
 
                             [newCard setValue:[NSNumber numberWithFloat:locX] forKey:@"locationX"];
                             [newCard setValue:[NSNumber numberWithFloat:locY] forKey:@"locationY"];
@@ -663,11 +603,9 @@ UITextView *explanation;
                             }
                         }
                         
-                        //reload viewcontroler
+                        //refresh the viewcontroler
                         [self viewDidAppear:YES];
-                        
-                        
-                        NSLog(@"Done");
+                    
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successfully restored data"
                                                                         message:@"Your data was successfully restored back to this device."
                                                                        delegate:nil
@@ -675,13 +613,6 @@ UITextView *explanation;
                                                               otherButtonTitles:nil];
                         [alert show];
                         
-                    } else {
-                        NSLog(@"0 objects found");
-                    }
-                    
-                    
-                } else {
-                    NSLog(@"Error: %@ %@", error, [error userInfo]);
                 }
             }];
             
@@ -692,7 +623,7 @@ UITextView *explanation;
 
 -(IBAction)chooseColor:(id)sender {
     colorChoice = [colorOptions objectAtIndex:currentColorIndex];
-    chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    chooseColorBtn.layer.borderColor = [colorReferences[colorChoice]CGColor];
     chooseColorBtn.layer.borderWidth = 3.0f;
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     toolbar.barStyle = UIBarStyleDefault;
@@ -735,101 +666,77 @@ UITextView *explanation;
     
     NSError *error;
     
-    [context deleteObject:[self.cards objectAtIndex:indexCard]];
-    [self.cards removeObjectAtIndex:indexCard];
+    [context deleteObject:[self.cards objectAtIndex:indexOfChosenCard]];
+    [self.cards removeObjectAtIndex:indexOfChosenCard];
     if (![context save:&error]) {
     	NSLog(@"Error deleting card:%@",error);
     }
     
-    NSLog(@"written point is still: %@.", writtenPoint);
-    
     PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
     [query whereKey:@"user" equalTo:[PFUser currentUser].username];
     [query whereKey:@"point" equalTo:writtenPoint];
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *foundCard, NSError *error) {
-        
-        NSLog(@"found card: %@", foundCard);
         [foundCard deleteInBackground];
     }];
 
 
-    [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+    [displayCardViewController dismissViewControllerAnimated:YES completion:nil];
     [self viewDidAppear:YES];
 }
 
 -(void) savePopup {
-    [[self.cards objectAtIndex:indexCard] setValue:point.text forKey:@"point"];
-    if (citation.text && ![citation.text isEqualToString:@"-999"]) {
-        [[self.cards objectAtIndex:indexCard] setValue:quote.text forKey:@"quote"];
-        [[self.cards objectAtIndex:indexCard] setValue:citation.text forKey:@"citation"];
-        [[self.cards objectAtIndex:indexCard] setValue:explanation.text forKey:@"explanation"];
+    [[self.cards objectAtIndex:indexOfChosenCard] setValue:point.text forKey:@"point"];
+    [[self.cards objectAtIndex:indexOfChosenCard] setValue:colorChoice forKey:@"color"];
+    if (citation.text && ![citation.text isEqualToString:kCardCheck]) {
+        [[self.cards objectAtIndex:indexOfChosenCard] setValue:quote.text forKey:@"quote"];
+        [[self.cards objectAtIndex:indexOfChosenCard] setValue:citation.text forKey:@"citation"];
+        [[self.cards objectAtIndex:indexOfChosenCard] setValue:explanation.text forKey:@"explanation"];
     }
-    [[self.cards objectAtIndex:indexCard] setValue:colorChoice forKey:@"color"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Flashcards"];
     [query whereKey:@"user" equalTo:[PFUser currentUser].username];
     [query whereKey:@"point" equalTo:writtenPoint];
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *foundCard, NSError *error) {
-        
-        NSLog(@"found card: %@", foundCard);
-
         foundCard[@"point"] = point.text;
-        if (![citation.text isEqualToString:@"-999"] && citation) {
+        if (![citation.text isEqualToString:kCardCheck] && citation) {
             foundCard[@"illustration"] = quote.text;
             foundCard[@"citation"] = citation.text;
             foundCard[@"explanation"] = explanation.text;
         }
         foundCard[@"color"] = colorChoice;
         [foundCard saveInBackground];
-        NSLog(@"saving card again");
     }];
-    
-    
-    
-    //float frameX = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
-    //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameX] forKey:@"locationX"];
-    //float frameY = [[self.cardViews objectAtIndex:indexCard] frame].origin.x;
-    //[[self.cards objectAtIndex:indexCard] setValue:[NSNumber numberWithFloat:frameY] forKey:@"locationY"];
-    
+
     NSManagedObjectContext *context = [self managedObjectContext];
     NSError *error = nil;
     if (![context save:&error]) {
         NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
     }
     
-    [self viewDidAppear:YES];
-    
-    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Card Modified"
-    //                                                message:@"Card was successfully modified!"
-    //                                               delegate:nil
-    //                                      cancelButtonTitle:@"OK"
-    //                                      otherButtonTitles:nil];
-    //[alert show];
-    [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+    [displayCardViewController dismissViewControllerAnimated:YES completion:nil];
     [self viewDidAppear:YES];
 }
 
 -(void) cancelPopup {
-    [self.cardInfo dismissViewControllerAnimated:YES completion:nil];
+    [displayCardViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [[event allTouches] anyObject];
     CGPoint touchLocation = [touch locationInView:touch.view];
-    touchLoc = touchLocation;
     if ([[touch.view class] isSubclassOfClass:[Card class]]) {
         Card *clickedCard = (Card *)touch.view;
-        indexCard = clickedCard.index;
-        dragging = YES;
+        indexOfChosenCard = clickedCard.index;
+        isCardBeingDragged = YES;
         [self.view bringSubviewToFront:touch.view];
-        oldX = touchLocation.x;
-        oldY = touchLocation.y;
+        lastXLocation = touchLocation.x;
+        lastYLocation = touchLocation.y;
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (dragging) {
-        dragging = NO;
+    if (isCardBeingDragged) {
+        isCardBeingDragged = NO;
         
         UITouch *touch = [[event allTouches] anyObject];
         Card *clickedCard;
@@ -838,18 +745,18 @@ UITextView *explanation;
         }
         
         if (self.cards.count > 0) {
-        NSManagedObjectContext *context = [self managedObjectContext];
-        NSManagedObject *updatedCard = [self.cards objectAtIndex:indexCard];
-        
-        [updatedCard setValue:[NSNumber numberWithFloat:clickedCard.frame.origin.x] forKey:@"locationX"];
-        [updatedCard setValue:[NSNumber numberWithFloat:clickedCard.frame.origin.y] forKey:@"locationY"];
-
-        NSError *error = nil;
-        if (![context save:&error]) {
-            NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
-        }
-        
-        NSLog(@"Layout Saved");
+            NSManagedObjectContext *context = [self managedObjectContext];
+            NSManagedObject *updatedCard = [self.cards objectAtIndex:indexOfChosenCard];
+            
+            [updatedCard setValue:[NSNumber numberWithFloat:clickedCard.frame.origin.x] forKey:@"locationX"];
+            [updatedCard setValue:[NSNumber numberWithFloat:clickedCard.frame.origin.y] forKey:@"locationY"];
+            
+            NSError *error = nil;
+            if (![context save:&error]) {
+                NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+            }
+            
+            NSLog(@"Layout Saved");
         }
     }
 }
@@ -860,22 +767,20 @@ UITextView *explanation;
     if ([[touch.view class] isSubclassOfClass:[Card class]]) {
         Card *movingCard = (Card *)touch.view;
         [self.view bringSubviewToFront:movingCard];
-        if (dragging) {
+        if (isCardBeingDragged) {
             CGRect frame = movingCard.frame;
-            frame.origin.x = movingCard.frame.origin.x + touchLocation.x - oldX;
-            frame.origin.y = movingCard.frame.origin.y + touchLocation.y - oldY;
+            frame.origin.x = movingCard.frame.origin.x + touchLocation.x - lastXLocation;
+            frame.origin.y = movingCard.frame.origin.y + touchLocation.y - lastYLocation;
             movingCard.frame = frame;
         }
     }
 }
 
 -(void)move:(id)sender {
-	NSLog(@"See a move gesture");
-    
     UIPanGestureRecognizer *panRecognizer = (UIPanGestureRecognizer *)self.view.gestureRecognizers;
     CGPoint translation = [panRecognizer translationInView:panRecognizer.view];
     
-    panRecognizer.view.center=CGPointMake(panRecognizer.view.center.x+translation.x, panRecognizer.view.center.y+ translation.y);
+    panRecognizer.view.center = CGPointMake(panRecognizer.view.center.x + translation.x, panRecognizer.view.center.y + translation.y);
     
     [panRecognizer setTranslation:CGPointMake(0, 0) inView:panRecognizer.view];
 }
@@ -901,8 +806,8 @@ UITextView *explanation;
 // Do something with the selected row.
 -(void)pickerView:(UIPickerView *)pv didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     colorChoice = [colorOptions objectAtIndex:row];
-    currentColorIndex = row;
-    chooseColorBtn.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
+    currentColorIndex = (int)row;
+    chooseColorBtn.layer.borderColor = [colorReferences[colorChoice] CGColor];
     chooseColorBtn.layer.borderWidth = 3.0f;
 }
 
@@ -937,19 +842,12 @@ UITextView *explanation;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)registerForKeyboardNotifications {
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
@@ -959,11 +857,9 @@ UITextView *explanation;
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
 }
 
 - (void)deregisterFromKeyboardNotifications {
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardDidHideNotification
                                                   object:nil];
@@ -971,7 +867,6 @@ UITextView *explanation;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
-    
 }
 
 -(CGRect)currentScreenBoundsBasedOnOrientation
@@ -988,18 +883,13 @@ UITextView *explanation;
     return screenBounds;
 }
 
-
-- (void) viewDidLoad {
-    [super viewDidLoad];
-    colorOptions = [NSArray arrayWithObjects:@"Gray", @"Red", @"Green", @"Blue", @"Cyan", @"Yellow", @"Magenta", @"Orange", @"Purple", @"Brown", nil];
-    chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    
-    self.cards = [[NSMutableArray alloc] init];
-    self.cardViews = [[NSMutableArray alloc] init];
-    self.retrievedViewLocations = [[NSMutableArray alloc] init];
-    self.coordinates = [[NSMutableArray alloc] init];
+//Logout
+- (IBAction)logOutButtonTapAction:(id)sender {
+    if ([PFUser currentUser])
+    {
+        [PFUser logOut];
+    }
 }
-
 
 #pragma mark - PFLogInViewControllerDelegate
 
@@ -1076,14 +966,5 @@ UITextView *explanation;
     NSLog(@"User dismissed the signUpViewController");
 }
 
-
-#pragma mark - ()
-
-- (IBAction)logOutButtonTapAction:(id)sender {
-    if ([PFUser currentUser])
-    {
-        [PFUser logOut];
-    }
-}
 
 @end

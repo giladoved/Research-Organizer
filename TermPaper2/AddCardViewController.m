@@ -182,7 +182,7 @@
 // Do something with the selected row.
 -(void)pickerView:(UIPickerView *)pv didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     colorChoice = [colorOptions objectAtIndex:row];
-    currentColorIndex = row;
+    currentColorIndex = (int)row;
     self.colorPickerButtonPIE.layer.borderColor = [self getColorWithString:colorChoice].CGColor;
     self.colorPickerButtonPIE.layer.borderWidth = 3.0f;
     self.colorPickerButtonTopic.layer.borderColor = [self getColorWithString:colorChoice].CGColor;

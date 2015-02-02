@@ -15,10 +15,10 @@
 MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextViewDelegate, PFSignUpViewControllerDelegate, PFLogInViewControllerDelegate> {
     UIPopoverController *popover;
 }
-@property (strong) NSMutableArray *cards;
-@property (strong) NSMutableArray *parseCards;
-@property (strong) NSMutableArray *cardViews;
-@property (strong) NSMutableArray *retrievedViewLocations;
+@property (nonatomic, strong) NSMutableArray *cards;
+@property (nonatomic, strong) NSMutableArray *parseCards;
+@property (nonatomic, strong) NSMutableArray *cardViews;
+@property (nonatomic, strong) NSMutableArray *retrievedViewLocations;
 
 @property (nonatomic, strong) NSMutableArray *points;
 @property (nonatomic, strong) NSMutableArray *quotes;

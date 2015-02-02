@@ -49,7 +49,6 @@
     self.navigationItem.leftBarButtonItems = arrBtns;
     self.navigationItem.title = @"Essay";
     
-    //_navBar = self.navigationItem
     _exportBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action: @selector(pop:)];
     self.navigationItem.rightBarButtonItem = _exportBarButton;
     
@@ -92,9 +91,6 @@
             [self.essay appendFormat:@"%@\n\n", currentPoint];
         }
     }
-    
-    //self.essayTV.text = [self.essay copy];
-    
     
     htmlEssayText = [NSMutableString new];
     [htmlEssayText appendString:@"<html><body>"];
