@@ -37,6 +37,10 @@
     int indexOfChosenCard;
     
     UIViewController *displayCardViewController;
+    BOOL isNewCard;
+    BOOL isNewCardaTopicCard;
+    Card *cardToDelete;
+    int cardToDeleteIndex;
 }
 @end
 
@@ -166,6 +170,16 @@
                 UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped:)];
                 [currentCard addGestureRecognizer:tap];
                 
+                
+                //coming soon
+                /*UILongPressGestureRecognizer *longpress = [[UILongPressGestureRecognizer alloc]
+                   initWithTarget:self action:@selector(deleteCard)];
+                longpress.minimumPressDuration = 1;
+                longpress.delegate = self;
+                longpress.delaysTouchesBegan = YES;
+                indexOfChosenCard = currentCard.index;
+                [currentCard addGestureRecognizer:longpress];*/
+                
                 [self.cardViews addObject:currentCard];
             }
         } else {
@@ -187,6 +201,16 @@
                                                      delegate:self
                                             cancelButtonTitle:@"Yes"
                                             otherButtonTitles:@"No", nil];
+    [message show];
+}
+
+
+- (IBAction)addNewCardPressed:(id)sender {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Reset Data"
+                                                      message:@"What kind of card do you want to make?"
+                                                     delegate:self
+                                            cancelButtonTitle:@"Topic Sentence Card"
+                                            otherButtonTitles:@"Information Card", nil];
     [message show];
 }
 
@@ -278,17 +302,14 @@
         NSLog(@"Message failed");
 }
 
-
-- (void)cardTapped:(UITapGestureRecognizer *)rec {
-    Card *tappedLabel = (Card *)rec.view;
-    indexOfChosenCard = tappedLabel.index;
+-(void) presentDetailCardController:(Card *)chosenCard withIndex:(int)index {
     displayCardViewController = [[UIViewController alloc] init];
     displayCardViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     displayCardViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [self presentViewController:displayCardViewController animated:YES completion:nil];
     displayCardViewController.view.superview.center = self.view.center;
     
-    if (![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
+    if ((![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && !isNewCardaTopicCard)) {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
         scrollview.showsVerticalScrollIndicator=YES;
         scrollview.scrollEnabled=YES;
@@ -320,8 +341,8 @@
     [[chooseColorBtn titleLabel] setTextColor:[UIColor blackColor]];
     chooseColorBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [chooseColorBtn addTarget:self
-               action:@selector(chooseColor:)
-     forControlEvents:UIControlEventTouchDown];
+                       action:@selector(chooseColor:)
+             forControlEvents:UIControlEventTouchDown];
     [displayCardViewController.view addSubview:chooseColorBtn];
     
     point = [[UITextView alloc] init];
@@ -332,7 +353,8 @@
     point.returnKeyType = UIReturnKeyDefault;
     isTopic = YES;
     point.delegate = self;
-    point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"point"]];
+    if (!isNewCard)
+        point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"point"]];
     writtenPoint = point.text;
     
     UILabel *pointLbl = [UILabel new];
@@ -347,12 +369,12 @@
     UIButton *changeMediaBtn;
     UIButton *removeMediaBtn;
     
-    if (![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
+    if ((![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && !isNewCardaTopicCard)) {
         chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
-
+        
         point.returnKeyType = UIReturnKeyNext;
         isTopic = NO;
-
+        
         NSString *quoteStr = [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"];
         quoteStr = [quoteStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         quote = [[UITextView alloc] init];
@@ -362,12 +384,13 @@
         quote.font = theFont;
         quote.returnKeyType = UIReturnKeyNext;
         quote.delegate = self;
-        quote.text = [NSString stringWithFormat:@"%@", quoteStr];
+        if (!isNewCard)
+            quote.text = [NSString stringWithFormat:@"%@", quoteStr];
         quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
         quoteIV.contentMode = UIViewContentModeScaleAspectFit;
         NSString *imageStr = [quoteStr substringWithRange:NSMakeRange(1, quoteStr.length - 2)];
         NSURL *imageURL = [NSURL URLWithString:imageStr];
-        if (imageURL) {
+        if (imageURL && !isNewCard) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -376,7 +399,7 @@
             });
         }
         
-        if ([quoteStr characterAtIndex:0] == '<' && [quoteStr characterAtIndex:quoteStr.length-1] == '>') {
+        if ([quoteStr characterAtIndex:0] == '<' && [quoteStr characterAtIndex:quoteStr.length-1] == '>' && !isNewCard) {
             NSLog(@"show text");
             quote.hidden = YES;
             quoteIV.hidden = NO;
@@ -401,8 +424,8 @@
         changeMediaBtn.backgroundColor = [UIColor lightGrayColor];
         [changeMediaBtn setTitle:@"Add Media" forState:UIControlStateNormal];
         [changeMediaBtn addTarget:self
-                         action:@selector(changeMedia)
-               forControlEvents:UIControlEventTouchUpInside];
+                           action:@selector(changeMedia)
+                 forControlEvents:UIControlEventTouchUpInside];
         
         removeMediaBtn = [[UIButton alloc] init];
         removeMediaBtn.frame = CGRectMake(15, 220, 100, 60);
@@ -411,8 +434,8 @@
         [[removeMediaBtn titleLabel] setLineBreakMode:NSLineBreakByWordWrapping];
         [removeMediaBtn setTitle:@"Remove Illustration" forState:UIControlStateNormal];
         [removeMediaBtn addTarget:self
-                         action:@selector(removeMedia)
-               forControlEvents:UIControlEventTouchUpInside];
+                           action:@selector(removeMedia)
+                 forControlEvents:UIControlEventTouchUpInside];
         
         citation = [[UITextView alloc] init];
         citation.frame = CGRectMake(125, 325, 400, 50);
@@ -421,7 +444,8 @@
         citation.delegate = self;
         citation.font = theFont;
         citation.returnKeyType = UIReturnKeyNext;
-        citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"citation"]];
+        if (!isNewCard)
+            citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"citation"]];
         
         citationLbl = [UILabel new];
         citationLbl.text = @"Citation";
@@ -435,7 +459,8 @@
         explanation.tag = 3;
         explanation.font = theFont;
         explanation.returnKeyType = UIReturnKeyDefault;
-        explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"explanation"]];
+        if (!isNewCard)
+            explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"explanation"]];
         
         explanationLbl = [UILabel new];
         explanationLbl.text = @"Explanation";
@@ -449,41 +474,55 @@
     cancelButton.backgroundColor = [UIColor redColor];
     [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [cancelButton addTarget:self
-                 action:@selector(cancelPopup)
-       forControlEvents:UIControlEventTouchUpInside];
+                     action:@selector(cancelPopup)
+           forControlEvents:UIControlEventTouchUpInside];
     
     saveButton = [[UIButton alloc] init];
     saveButton.frame = CGRectMake(350, 630, 150, 35);
     saveButton.backgroundColor = [UIColor blueColor];
     [saveButton setTitle:@"Save" forState:UIControlStateNormal];
-    [saveButton addTarget:self
-                     action:@selector(savePopup)
-           forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *deleteButton = [[UIButton alloc] init];
-    deleteButton.frame = CGRectMake(185, 630, 150, 35);
-    deleteButton.backgroundColor = [UIColor blackColor];
-    [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [deleteButton setTitle:@"Delete Card" forState:UIControlStateNormal];
-    [deleteButton addTarget:self
-                   action:@selector(deleteCard)
-         forControlEvents:UIControlEventTouchUpInside];
     
-    if ([[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
-        cancelButton.frame = CGRectMake(20, 270, 150, 35);
-        saveButton.frame = CGRectMake(350, 270, 150, 35);
-        deleteButton.frame = CGRectMake(185, 270, 150, 35);
+    if (!isNewCard) { //if editing the card
+        [saveButton addTarget:self
+                       action:@selector(savePopup)
+             forControlEvents:UIControlEventTouchUpInside];
+        
+        deleteButton.frame = CGRectMake(185, 630, 150, 35);
+        deleteButton.backgroundColor = [UIColor blackColor];
+        [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [deleteButton setTitle:@"Delete Card" forState:UIControlStateNormal];
+        [deleteButton addTarget:self
+                         action:@selector(deleteCard)
+            forControlEvents:UIControlEventTouchUpInside];
+    } else { //new card
+        [saveButton addTarget:self
+                       action:@selector(addCard)
+             forControlEvents:UIControlEventTouchUpInside];
     }
     
-    int row = (int)[colorOptions indexOfObject:[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"color"]];
+    
+    if (([[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && isNewCardaTopicCard)) {
+        cancelButton.frame = CGRectMake(20, 270, 150, 35);
+        saveButton.frame = CGRectMake(350, 270, 150, 35);
+        if (isNewCard && isNewCard) {
+            deleteButton.frame = CGRectMake(185, 270, 150, 35);
+        }
+    }
+    
+    
+    int row = 0;
+    if (!isNewCard)
+        row = (int)[colorOptions indexOfObject:[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"color"]];
     colorChoice = [colorOptions objectAtIndex:row];
     currentColorIndex = row;
     chooseColorBtn.layer.borderColor = [colorReferences[colorChoice] CGColor];
     chooseColorBtn.layer.borderWidth = 3.0f;
-
+    
     [scrollview addSubview:point];
     [scrollview addSubview:pointLbl];
-    if (![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck]) {
+    if ((![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && !isNewCardaTopicCard)) {
         [scrollview addSubview:quote];
         [scrollview addSubview:quoteLbl];
         [scrollview addSubview:quoteIV];
@@ -497,9 +536,80 @@
     [scrollview addSubview:chooseColorBtn];
     [scrollview addSubview:cancelButton];
     [scrollview addSubview:saveButton];
-    [scrollview addSubview:deleteButton];
+    if (!isNewCard)
+        [scrollview addSubview:deleteButton];
     [displayCardViewController.view addSubview:scrollview];
     scrollview.contentSize = CGSizeMake(displayCardViewController.view.frame.size.width, displayCardViewController.view.frame.size.height + 265);
+}
+
+- (void)addCard {
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObject *newCard = [NSEntityDescription insertNewObjectForEntityForName:@"Flashcards" inManagedObjectContext:context];
+    
+    PFObject *newCardPF = [PFObject objectWithClassName:@"Flashcards"];
+    
+    float xPos = [self currentScreenBoundsBasedOnOrientation].size.width / 2 - 100;
+    float yPos = [self currentScreenBoundsBasedOnOrientation].size.height / 2 - 60;
+    
+    if (!isNewCardaTopicCard) {
+        if ([point.text isEqualToString:@""])
+            point.text = @" ";
+        if ([quote.text isEqualToString:@""])
+            quote.text = @" ";
+        if ([citation.text isEqualToString:@""])
+            citation.text = @" ";
+        if ([explanation.text isEqualToString:@""])
+            explanation.text = @" ";
+        
+        [newCard setValue:point.text forKey:@"point"];
+        newCardPF[@"point"] = point.text;
+        [newCard setValue:quote.text forKey:@"quote"];
+        newCardPF[@"illustration"] = quote.text;
+        [newCard setValue:citation.text forKey:@"citation"];
+        newCardPF[@"citation"] = citation.text;
+        [newCard setValue:explanation.text forKey:@"explanation"];
+        newCardPF[@"explanation"] = explanation.text;
+        [newCard setValue:colorChoice forKey:@"color"];
+        newCardPF[@"color"] = colorChoice;
+        [newCardPF setObject:[PFUser currentUser].username forKey:@"user"];
+        
+    } else {
+        if ([point.text isEqualToString:@""])
+            point.text = @"------";
+        
+        [newCard setValue:point.text forKey:@"point"];
+        newCardPF[@"point"] = point.text;
+        [newCard setValue:@"-999" forKey:@"quote"];
+        newCardPF[@"illustration"] = @"-999";
+        [newCard setValue:@"-999" forKey:@"citation"];
+        newCardPF[@"citation"] = @"-999";
+        [newCard setValue:@"-999" forKey:@"explanation"];
+        newCardPF[@"explanation"] = @"-999";
+        [newCard setValue:colorChoice forKey:@"color"];
+        newCardPF[@"color"] = colorChoice;
+        [newCardPF setObject:[PFUser currentUser].username forKey:@"user"];
+    }
+    
+    [newCard setValue:[NSNumber numberWithFloat:xPos] forKey:@"locationX"];
+    [newCard setValue:[NSNumber numberWithFloat:yPos] forKey:@"locationY"];
+    
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+    
+    [newCardPF saveInBackground];
+    [displayCardViewController dismissViewControllerAnimated:YES completion:nil];
+    [self viewDidAppear:YES];
+}
+
+
+- (void)cardTapped:(UITapGestureRecognizer *)rec {
+    Card *tappedLabel = (Card *)rec.view;
+    indexOfChosenCard = tappedLabel.index;
+    isNewCard = NO;
+    isNewCardaTopicCard = NO;
+    [self presentDetailCardController:tappedLabel withIndex:indexOfChosenCard];
 }
 
 - (BOOL)disablesAutomaticKeyboardDismissal {
@@ -507,7 +617,7 @@
 }
 
 -(void)changeMedia {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Add" otherButtonTitles:nil];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Add" otherButtonTitles:@"Cancel", nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert show];
 }
@@ -567,6 +677,9 @@
             });
         }
         quote.text = [NSString stringWithFormat:@"<%@>", imageStr];
+        //not working for some reason...
+        [[alertView textFieldAtIndex:0] resignFirstResponder];
+        [alertView resignFirstResponder];
     }
     else if([title isEqualToString:@"Yes"])
     {
@@ -612,14 +725,22 @@
                                                               cancelButtonTitle:@"OK"
                                                               otherButtonTitles:nil];
                         [alert show];
-                        
                 }
             }];
             
         }
+    } else if ([title isEqualToString:@"Topic Sentence Card"]) {
+        isNewCard = YES;
+        isNewCardaTopicCard = YES;
+        [self presentDetailCardController:nil withIndex:0];
+    } else if ([title isEqualToString:@"Information Card"]) {
+        isNewCard = YES;
+        isNewCardaTopicCard = NO;
+        [self presentDetailCardController:nil withIndex:0];
     }
     
 }
+
 
 -(IBAction)chooseColor:(id)sender {
     colorChoice = [colorOptions objectAtIndex:currentColorIndex];
@@ -965,6 +1086,5 @@
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
     NSLog(@"User dismissed the signUpViewController");
 }
-
 
 @end

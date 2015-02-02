@@ -15,6 +15,7 @@
 MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITextViewDelegate, PFSignUpViewControllerDelegate, PFLogInViewControllerDelegate> {
     UIPopoverController *popover;
 }
+
 @property (nonatomic, strong) NSMutableArray *cards;
 @property (nonatomic, strong) NSMutableArray *parseCards;
 @property (nonatomic, strong) NSMutableArray *cardViews;
@@ -24,5 +25,8 @@ MFMessageComposeViewControllerDelegate, UIPickerViewDataSource, UIPickerViewDele
 @property (nonatomic, strong) NSMutableArray *quotes;
 @property (nonatomic, strong) NSMutableArray *citations;
 @property (nonatomic, strong) NSMutableArray *explanations;
+
+
+- (IBAction)addNewCardPressed:(id)sender;
 
 @end
