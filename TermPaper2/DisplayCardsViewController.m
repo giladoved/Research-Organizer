@@ -12,6 +12,8 @@
 #import "Card.h"
 #import <Parse/Parse.h>
 #import "Constants.h"
+#import <MediaPlayer/MediaPlayer.h>
+#import <XCDYouTubeKit/XCDYouTubeKit.h>
 
 @interface DisplayCardsViewController () {
     UIButton *chooseColorBtn;
@@ -33,14 +35,16 @@
     UITextView *explanation;
     
     BOOL isCardBeingDragged;
+    BOOL isCardBeingMoved;
     float lastXLocation, lastYLocation;
     int indexOfChosenCard;
     
     UIViewController *displayCardViewController;
     BOOL isNewCard;
     BOOL isNewCardaTopicCard;
-    Card *cardToDelete;
-    int cardToDeleteIndex;
+    
+    UIView *movieFrame;
+    XCDYouTubeVideoPlayerViewController *videoPlayerViewController;
 }
 @end
 
@@ -52,10 +56,16 @@
     colorReferences = @{@"Gray":[UIColor grayColor], @"Red":[UIColor redColor], @"Green":[UIColor greenColor], @"Blue" : [UIColor blueColor], @"Cyan" : [UIColor cyanColor], @"Yellow": [UIColor yellowColor], @"Magenta" : [UIColor magentaColor], @"Orange" : [UIColor orangeColor], @"Purple" : [UIColor purpleColor], @"Brown" : [UIColor brownColor]};
     
     chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    displayCardViewController = [UIViewController new];
     
-    self.cards = [[NSMutableArray alloc] init];
-    self.cardViews = [[NSMutableArray alloc] init];
-    self.retrievedViewLocations = [[NSMutableArray alloc] init];
+    self.cards = [NSMutableArray new];
+    self.parseCards = [NSMutableArray new];
+    self.cardViews = [NSMutableArray new];
+    self.retrievedViewLocations = [NSMutableArray new];
+    self.points = [NSMutableArray new];
+    self.quotes = [NSMutableArray new];
+    self.citations = [NSMutableArray new];
+    self.explanations = [NSMutableArray new];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -302,14 +312,14 @@
         NSLog(@"Message failed");
 }
 
--(void) presentDetailCardController:(Card *)chosenCard withIndex:(int)index {
+-(void) presentDetailCardController:(id)chosenCard {
     displayCardViewController = [[UIViewController alloc] init];
     displayCardViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     displayCardViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [self presentViewController:displayCardViewController animated:YES completion:nil];
     displayCardViewController.view.superview.center = self.view.center;
     
-    if ((![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && !isNewCardaTopicCard)) {
+    if ((isNewCard && !isNewCardaTopicCard) || (chosenCard && ![[chosenCard valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard)) {
         scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 540, 720)];
         scrollview.showsVerticalScrollIndicator=YES;
         scrollview.scrollEnabled=YES;
@@ -354,7 +364,7 @@
     isTopic = YES;
     point.delegate = self;
     if (!isNewCard)
-        point.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"point"]];
+        point.text = [NSString stringWithFormat:@"%@", [chosenCard valueForKey:@"point"]];
     writtenPoint = point.text;
     
     UILabel *pointLbl = [UILabel new];
@@ -368,14 +378,15 @@
     UILabel *explanationLbl;
     UIButton *changeMediaBtn;
     UIButton *removeMediaBtn;
+    movieFrame = [[UIView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
     
-    if ((![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && !isNewCardaTopicCard)) {
+    if ((isNewCard && !isNewCardaTopicCard) || (chosenCard && ![[chosenCard valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard)) {
         chooseColorBtn.frame = CGRectMake(25, 530, 78, 60);
         
         point.returnKeyType = UIReturnKeyNext;
         isTopic = NO;
         
-        NSString *quoteStr = [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"];
+        NSString *quoteStr = [chosenCard valueForKey:@"quote"];
         quoteStr = [quoteStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         quote = [[UITextView alloc] init];
         quote.frame = CGRectMake(125, 90, 400, 200);
@@ -389,20 +400,47 @@
         quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
         quoteIV.contentMode = UIViewContentModeScaleAspectFit;
         NSString *imageStr = [quoteStr substringWithRange:NSMakeRange(1, quoteStr.length - 2)];
+        BOOL isPicture = ([quoteStr characterAtIndex:0] == '<');
         NSURL *imageURL = [NSURL URLWithString:imageStr];
         if (imageURL && !isNewCard) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    quoteIV.image = [UIImage imageWithData:imageData];
+            if (isPicture) {
+                quoteIV.hidden = NO;
+                movieFrame.hidden  = YES;
+                quote.hidden = YES;
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                    NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        quoteIV.image = [UIImage imageWithData:imageData];
+                    });
                 });
-            });
+            } else {
+                NSRange range = [imageStr rangeOfString:@"v="];
+                NSString *identifier;
+                if (range.location == NSNotFound) {
+                    NSLog(@"string was not found");
+                } else {
+                    NSLog(@"position %lu", (unsigned long)range.location);
+                    identifier = [imageStr substringFromIndex:range.location];
+                }
+                videoPlayerViewController = [[XCDYouTubeVideoPlayerViewController alloc] initWithVideoIdentifier:identifier];
+                [videoPlayerViewController presentInView:movieFrame];
+                //[videoPlayerViewController.moviePlayer play];
+
+                quoteIV.hidden = YES;
+                quote.hidden = YES;
+                movieFrame.hidden  = NO;
+            }
         }
         
         if ([quoteStr characterAtIndex:0] == '<' && [quoteStr characterAtIndex:quoteStr.length-1] == '>' && !isNewCard) {
             NSLog(@"show text");
             quote.hidden = YES;
             quoteIV.hidden = NO;
+        } else if ([quoteStr characterAtIndex:0] == '[' && [quoteStr characterAtIndex:quoteStr.length-1] == ']') {
+            NSLog(@"show video");
+            quote.hidden = YES;
+            quoteIV.hidden = YES;
+            movieFrame.hidden  = NO;
         } else {
             NSLog(@"show image");
             quote.hidden = NO;
@@ -445,7 +483,7 @@
         citation.font = theFont;
         citation.returnKeyType = UIReturnKeyNext;
         if (!isNewCard)
-            citation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"citation"]];
+            citation.text = [NSString stringWithFormat:@"%@", [chosenCard valueForKey:@"citation"]];
         
         citationLbl = [UILabel new];
         citationLbl.text = @"Citation";
@@ -460,7 +498,7 @@
         explanation.font = theFont;
         explanation.returnKeyType = UIReturnKeyDefault;
         if (!isNewCard)
-            explanation.text = [NSString stringWithFormat:@"%@", [[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"explanation"]];
+            explanation.text = [NSString stringWithFormat:@"%@", [chosenCard valueForKey:@"explanation"]];
         
         explanationLbl = [UILabel new];
         explanationLbl.text = @"Explanation";
@@ -503,7 +541,7 @@
     }
     
     
-    if (([[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && isNewCardaTopicCard)) {
+    if ((isNewCard && isNewCardaTopicCard) || (chosenCard && [[chosenCard valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard)) {
         cancelButton.frame = CGRectMake(20, 270, 150, 35);
         saveButton.frame = CGRectMake(350, 270, 150, 35);
         if (isNewCard && isNewCard) {
@@ -511,10 +549,9 @@
         }
     }
     
-    
     int row = 0;
     if (!isNewCard)
-        row = (int)[colorOptions indexOfObject:[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"color"]];
+        row = (int)[colorOptions indexOfObject:[chosenCard valueForKey:@"color"]];
     colorChoice = [colorOptions objectAtIndex:row];
     currentColorIndex = row;
     chooseColorBtn.layer.borderColor = [colorReferences[colorChoice] CGColor];
@@ -522,10 +559,11 @@
     
     [scrollview addSubview:point];
     [scrollview addSubview:pointLbl];
-    if ((![[[self.cards objectAtIndex:indexOfChosenCard] valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard) || (isNewCard && !isNewCardaTopicCard)) {
+    if ((isNewCard && !isNewCardaTopicCard) || (chosenCard && ![[chosenCard valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard)) {
         [scrollview addSubview:quote];
         [scrollview addSubview:quoteLbl];
         [scrollview addSubview:quoteIV];
+        [scrollview addSubview:movieFrame];
         [scrollview addSubview:citation];
         [scrollview addSubview:citationLbl];
         [scrollview addSubview:explanation];
@@ -605,11 +643,12 @@
 
 
 - (void)cardTapped:(UITapGestureRecognizer *)rec {
-    Card *tappedLabel = (Card *)rec.view;
-    indexOfChosenCard = tappedLabel.index;
+    Card *tappedCard = (Card *)rec.view;
+    indexOfChosenCard = tappedCard.index;
     isNewCard = NO;
     isNewCardaTopicCard = NO;
-    [self presentDetailCardController:tappedLabel withIndex:indexOfChosenCard];
+    if (!isCardBeingMoved)
+        [self presentDetailCardController:[self.cards objectAtIndex:indexOfChosenCard]];
 }
 
 - (BOOL)disablesAutomaticKeyboardDismissal {
@@ -617,7 +656,7 @@
 }
 
 -(void)changeMedia {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Add" otherButtonTitles:@"Cancel", nil];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Add Media" message:@"Enter the link to the media" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Picture", @"Add Youtube", nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert show];
 }
@@ -627,6 +666,7 @@
     quote.hidden = NO;
     quoteIV.image = nil;
     quoteIV.hidden = YES;
+    movieFrame.hidden  = YES;
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
@@ -661,10 +701,11 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if([title isEqualToString:@"Add"])
+    if([title isEqualToString:@"Add Picture"])
     {
         quote.hidden = YES;
         quoteIV.hidden = NO;
+        movieFrame.hidden  = YES;
         NSString *imageStr = [[alertView textFieldAtIndex:0] text];
         imageStr = [imageStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSURL *imageURL = [NSURL URLWithString:imageStr];
@@ -677,6 +718,33 @@
             });
         }
         quote.text = [NSString stringWithFormat:@"<%@>", imageStr];
+        //not working for some reason...
+        [[alertView textFieldAtIndex:0] resignFirstResponder];
+        [alertView resignFirstResponder];
+    }
+    else if([title isEqualToString:@"Add Youtube"])
+    {
+        quote.hidden = YES;
+        //quoteIV.hidden = YES;
+        quoteIV.hidden = NO;
+        movieFrame.hidden  = NO;
+        NSString *imageStr = [[alertView textFieldAtIndex:0] text];
+        imageStr = [imageStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSURL *imageURL = [NSURL URLWithString:imageStr];
+        if (imageURL) {
+            NSRange range = [imageStr rangeOfString:@"v="];
+            NSString *identifier;
+            if (range.location == NSNotFound) {
+                NSLog(@"string was not found");
+            } else {
+                NSLog(@"position %lu", (unsigned long)range.location);
+                identifier = [imageStr substringFromIndex:range.location];
+            }
+            videoPlayerViewController = [[XCDYouTubeVideoPlayerViewController alloc] initWithVideoIdentifier:identifier];
+            [videoPlayerViewController presentInView:quoteIV];
+            //[videoPlayerViewController.moviePlayer play];
+        }
+        quote.text = [NSString stringWithFormat:@"[%@]", imageStr];
         //not working for some reason...
         [[alertView textFieldAtIndex:0] resignFirstResponder];
         [alertView resignFirstResponder];
@@ -732,11 +800,11 @@
     } else if ([title isEqualToString:@"Topic Sentence Card"]) {
         isNewCard = YES;
         isNewCardaTopicCard = YES;
-        [self presentDetailCardController:nil withIndex:0];
+        [self presentDetailCardController:nil];
     } else if ([title isEqualToString:@"Information Card"]) {
         isNewCard = YES;
         isNewCardaTopicCard = NO;
-        [self presentDetailCardController:nil withIndex:0];
+        [self presentDetailCardController:nil];
     }
     
 }
@@ -880,6 +948,8 @@
             NSLog(@"Layout Saved");
         }
     }
+    isCardBeingMoved = NO;
+    
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -895,6 +965,7 @@
             movingCard.frame = frame;
         }
     }
+    isCardBeingMoved = YES;
 }
 
 -(void)move:(id)sender {
