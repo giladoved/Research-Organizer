@@ -15,6 +15,7 @@
     NSMutableString *htmlEssayText;
     int footnoteCount;
     int footnoteCount1;
+    BOOL withVideo;
 }
 
 @end
@@ -27,6 +28,7 @@
     if (self) {
         self.essay = [NSMutableString string];
         self.cards = [NSMutableArray new];
+        withVideo = YES;
     }
     return self;
 }
@@ -35,6 +37,7 @@
 {
     [super viewDidLoad];
     
+    withVideo = YES;
     footnoteCount = 1;
     footnoteCount1 = 1;
     UIBarButtonItem *citationButton = [[UIBarButtonItem alloc] initWithTitle:@"Citation Page" style:UIBarButtonItemStyleBordered target:self action:@selector(goCitation:)];
@@ -58,6 +61,8 @@
 
 
 -(void) formulateEssay {
+    footnoteCount = 1;
+    footnoteCount1 = 1;
     self.essay = [NSMutableString new];
     NSFetchRequest *fetchRequest2 = [[NSFetchRequest alloc] initWithEntityName:@"Flashcards"];
     self.cards = [[[self managedObjectContext] executeFetchRequest:fetchRequest2 error:nil] mutableCopy];
@@ -110,7 +115,7 @@
             if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
                 NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
                 [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\"> [%i]", tempQuote, footnoteCount1];
-            } else if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"["]) {
+            } else if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"["] && withVideo) {
                 NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
                 NSRange range = [tempQuote rangeOfString:@"v="];
                 NSString *identifier;
@@ -124,7 +129,7 @@
 
                 NSString *tempQuote2 = [NSString stringWithFormat:@"http://www.youtube.com/v/%@", identifier];
                 
-                [htmlEssayText appendFormat:@"<embed src=\"%@\" width=\"250\" height=\"125\"> [%i]", tempQuote2, footnoteCount1];
+                [htmlEssayText appendFormat:@"<embed src=\"%@\" width=\"250\" height=\"125\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\"> [%i]", tempQuote2, footnoteCount1];
             }
             else {
                 [htmlEssayText appendFormat:@"<p>%@ [%i]</p>", currentQuote, footnoteCount1];
@@ -140,7 +145,7 @@
     [htmlEssayText appendString:@"</body></html>"];
     NSLog(@"html is: %@", htmlEssayText);
     
-    [self.essayWebView loadHTMLString:htmlEssayText baseURL:[NSURL URLWithString:@""]];
+    [self.essayWebView loadHTMLString:htmlEssayText baseURL:nil];
 }
 
 -(IBAction)goCitation:(id)sender {
@@ -202,6 +207,8 @@
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     mc.mailComposeDelegate = self;
     
+    withVideo = NO;
+    [self formulateEssay];
     [mc setMessageBody:[htmlEssayText copy] isHTML:YES];
     [self presentViewController:mc animated:YES completion:NULL];    
 }
