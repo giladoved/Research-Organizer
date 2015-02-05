@@ -14,6 +14,9 @@
 #import "Constants.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <XCDYouTubeKit/XCDYouTubeKit.h>
+//#import "YTPlayerView.h"
+
+#define kCardCheck @"-999"
 
 @interface DisplayCardsViewController () {
     UIButton *chooseColorBtn;
@@ -44,6 +47,7 @@
     BOOL isNewCardaTopicCard;
     
     UIView *movieFrame;
+    //YTPlayerView *playerView;
     XCDYouTubeVideoPlayerViewController *videoPlayerViewController;
 }
 @end
@@ -100,6 +104,11 @@
         backIV.image = backImage;
         backIV.contentMode = UIViewContentModeScaleToFill;
         [self.view addSubview:backIV];
+        
+        //playerView = [[YTPlayerView alloc] initWithFrame:CGRectMake(50, 50, 250, 250)];
+        //[playerView loadWithVideoId:@"M7lc1UVf-VE"];
+        //[self.view addSubview:playerView];
+        
         
         //remove all cards from the screen
         for (UIView *view in self.view.subviews)
@@ -399,6 +408,11 @@
             quote.text = [NSString stringWithFormat:@"%@", quoteStr];
         quoteIV = [[UIImageView alloc] initWithFrame:CGRectMake(125, 90, 400, 200)];
         quoteIV.contentMode = UIViewContentModeScaleAspectFit;
+        
+        quoteIV.hidden = YES;
+        quote.hidden = YES;
+        movieFrame.hidden  = NO;
+        
         NSString *imageStr = [quoteStr substringWithRange:NSMakeRange(1, quoteStr.length - 2)];
         BOOL isPicture = ([quoteStr characterAtIndex:0] == '<');
         NSURL *imageURL = [NSURL URLWithString:imageStr];
@@ -421,14 +435,11 @@
                 } else {
                     NSLog(@"position %lu", (unsigned long)range.location);
                     identifier = [imageStr substringFromIndex:range.location];
+                    identifier = [identifier substringFromIndex:2];
                 }
                 videoPlayerViewController = [[XCDYouTubeVideoPlayerViewController alloc] initWithVideoIdentifier:identifier];
                 [videoPlayerViewController presentInView:movieFrame];
-                //[videoPlayerViewController.moviePlayer play];
-
-                quoteIV.hidden = YES;
-                quote.hidden = YES;
-                movieFrame.hidden  = NO;
+                [videoPlayerViewController.moviePlayer play];
             }
         }
         
@@ -725,7 +736,7 @@
     else if([title isEqualToString:@"Add Youtube"])
     {
         quote.hidden = YES;
-        //quoteIV.hidden = YES;
+        quoteIV.hidden = YES;
         quoteIV.hidden = NO;
         movieFrame.hidden  = NO;
         NSString *imageStr = [[alertView textFieldAtIndex:0] text];
@@ -739,15 +750,13 @@
             } else {
                 NSLog(@"position %lu", (unsigned long)range.location);
                 identifier = [imageStr substringFromIndex:range.location];
+                identifier = [identifier substringFromIndex:2];
             }
             videoPlayerViewController = [[XCDYouTubeVideoPlayerViewController alloc] initWithVideoIdentifier:identifier];
-            [videoPlayerViewController presentInView:quoteIV];
-            //[videoPlayerViewController.moviePlayer play];
+            [videoPlayerViewController presentInView:movieFrame];
+            [videoPlayerViewController.moviePlayer play];
         }
         quote.text = [NSString stringWithFormat:@"[%@]", imageStr];
-        //not working for some reason...
-        [[alertView textFieldAtIndex:0] resignFirstResponder];
-        [alertView resignFirstResponder];
     }
     else if([title isEqualToString:@"Yes"])
     {

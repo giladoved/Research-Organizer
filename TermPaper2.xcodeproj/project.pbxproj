@@ -441,8 +441,8 @@
 		61CEC9E617792D6400820AA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dror Oved (XG726H4U35)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dror Oved (XG726H4U35)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Gilad Oved (XG726H4U35)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilad Oved (XG726H4U35)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/giladoved/Documents/Developer/termpaper/term-paper-app",
@@ -453,9 +453,10 @@
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 2;
+				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -463,8 +464,8 @@
 		61CEC9E717792D6400820AA9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dror Oved (XG726H4U35)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dror Oved (XG726H4U35)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Gilad Oved (XG726H4U35)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilad Oved (XG726H4U35)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/giladoved/Documents/Developer/termpaper/term-paper-app",
@@ -475,9 +476,10 @@
 				INFOPLIST_FILE = "TermPaper2/TermPaper2-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3F06B2C8-ED10-4AAC-B251-716C7BE37198";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 2;
+				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

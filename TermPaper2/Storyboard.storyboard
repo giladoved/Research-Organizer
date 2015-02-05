@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="aSK-Uc-KOh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="aSK-Uc-KOh">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -36,7 +37,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="fhU-Ff-ePm">
                             <connections>
-                                <segue destination="kKJ-XH-0JY" kind="modal" id="haH-en-Vfk"/>
+                                <action selector="addNewCardPressed:" destination="tay-n5-cZS" id="6YH-Fa-iV4"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -45,158 +46,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q4J-hI-7hG" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-591" y="-277"/>
-        </scene>
-        <!--Add Card View Controller-->
-        <scene sceneID="bVw-9j-gyT">
-            <objects>
-                <viewController id="kKJ-XH-0JY" customClass="AddCardViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fE3-bu-dOB">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <view hidden="YES" contentMode="scaleToFill" id="5sZ-Vr-oWS">
-                                <rect key="frame" x="20" y="119" width="984" height="806"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" id="BwS-bR-evj">
-                                        <rect key="frame" x="-20" y="0.0" width="1024" height="723"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" id="O3c-R0-Mmx">
-                                                <rect key="frame" x="20" y="0.0" width="984" height="806"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <subviews>
-                                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Citation" minimumFontSize="17" clearButtonMode="whileEditing" id="4La-vd-eUn">
-                                                        <rect key="frame" x="20" y="363" width="877" height="30"/>
-                                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Point/Title" minimumFontSize="17" clearButtonMode="whileEditing" id="HRp-Vc-mdu">
-                                                        <rect key="frame" x="145" y="21" width="752" height="30"/>
-                                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Illustration / Evidence" id="JL2-cX-OiP">
-                                                        <rect key="frame" x="20" y="113" width="877" height="184"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5RI-rE-bQO">
-                                                        <rect key="frame" x="900" y="198" width="80" height="30"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                        <state key="normal" title="Add Media">
-                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </state>
-                                                        <connections>
-                                                            <action selector="chooseMedia:" destination="kKJ-XH-0JY" eventType="touchUpInside" id="yXc-xb-Bex"/>
-                                                        </connections>
-                                                    </button>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Explanation" id="Swa-eX-5Y7">
-                                                        <rect key="frame" x="20" y="458" width="877" height="258"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="AeV-lq-ST1">
-                                                        <rect key="frame" x="20" y="20" width="78" height="60"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                                        <state key="normal" title="Choose Color">
-                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </state>
-                                                        <connections>
-                                                            <action selector="chooseColor:" destination="kKJ-XH-0JY" eventType="touchUpInside" id="zQb-C3-WPc"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </scrollView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" id="yIx-eb-f1R">
-                                <rect key="frame" x="405" y="65" width="213" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="Topic Sentence"/>
-                                    <segment title="PIE Card"/>
-                                </segments>
-                                <connections>
-                                    <action selector="changeCardType:" destination="kKJ-XH-0JY" eventType="valueChanged" id="B4C-Mz-R1u"/>
-                                </connections>
-                            </segmentedControl>
-                            <navigationBar contentMode="scaleToFill" id="ZGr-oO-7yO">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Add Card" id="acP-jh-YYO">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Lja-X4-Yy8">
-                                            <connections>
-                                                <action selector="cancel:" destination="kKJ-XH-0JY" id="JFq-CO-E5A"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="911-8k-C2s">
-                                            <connections>
-                                                <action selector="addCard:" destination="kKJ-XH-0JY" id="7Wd-ih-CaN"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <view contentMode="scaleToFill" id="5VZ-Cm-Ctt">
-                                <rect key="frame" x="20" y="119" width="984" height="220"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Point/Title" minimumFontSize="17" clearButtonMode="whileEditing" id="4Th-kD-d80">
-                                        <rect key="frame" x="145" y="21" width="751" height="30"/>
-                                        <fontDescription key="fontDescription" name="TrebuchetMS" family="Trebuchet MS" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" id="Rnx-oK-8v2">
-                                        <rect key="frame" x="20" y="20" width="78" height="60"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                        <state key="normal" title="Choose Color">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="chooseColor:" destination="kKJ-XH-0JY" eventType="touchUpInside" id="SP5-tP-7wC"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <accessibility key="accessibilityConfiguration" hint="SDVSv" label=""/>
-                    </view>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <connections>
-                        <outlet property="cardChooser" destination="yIx-eb-f1R" id="04y-qa-Wzm"/>
-                        <outlet property="citationTxt" destination="4La-vd-eUn" id="Cda-ZU-vYQ"/>
-                        <outlet property="colorPickerButtonPIE" destination="AeV-lq-ST1" id="Zek-yn-aYX"/>
-                        <outlet property="colorPickerButtonTopic" destination="Rnx-oK-8v2" id="pch-sS-Pus"/>
-                        <outlet property="explanationTxt" destination="Swa-eX-5Y7" id="gSe-Vf-xhW"/>
-                        <outlet property="pieForm" destination="5sZ-Vr-oWS" id="KKm-9w-wCN"/>
-                        <outlet property="pointTxt" destination="HRp-Vc-mdu" id="6D7-mU-FEy"/>
-                        <outlet property="quoteTxt" destination="JL2-cX-OiP" id="esA-lU-PjH"/>
-                        <outlet property="scrollView" destination="BwS-bR-evj" id="EXA-62-AY9"/>
-                        <outlet property="topicForm" destination="5VZ-Cm-Ctt" id="73O-gJ-DsL"/>
-                        <outlet property="topicTxt" destination="4Th-kD-d80" id="nk8-oi-TnD"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2KN-S2-424" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="589" y="-277"/>
+            <point key="canvasLocation" x="-1643" y="874"/>
         </scene>
         <!--Display Outline-->
         <scene sceneID="fiS-do-8dg">
@@ -226,7 +76,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r6m-dc-tgn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="589" y="664"/>
+            <point key="canvasLocation" x="-313" y="1459"/>
         </scene>
         <!--CitationViewController-->
         <scene sceneID="Qhl-9N-UBU">
@@ -254,7 +104,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hxG-dS-jt7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1821" y="-359"/>
+            <point key="canvasLocation" x="905" y="353"/>
         </scene>
         <!--CreateEssayViewController-->
         <scene sceneID="OeZ-E4-7WY">
@@ -280,7 +130,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZs-JV-C0j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1830" y="787"/>
+            <point key="canvasLocation" x="954" y="1419"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
