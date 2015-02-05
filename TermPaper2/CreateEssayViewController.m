@@ -110,6 +110,21 @@
             if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
                 NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
                 [htmlEssayText appendFormat:@"<img src=\"%@\" height=\"100\" width=\"100\"> [%i]", tempQuote, footnoteCount1];
+            } else if ([[currentQuote substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"["]) {
+                NSString *tempQuote = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
+                NSRange range = [tempQuote rangeOfString:@"v="];
+                NSString *identifier;
+                if (range.location == NSNotFound) {
+                    NSLog(@"string was not found");
+                } else {
+                    NSLog(@"position %lu", (unsigned long)range.location);
+                    identifier = [tempQuote substringFromIndex:range.location];
+                    identifier = [identifier substringFromIndex:2];
+                }
+
+                NSString *tempQuote2 = [NSString stringWithFormat:@"http://www.youtube.com/v/%@", identifier];
+                
+                [htmlEssayText appendFormat:@"<embed src=\"%@\" width=\"250\" height=\"125\"> [%i]", tempQuote2, footnoteCount1];
             }
             else {
                 [htmlEssayText appendFormat:@"<p>%@ [%i]</p>", currentQuote, footnoteCount1];
@@ -122,7 +137,9 @@
             //[htmlEssayText appendString:@"</br>"];
         }
     }
+    [htmlEssayText appendString:@"</body></html>"];
     NSLog(@"html is: %@", htmlEssayText);
+    
     [self.essayWebView loadHTMLString:htmlEssayText baseURL:[NSURL URLWithString:@""]];
 }
 

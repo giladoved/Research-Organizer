@@ -270,7 +270,12 @@
         Card *currentCard = [self.cards objectAtIndex:i];
         if (![[self.quotes objectAtIndex:i] isEqualToString:kCardCheck]){
             [emailText appendFormat:@"<p style=\"color:%@\">Point: %@</p>", [currentCard valueForKey:@"color"], self.points[i]];
-            [emailText appendFormat:@"<p style=\"color:%@\">Illustration: %@</p>", [currentCard valueForKey:@"color"], self.quotes[i]];
+            if ([self.quotes[i] characterAtIndex:0] == '<') {
+                NSString *imgURL = [[self.quotes[i] substringFromIndex:1] substringToIndex:[self.quotes[i] length] - 2];
+                [emailText appendFormat:@"<p style=\"color:%@\">Illustration: %@</p>", [currentCard valueForKey:@"color"], [NSString stringWithFormat:@"[%@]", imgURL]];
+            } else {
+                [emailText appendFormat:@"<p style=\"color:%@\">Illustration: %@</p>", [currentCard valueForKey:@"color"], self.quotes[i]];
+            }
             [emailText appendFormat:@"<p style=\"color:%@\">Explanation: %@</p>", [currentCard valueForKey:@"color"], self.explanations[i]];
             [emailText appendFormat:@"<p style=\"color:%@\">Citation: %@</p>", [currentCard valueForKey:@"color"], self.citations[i]];
         }
@@ -729,9 +734,6 @@
             });
         }
         quote.text = [NSString stringWithFormat:@"<%@>", imageStr];
-        //not working for some reason...
-        [[alertView textFieldAtIndex:0] resignFirstResponder];
-        [alertView resignFirstResponder];
     }
     else if([title isEqualToString:@"Add Youtube"])
     {

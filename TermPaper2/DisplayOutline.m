@@ -11,6 +11,7 @@
 #import "SimpleTableCell.h"
 #import "TopicCell.h"
 #import "CreateEssayViewController.h"
+#import <XCDYouTubeKit/XCDYouTubeKit.h>
 
 @implementation DisplayOutline
 {
@@ -19,6 +20,7 @@
     NSIndexPath *indexpath;
     int footnoteCount;
     NSMutableArray *footnotes;
+    XCDYouTubeVideoPlayerViewController *videoPlayerViewController;
 }
 
 -(void) viewDidLoad
@@ -129,8 +131,9 @@
         currentQuote = [currentQuote stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([currentQuote characterAtIndex:0] == '<' && [currentQuote characterAtIndex:currentQuote.length-1] == '>') {
             NSLog(@"show image");
-            cell.quoteText.hidden = YES;
+            cell.quoteText.hidden = NO;
             cell.quoteIV.hidden = NO;
+            cell.movieFrame.hidden = YES;
             NSString *imageStr = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
             NSURL *imageURL = [NSURL URLWithString:imageStr];
             if (imageURL) {
@@ -144,10 +147,36 @@
             cell.quoteText.hidden = NO;
             if ([footnotes[indexPath.row] intValue] != 0)
             cell.quoteText.text = [NSString stringWithFormat:@"[%i]", [footnotes[indexPath.row] intValue]];
-        } else {
+        
+        } /*else if ([currentQuote characterAtIndex:0] == '[' && [currentQuote characterAtIndex:currentQuote.length-1] == ']') {
+            NSLog(@"show video");
+            cell.quoteText.hidden = YES;
+            cell.quoteIV.hidden = NO;
+            cell.movieFrame.hidden = YES;
+            NSString *imageStr = [currentQuote substringWithRange:NSMakeRange(1, currentQuote.length - 2)];
+            NSURL *imageURL = [NSURL URLWithString:imageStr];
+            if (imageURL) {
+                NSRange range = [imageStr rangeOfString:@"v="];
+                NSString *identifier;
+                if (range.location == NSNotFound) {
+                    NSLog(@"string was not found");
+                } else {
+                    NSLog(@"position %lu", (unsigned long)range.location);
+                    identifier = [imageStr substringFromIndex:range.location];
+                    identifier = [identifier substringFromIndex:2];
+                }
+                //videoPlayerViewController = [[XCDYouTubeVideoPlayerViewController alloc] initWithVideoIdentifier:identifier];
+                //[videoPlayerViewController presentInView:cell.movieFrame];
+                //[videoPlayerViewController.moviePlayer play];
+            }
+            cell.quoteText.hidden = NO;
+            if ([footnotes[indexPath.row] intValue] != 0)
+                cell.quoteText.text = [NSString stringWithFormat:@"[%i]", [footnotes[indexPath.row] intValue]];
+        }*/ else {
             NSLog(@"show text");
             cell.quoteText.hidden = NO;
             cell.quoteIV.hidden = YES;
+            cell.movieFrame.hidden = YES;
             if ([footnotes[indexPath.row] intValue] != 0)
             cell.quoteText.text = [NSString stringWithFormat:@"%@ [%i]", currentQuote, [footnotes[indexPath.row] intValue]];
         }
