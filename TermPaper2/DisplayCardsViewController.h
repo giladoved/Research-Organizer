@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AddCardViewController.h"
 #import <MessageUI/MessageUI.h>
 #import <Parse/Parse.h>
 

@@ -7,14 +7,12 @@
 //
 
 #import "DisplayCardsViewController.h"
-#import "AddCardViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Card.h"
 #import <Parse/Parse.h>
 #import "Constants.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <XCDYouTubeKit/XCDYouTubeKit.h>
-//#import "YTPlayerView.h"
 
 #define kCardCheck @"-999"
 
@@ -61,6 +59,8 @@
     
     chooseColorBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     displayCardViewController = [UIViewController new];
+    
+    //[self clearCards];
     
     self.cards = [NSMutableArray new];
     self.parseCards = [NSMutableArray new];
@@ -292,6 +292,14 @@
     [self presentViewController:mc animated:YES completion:NULL];
 }
 
+-(void) clearCards {
+    [self deleteAllObjectsForEntity:@"Flashcards" andContext:[self managedObjectContext]];
+    [self.cards removeAllObjects];
+    [self.retrievedViewLocations removeAllObjects];
+    [self.cardViews removeAllObjects];
+    [self viewDidAppear:NO];
+}
+
 - (void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
     switch (result)
@@ -365,7 +373,7 @@
     [[chooseColorBtn titleLabel] setTextColor:[UIColor blackColor]];
     chooseColorBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [chooseColorBtn addTarget:self
-                       action:@selector(chooseColor:)
+                       action:@selector(chooseColor)
              forControlEvents:UIControlEventTouchDown];
     [displayCardViewController.view addSubview:chooseColorBtn];
     
@@ -821,7 +829,7 @@
 }
 
 
--(IBAction)chooseColor:(id)sender {
+-(void)chooseColor {
     colorChoice = [colorOptions objectAtIndex:currentColorIndex];
     chooseColorBtn.layer.borderColor = [colorReferences[colorChoice]CGColor];
     chooseColorBtn.layer.borderWidth = 3.0f;
