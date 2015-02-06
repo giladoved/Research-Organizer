@@ -560,7 +560,7 @@
     if ((isNewCard && isNewCardaTopicCard) || (chosenCard && [[chosenCard valueForKey:@"quote"] isEqualToString:kCardCheck] && !isNewCard)) {
         cancelButton.frame = CGRectMake(20, 270, 150, 35);
         saveButton.frame = CGRectMake(350, 270, 150, 35);
-        if (isNewCard && isNewCard) {
+        if (!isNewCard) {
             deleteButton.frame = CGRectMake(185, 270, 150, 35);
         }
     }
